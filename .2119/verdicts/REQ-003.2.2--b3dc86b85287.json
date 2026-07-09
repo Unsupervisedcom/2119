@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.2--b3dc86b85287",
+  "requirementId": "REQ-003.2.2",
+  "hash": "b3dc86b85287",
+  "verdict": "pass",
+  "summary": "writeVerdict emits plain indented JSON to .2119/verdicts/ and init.ts adds only .2119/reviews/ to .gitignore, explicitly never verdicts (commented and enforced in code), so verdict files stay committed and diff-visible.",
+  "timestamp": "2026-07-09T18:30:30.815Z"
+}

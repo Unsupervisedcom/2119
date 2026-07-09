@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.3.3--7392d7252d47",
-  "requirementId": "REQ-004.3.3",
-  "hash": "7392d7252d47",
-  "verdict": "pass",
-  "summary": "test asserts installed pre-commit contains the rfc2119 check command, reinstall is a silent no-op, and a foreign my-linter hook is refused with its content left intact",
-  "timestamp": "2026-07-09T03:43:19.677Z"
-}

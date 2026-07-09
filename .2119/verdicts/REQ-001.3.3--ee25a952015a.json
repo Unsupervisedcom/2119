@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.3.3--ee25a952015a",
+  "requirementId": "REQ-001.3.3",
+  "hash": "ee25a952015a",
+  "verdict": "pass",
+  "summary": "No requirement has been removed in any spec (grep finds only the rule's own definition, not tombstones), so nothing dangles; parser/cover/check machinery (spec.ts TOMBSTONE, cover.ts removed-tolerance) supports the exact 'REQUIREMENT REMOVED' body when one is.",
+  "timestamp": "2026-07-09T18:30:16.882Z"
+}

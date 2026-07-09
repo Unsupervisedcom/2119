@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.2.4--58a1a52e037c",
-  "requirementId": "REQ-004.2.4",
-  "hash": "58a1a52e037c",
-  "verdict": "pass",
-  "summary": "test pre-seeds settings.json with permissions.allow and a PreToolUse echo hook, installs, and asserts both survive verbatim alongside the new PostToolUse hook - clobbering unrelated keys would fail",
-  "timestamp": "2026-07-09T03:43:19.301Z"
-}

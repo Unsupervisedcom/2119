@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.2.2--36082f755c99",
-  "requirementId": "REQ-004.2.2",
-  "hash": "36082f755c99",
-  "verdict": "pass",
-  "summary": "adapters.test.ts parses written .codex/hooks.json asserting all three 2119 hook commands and result.note contains /hooks; cli.test.ts runs real 'init --agent codex' and asserts stdout prints /hooks and .codex/hooks.json",
-  "timestamp": "2026-07-09T03:43:19.106Z"
-}

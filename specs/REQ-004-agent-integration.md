@@ -38,6 +38,7 @@ plugins and are planned as thin native packages.
 4. Adapter installation MUST merge into existing settings files without removing or altering unrelated keys.
 5. Adapter installation MUST be idempotent: running init twice produces no duplicate hook entries.
 6. Native plugin packages for Pi and opencode MAY be provided as separate thin packages that shell out to the same CLI. [manual]
+7. `2119 init --agent claude` MUST also install a `2119-reviewer` subagent definition at `.claude/agents/2119-reviewer.md` (a fresh-context, read-only reviewer that records verdicts), without overwriting an existing file at that path.
 
 ### REQ-004.3: Universal fallback layer
 

@@ -31,6 +31,25 @@ describe("agent adapters", () => {
     expect(result.note).toContain("/hooks");
   });
 
+  // 2119: REQ-004.2.7
+  it("installs the 2119-reviewer subagent for claude without overwriting an existing one", () => {
+    const root = fixture();
+    installAgentHooks(root, "claude");
+    const path = join(root, ".claude/agents/2119-reviewer.md");
+    const body = readFileSync(path, "utf8");
+    expect(body).toContain("name: 2119-reviewer");
+    expect(body).toContain("Do not edit any files");
+    expect(body).toContain("rfc2119 pass");
+
+    writeFileSync(path, "customized by the user\n");
+    installAgentHooks(root, "claude");
+    expect(readFileSync(path, "utf8")).toBe("customized by the user\n");
+
+    const root2 = fixture();
+    installAgentHooks(root2, "gemini");
+    expect(existsSync(join(root2, ".claude/agents/2119-reviewer.md"))).toBe(false);
+  });
+
   // 2119: REQ-004.2.3
   it("writes Gemini events with millisecond timeouts to .gemini/settings.json", () => {
     const root = fixture();

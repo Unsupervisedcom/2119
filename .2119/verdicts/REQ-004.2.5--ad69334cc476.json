@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.2.5--ad69334cc476",
+  "requirementId": "REQ-004.2.5",
+  "hash": "ad69334cc476",
+  "verdict": "pass",
+  "summary": "Test installs claude twice, asserts second run reports changed=false and PostToolUse/Stop arrays each still have length 1 — would fail with duplicate entries if idempotency broke.",
+  "timestamp": "2026-07-09T18:28:20.403Z"
+}

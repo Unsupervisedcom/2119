@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.3.1--f78f0f503005",
+  "requirementId": "REQ-001.3.1",
+  "hash": "f78f0f503005",
+  "verdict": "pass",
+  "summary": "All spec IDs across REQ-001..005 are unique and sequential with no gaps; new REQ-004.2.7 was added without renumbering existing .1-.6, so no existing ID has been reassigned to a different obligation.",
+  "timestamp": "2026-07-09T18:30:16.696Z"
+}

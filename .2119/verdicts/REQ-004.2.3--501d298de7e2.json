@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.2.3--501d298de7e2",
+  "requirementId": "REQ-004.2.3",
+  "hash": "501d298de7e2",
+  "verdict": "pass",
+  "summary": "Test asserts .gemini/settings.json has AfterTool matcher write_file|replace, AfterAgent command '2119 hook stop --platform gemini', SessionStart defined, and timeout>=1000 distinguishing ms from seconds — genuinely covers all three events and the ms criterion.",
+  "timestamp": "2026-07-09T18:28:14.947Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-002.3.2--9cbf14b725a9",
-  "requirementId": "REQ-002.3.2",
-  "hash": "9cbf14b725a9",
-  "verdict": "pass",
-  "summary": "check is single-pass synchronous fs work (one walk, spec parse, annotation scan, hash) with no subprocesses besides [verify], which the requirement excludes; benchmarked 0.22s on a synthetic 100-spec/2000-test repo",
-  "timestamp": "2026-07-09T04:44:30.088Z"
-}

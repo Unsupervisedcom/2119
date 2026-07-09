@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.4--70ee37e741b2",
+  "requirementId": "REQ-004.3.4",
+  "hash": "70ee37e741b2",
+  "verdict": "pass",
+  "summary": "Test asserts installCi writes .github/workflows/2119.yml whose body contains 'pull_request' and '2119 check' and that the file exists — genuinely verifies the PR-triggered check workflow.",
+  "timestamp": "2026-07-09T18:28:29.491Z"
+}

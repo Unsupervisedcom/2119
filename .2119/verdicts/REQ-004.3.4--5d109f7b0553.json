@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.3.4--5d109f7b0553",
-  "requirementId": "REQ-004.3.4",
-  "hash": "5d109f7b0553",
-  "verdict": "pass",
-  "summary": "test reads the written .github/workflows/2119.yml asserting installCi set changed=true and the file contains a pull_request trigger and a '2119 check' step",
-  "timestamp": "2026-07-09T03:43:19.772Z"
-}

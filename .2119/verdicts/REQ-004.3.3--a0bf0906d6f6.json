@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.3--a0bf0906d6f6",
+  "requirementId": "REQ-004.3.3",
+  "hash": "a0bf0906d6f6",
+  "verdict": "pass",
+  "summary": "Test asserts installGitHook writes .git/hooks/pre-commit containing 'npx rfc2119 check', recognizes its own hook on re-run (changed=false, not refused), and refuses a foreign hook (refused mentions 'manually', changed=false, original 'my-linter' preserved) — genuinely verifies both install and no-clobber.",
+  "timestamp": "2026-07-09T18:28:28.032Z"
+}

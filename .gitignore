@@ -6,3 +6,4 @@ dist/
 project-log.md
 project-plan.md
 docs/explainer.html
+.claude/settings.json

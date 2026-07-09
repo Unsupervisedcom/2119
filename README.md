@@ -11,15 +11,34 @@
 
 This repo practices what it enforces: 2119's own requirements live in [`specs/`](specs/), every MUST has an annotated test, and `.2119/verdicts/` holds the committed review verdicts.
 
-## Quick start
+## Use it in your repo
+
+You don't clone this repo — npm delivers the tool. From your project root:
 
 ```bash
-npx rfc2119 init                 # specs/, .2119.yml, AGENTS.md section
-npx rfc2119 init --agent claude  # + Claude Code hooks (also: codex, gemini)
+npx rfc2119 init                 # the core: specs/, .2119.yml, AGENTS.md section
+npx rfc2119 init --agent claude  # + hooks and a reviewer subagent (also: codex, gemini)
 npx rfc2119 init --git-hook --ci # + pre-commit gate and GitHub Actions backstop
 ```
 
-Then write a spec, implement with annotated tests, and run `npx rfc2119 check`.
+What `init` creates in your repo:
+
+| Path | What it is | Commit it? |
+|------|-----------|------------|
+| `specs/` | Your requirements docs (starts with a template) | Yes |
+| `.2119.yml` | Config: globs, ID prefix, enforced severities, reviewer model | Yes |
+| `AGENTS.md` section | Teaches any coding agent the workflow | Yes |
+| `.2119/verdicts/` | Committed review verdicts, written as reviews run | Yes — they're the audit trail |
+| `.2119/reviews/` | Scratch instruction files | No (init gitignores it) |
+| `.claude/settings.json` + `.claude/agents/2119-reviewer.md` | Claude Code hooks + a fresh-context reviewer subagent (`--agent claude`) | Yes |
+| `.github/workflows/2119.yml` | The CI backstop (`--ci`) | Yes |
+
+Then the loop:
+
+1. Have your agent plan each feature **as a spec** in `specs/` — `2119 lint` keeps the format honest.
+2. Build. Every MUST-level requirement needs a test annotated with its ID (`// 2119: REQ-001.2.3`).
+3. Run `npx rfc2119 check`. Fix lint/coverage failures directly; for pending judgment reviews, run `npx rfc2119 review` and dispatch each instruction file to a fresh-context subagent.
+4. Done means exit 0 — in your editor, at commit time, and in CI, all the same command.
 
 ## The spec format
 
@@ -44,10 +63,11 @@ What this subsystem is and why.
 - Exactly one RFC 2119 keyword per statement (keywords inside `backticks` are quoted text, not counted), and — per RFC 8174 — only UPPERCASE keywords are normative; lowercase "must" is ordinary prose.
 - The tool is accountable to the RFC it's named for: [docs/rfc-conformance.md](docs/rfc-conformance.md) maps every clause of RFC 2119 and RFC 8174 to how it's implemented, represented, or deliberately scoped out.
 
-> The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in specs checked by this tool are to be interpreted as described in BCP 14 ([RFC 2119](https://www.rfc-editor.org/rfc/rfc2119), [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)) when, and only when, they appear in all capitals. This citation lives here — project-level, once — rather than in every spec file, so it never costs agent context.
 - `[review: globs]` marks a requirement verified by judgment review instead of a test; add `instructions: <path>` inside the tag when the criteria outgrow one sentence (the file's content is hashed into the verdict, so editing criteria invalidates prior approvals). `[manual]` exempts it (surfaced in every `check`, never silently skipped).
 - `[verify: <command>]` validates a requirement with a shell command run from the repo root — exit 0 passes, anything else is a check violation carrying the output, 30s timeout. Verify commands execute arbitrary shell from spec files: they carry the same trust level as `package.json` scripts.
 - Annotating a section ID (`// 2119: REQ-001.1`) covers all items in that section.
+
+> The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in specs checked by this tool are to be interpreted as described in BCP 14 ([RFC 2119](https://www.rfc-editor.org/rfc/rfc2119), [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)) when, and only when, they appear in all capitals. This citation lives here — project-level, once — rather than in every spec file, so it never costs agent context.
 
 ## How the anti-cheat works
 
@@ -80,7 +100,7 @@ Judgment reviews are scoped, single-question tasks, so we recommend **a capable 
 - Don't go too small: round one of this repo's own reviews surfaced findings like masked assertions and a parser violating its own spec — subtle calls that weak models tend to rubber-stamp. On Claude Code, an Opus-class model is a solid choice.
 - `[review]`-tagged requirements are the judgment-heavy ones; their instruction files deliberately recommend the dispatching agent's own (typically stronger) model instead of the pinned one.
 
-## Choosing test vs. review vs. manual
+## Choosing test vs. review vs. verify vs. manual
 
 Deterministic facts get tests. Judgment calls get `[review]`. Things only a human can do get `[manual]`. The anti-patterns to avoid (borrowed from [DeepWork](https://github.com/Unsupervisedcom/deepwork)'s requirements-validation doctrine, which inspired this tool):
 
@@ -110,3 +130,16 @@ reviews: true          # set false to disable the judgment layer
 review_model: "opus"   # advisory, platform-specific; default recommends
                        # "a capable, cost-effective model"
 ```
+
+## What's in this repo
+
+Nothing here needs to be copied into your project — `init` generates everything an adopter needs. The layout, for the curious and for contributors:
+
+| Path | Role |
+|------|------|
+| `src/` | The tool: spec parser/lint, coverage, review hashing, verdicts, hooks, adapters |
+| `tests/` | The tool's own suite — every test annotated with the requirement it covers |
+| `specs/` | 2119's own requirements, written in the format it enforces (the best live example) |
+| `.2119/verdicts/` | Real committed verdicts from the fresh-context reviews that gated this code |
+| `.2119.yml` · `AGENTS.md` · `.claude/agents/` | This repo dogfooding its own `init` output |
+| `docs/rfc-conformance.md` | Clause-by-clause accounting against RFC 2119 and RFC 8174 |
