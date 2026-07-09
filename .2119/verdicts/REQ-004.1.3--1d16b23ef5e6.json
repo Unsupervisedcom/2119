@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.3--1d16b23ef5e6",
+  "requirementId": "REQ-004.1.3",
+  "hash": "1d16b23ef5e6",
+  "verdict": "pass",
+  "summary": "hook.test.ts:34 asserts extractEditedPaths parses both file_path and Codex apply_patch Update/Add File lines to exact path lists, and :46 shows an off-glob edit (app.py) returns {} while the spec is deliberately lint-broken, so indiscriminate linting would fail it",
+  "timestamp": "2026-07-09T03:43:53.458Z"
+}

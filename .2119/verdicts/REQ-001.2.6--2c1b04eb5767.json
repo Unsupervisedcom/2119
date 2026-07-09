@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.2.6--2c1b04eb5767",
+  "requirementId": "REQ-001.2.6",
+  "hash": "2c1b04eb5767",
+  "verdict": "pass",
+  "summary": "Test asserts findKeywords returns [] for lowercase must/should/required/may, and that a statement whose only imperative is lowercase lints as 'no RFC 2119 keyword' under REQ-001.2.2.",
+  "timestamp": "2026-07-09T03:49:32.846Z"
+}

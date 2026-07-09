@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.1.4--68ca14574efe",
+  "requirementId": "REQ-005.1.4",
+  "hash": "68ca14574efe",
+  "verdict": "pass",
+  "summary": "test points instructions: at a nonexistent gone.md and asserts buildContext emits a REQ-005.1.4 check violation naming both REQ-001.1.1 and the missing path",
+  "timestamp": "2026-07-09T04:48:32.320Z"
+}

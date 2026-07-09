@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.4.1--30e465ec6e91",
+  "requirementId": "REQ-001.4.1",
+  "hash": "30e465ec6e91",
+  "verdict": "pass",
+  "summary": "Test covers only items .1.1/.1.2 with item-level annotations and asserts the [review: docs/**]-tagged item is absent from uncovered and parses as {kind: review, globs: [docs/**]}; if review-tagged items required tests, uncovered would be non-empty and the test fails",
+  "timestamp": "2026-07-09T00:37:39.420Z"
+}

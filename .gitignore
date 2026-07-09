@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.2119/reviews/
+.deepwork/tmp/
+.deepwork/
+project-log.md
+project-plan.md

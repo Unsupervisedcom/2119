@@ -1,0 +1,13 @@
+# 2119 configuration — https://github.com/tylerwillis/2119
+# All fields optional; these are the defaults.
+#
+# specs:
+#   - "specs/**/*REQ-*.md"
+# tests:
+#   - "test/**"
+#   - "tests/**"
+#   - "**/*.test.*"
+# prefix: "REQ"
+# enforce: ["MUST", "MUST NOT", "SHALL", "SHALL NOT", "REQUIRED"]
+# reviews: true
+review_model: "opus"

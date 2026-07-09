@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.2.1--25505cfad07b",
+  "requirementId": "REQ-004.2.1",
+  "hash": "25505cfad07b",
+  "verdict": "pass",
+  "summary": "adapters.test.ts:11 asserts the real written .claude/settings.json has PostToolUse matcher 'Edit|Write' with the after-edit command plus Stop and SessionStart hook commands; init --agent wiring to installAgentHooks is at src/init.ts:99 and exercised via CLI in cli.test.ts:183",
+  "timestamp": "2026-07-09T03:44:13.351Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.5.1--11aa98689a04",
+  "requirementId": "REQ-003.5.1",
+  "hash": "11aa98689a04",
+  "verdict": "pass",
+  "summary": "review.test.ts exercises loadConfig: asserts the default is the exact platform-neutral phrase and that review_model: opus in .2119.yml overrides it",
+  "timestamp": "2026-07-09T02:59:58.858Z"
+}

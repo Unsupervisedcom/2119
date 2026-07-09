@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.1--835692269c19",
+  "requirementId": "REQ-004.3.1",
+  "hash": "835692269c19",
+  "verdict": "pass",
+  "summary": "e2e CLI test runs init in an empty dir and reads back .2119.yml requiring the '# 2119 configuration' comment and specs/REQ-001-example.md requiring a Requirements section",
+  "timestamp": "2026-07-09T03:43:19.489Z"
+}

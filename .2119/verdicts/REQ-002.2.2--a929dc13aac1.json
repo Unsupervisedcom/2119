@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.2.2--a929dc13aac1",
+  "requirementId": "REQ-002.2.2",
+  "hash": "a929dc13aac1",
+  "verdict": "pass",
+  "summary": "Production buildAnnotationRegex matched against Python #, TS //, and Go /* */ comment styles plus comma-separated multi-ID extraction; cli.test.ts exercises glob-scanned .test.js discovery",
+  "timestamp": "2026-07-09T00:37:48.794Z"
+}

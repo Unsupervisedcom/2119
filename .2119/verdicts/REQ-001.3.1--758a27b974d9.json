@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.3.1--758a27b974d9",
+  "requirementId": "REQ-001.3.1",
+  "hash": "758a27b974d9",
+  "verdict": "pass",
+  "summary": "Full spec git history shows no ID renumbering; this round amends REQ-002.3.1/.3.2 in place (same IDs, same obligations extended for verify commands) and adds REQ-005 as a new file",
+  "timestamp": "2026-07-09T04:44:21.241Z"
+}

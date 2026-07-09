@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.3.2--834cc3d1e425",
+  "requirementId": "REQ-003.3.2",
+  "hash": "834cc3d1e425",
+  "verdict": "pass",
+  "summary": "Tombstones a requirement to REQUIREMENT REMOVED, writes an old verdict for it, and asserts verdictViolations reports nothing mentioning that ID — the obsolete verdict is ignored rather than flagged stale",
+  "timestamp": "2026-07-09T03:01:13.948Z"
+}

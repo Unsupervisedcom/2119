@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.2--07a64d7f0c01",
+  "requirementId": "REQ-003.1.2",
+  "hash": "07a64d7f0c01",
+  "verdict": "pass",
+  "summary": "Test asserts the <req-id>--<12 hex> form and that the ID changes when either the covering test file content or the statement text changes, pinning both hash inputs behaviorally (algorithm identity itself not recomputed independently)",
+  "timestamp": "2026-07-09T03:01:17.539Z"
+}

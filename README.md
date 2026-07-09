@@ -1,0 +1,112 @@
+# 2119
+
+**Spec-driven test enforcement for coding agents.** Named for [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119), the RFC that gave MUST and SHOULD their teeth.
+
+2119 makes the planning → building → testing loop hard to cheat:
+
+1. **Plans become requirements.** Features start as specs in `specs/` — RFC 2119 documents where every requirement is a numbered, individually addressable statement with exactly one normative keyword. `2119 lint` enforces the format.
+2. **Requirements become tests.** Every MUST-level requirement needs at least one test annotated with its ID (`// 2119: REQ-001.2.3` — a comment, so it works in any language). `2119 cover` fails on any gap, in either direction.
+3. **Tests get judged.** A coverage check can't tell a real test from a tautology. `2119 review` generates one instruction file per requirement asking a *fresh-context* reviewer a single question: **would these tests fail if this requirement were violated?** Verdicts are recorded with `2119 pass` / `2119 fail`.
+4. **One gate.** `2119 check` = lint + coverage + verdict freshness. Exit code 0 or it isn't done. Hooks, git, and CI all call the same command.
+
+This repo practices what it enforces: 2119's own requirements live in [`specs/`](specs/), every MUST has an annotated test, and `.2119/verdicts/` holds the committed review verdicts.
+
+## Quick start
+
+```bash
+npx rfc2119 init                 # specs/, .2119.yml, AGENTS.md section
+npx rfc2119 init --agent claude  # + Claude Code hooks (also: codex, gemini)
+npx rfc2119 init --git-hook --ci # + pre-commit gate and GitHub Actions backstop
+```
+
+Then write a spec, implement with annotated tests, and run `npx rfc2119 check`.
+
+## The spec format
+
+```markdown
+# REQ-001: Session Handling
+
+## Overview
+
+What this subsystem is and why.
+
+## Requirements
+
+### REQ-001.1: Timeouts
+
+1. Sessions MUST expire after 30 minutes of inactivity.
+2. Expired sessions MUST NOT be resumable with a stale token.
+3. The docs SHOULD explain the timeout rationale. [review: docs/**]
+4. Support MUST verify identity on the phone. [manual]
+```
+
+- IDs are `REQ-NNN.M.K` (file `.` section `.` item) and **stable forever** — removed requirements keep their number with the body `REQUIREMENT REMOVED`.
+- Exactly one RFC 2119 keyword per statement (keywords inside `backticks` are quoted text, not counted), and — per RFC 8174 — only UPPERCASE keywords are normative; lowercase "must" is ordinary prose.
+- The tool is accountable to the RFC it's named for: [docs/rfc-conformance.md](docs/rfc-conformance.md) maps every clause of RFC 2119 and RFC 8174 to how it's implemented, represented, or deliberately scoped out.
+
+> The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in specs checked by this tool are to be interpreted as described in BCP 14 ([RFC 2119](https://www.rfc-editor.org/rfc/rfc2119), [RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)) when, and only when, they appear in all capitals. This citation lives here — project-level, once — rather than in every spec file, so it never costs agent context.
+- `[review: globs]` marks a requirement verified by judgment review instead of a test; add `instructions: <path>` inside the tag when the criteria outgrow one sentence (the file's content is hashed into the verdict, so editing criteria invalidates prior approvals). `[manual]` exempts it (surfaced in every `check`, never silently skipped).
+- `[verify: <command>]` validates a requirement with a shell command run from the repo root — exit 0 passes, anything else is a check violation carrying the output, 30s timeout. Verify commands execute arbitrary shell from spec files: they carry the same trust level as `package.json` scripts.
+- Annotating a section ID (`// 2119: REQ-001.1`) covers all items in that section.
+
+## How the anti-cheat works
+
+The design splits enforcement by what each layer can actually guarantee:
+
+- **Deterministic checks carry the weight.** Lint and coverage are exact parsing, not vibes. They run identically from an agent hook, your shell, and CI — an agent can't talk its way past an exit code in CI.
+- **Judgment reviews close the tautology gap.** Review IDs embed a SHA-256 content hash of the requirement text plus its evidence files. Edit a covered test — or the requirement — and the old verdict silently stops counting; `check` fails until a fresh review passes. `2119 pass` refuses IDs whose hash doesn't match current content, so verdicts can't be pre-computed or replayed.
+- **Verdicts are committed, not hidden.** `.2119/verdicts/*.json` files carry the verdict, summary, and timestamp, so every review decision shows up in the PR diff for humans to audit.
+
+### Residual risk, stated plainly
+
+Nothing physically prevents the implementing agent from running `2119 pass` on its own work — no local tool can, since the agent controls the shell. The mitigations are layered: verdicts are **committed and auditable** (a self-pass with a hand-wavy summary is visible in review), **hash invalidation** means a verdict only ever vouches for exact content (no stale reuse), instruction files **direct dispatch to a fresh-context subagent**, and **CI re-runs the same check** so nothing merges without the full gate passing. If you need a hard guarantee, have CI or a bot re-dispatch the judgment reviews with an agent the author doesn't control.
+
+## Agent integration
+
+| Platform | Write-time lint feedback | Stop/finish gate | Install |
+|----------|--------------------------|------------------|---------|
+| Claude Code | PostToolUse → context injection | Stop hook (hard block) | `2119 init --agent claude` |
+| Codex CLI | PostToolUse → context injection | Stop hook (hard block) | `2119 init --agent codex`, then trust via `/hooks` |
+| Gemini CLI | AfterTool → context injection | AfterAgent (hard block) | `2119 init --agent gemini` |
+| Pi / opencode | native TS plugins (planned) | commit block + nudge | AGENTS.md + git hook + CI |
+| Anything else | — | — | AGENTS.md + git hook + CI |
+
+Codex and Gemini deliberately cloned Claude Code's hook contract (JSON on stdin; `decision` / `additionalContext` on stdout), so all three share one normalized entry point: `2119 hook <after-edit|stop|session-start> --platform <p>`. Hooks always exit 0 and speak JSON; a repo without 2119 set up gets a silent no-op, so user-level installs are safe. On platforms without hooks, the AGENTS.md section, the git pre-commit hook, and CI are the floor — weaker feedback, same gate.
+
+## Choosing a reviewer model
+
+Judgment reviews are scoped, single-question tasks, so we recommend **a capable but cost-effective model** — set it once via `review_model` in `.2119.yml` (the first interactive `2119 review` will ask; agents and CI never get prompted). The value is advisory text passed to whatever agent dispatches the reviews, so use your platform's own model names. Two things to calibrate:
+
+- Don't go too small: round one of this repo's own reviews surfaced findings like masked assertions and a parser violating its own spec — subtle calls that weak models tend to rubber-stamp. On Claude Code, an Opus-class model is a solid choice.
+- `[review]`-tagged requirements are the judgment-heavy ones; their instruction files deliberately recommend the dispatching agent's own (typically stronger) model instead of the pinned one.
+
+## Choosing test vs. review vs. manual
+
+Deterministic facts get tests. Judgment calls get `[review]`. Things only a human can do get `[manual]`. The anti-patterns to avoid (borrowed from [DeepWork](https://github.com/Unsupervisedcom/deepwork)'s requirements-validation doctrine, which inspired this tool):
+
+- **A keyword-grep test pretending to verify judgment** (`assert "parallel" in text` for "MUST run in parallel") — that's a test that can't fail honestly. Use `[review]`.
+- **A review wasted on a machine-checkable fact** ("check the version field equals 2") — that's judgment spent where a test is stronger. Write the test.
+
+## Commands
+
+| Command | Does |
+|---------|------|
+| `2119 init [--agent <p>] [--git-hook] [--ci]` | Scaffold and install integrations |
+| `2119 lint` | Spec format checks |
+| `2119 cover` | Requirement ↔ test traceability |
+| `2119 review` | Generate instruction files for stale/missing judgment reviews |
+| `2119 pass/fail <review-id> --summary "…"` | Record a verdict (hash-verified) |
+| `2119 check [--json]` | Everything; the one exit code that matters |
+| `2119 hook <event> --platform <p>` | Agent hook entry point (used by installed hooks) |
+
+## Configuration (`.2119.yml`, all optional)
+
+```yaml
+specs: ["specs/**/*REQ-*.md"]
+tests: ["tests/**", "**/*.test.*"]
+prefix: "REQ"          # e.g. "ACME-REQ" for ACME-REQ-001 IDs
+enforce: ["MUST", "MUST NOT", "SHALL", "SHALL NOT", "REQUIRED"]
+reviews: true          # set false to disable the judgment layer
+review_model: "opus"   # advisory, platform-specific; default recommends
+                       # "a capable, cost-effective model"
+```

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.4.1--c3500f349d24",
+  "requirementId": "REQ-002.4.1",
+  "hash": "c3500f349d24",
+  "verdict": "pass",
+  "summary": "Fixture .2119.yml sets only prefix: FIX; lint exits 0 finding the FIX spec via default globs, so config reading, per-field optionality, and defaults are exercised end-to-end (sibling tests rely on default test globs)",
+  "timestamp": "2026-07-09T03:44:11.999Z"
+}

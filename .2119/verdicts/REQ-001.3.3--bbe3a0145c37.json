@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.3.3--bbe3a0145c37",
+  "requirementId": "REQ-001.3.3",
+  "hash": "bbe3a0145c37",
+  "verdict": "pass",
+  "summary": "No requirement has ever been removed (git history shows only additions and in-place rewordings), so no tombstone is owed and no external reference dangles",
+  "timestamp": "2026-07-09T04:44:21.442Z"
+}

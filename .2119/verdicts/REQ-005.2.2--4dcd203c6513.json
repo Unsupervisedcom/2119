@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.2.2--4dcd203c6513",
+  "requirementId": "REQ-005.2.2",
+  "hash": "4dcd203c6513",
+  "verdict": "pass",
+  "summary": "real failing command yields exactly one violation asserted to carry rule REQ-005.2.2, the requirement ID, and the command's stderr text; check-runs-verify wiring is proven by the e2e test in the same file",
+  "timestamp": "2026-07-09T04:48:41.660Z"
+}

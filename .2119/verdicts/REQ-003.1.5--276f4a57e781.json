@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.5--276f4a57e781",
+  "requirementId": "REQ-003.1.5",
+  "hash": "276f4a57e781",
+  "verdict": "pass",
+  "summary": "Asserts the generated instruction file contains the would-the-tests-fail question and the tautological/over-mocking/unrelated flag directives; the criterion is textual so containment checks are the right verification",
+  "timestamp": "2026-07-09T03:00:44.499Z"
+}

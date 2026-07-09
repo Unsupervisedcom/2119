@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.2--04620cbe4157",
+  "requirementId": "REQ-004.1.2",
+  "hash": "04620cbe4157",
+  "verdict": "pass",
+  "summary": "cli.test.ts:199 asserts exit 0 with parseable JSON on stdout for every hook invocation, including a failing-check stop (decision:block in JSON, not exit code) and a bogus event with invalid JSON payload (exit 0, systemMessage)",
+  "timestamp": "2026-07-09T03:43:43.027Z"
+}

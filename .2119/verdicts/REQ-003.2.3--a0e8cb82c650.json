@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.3--a0e8cb82c650",
+  "requirementId": "REQ-003.2.3",
+  "hash": "a0e8cb82c650",
+  "verdict": "pass",
+  "summary": "Test forges the 12-hex hash suffix of a real generated review ID; pass exits 1 with 'Stale review ID' and a subsequent check still fails, so pre-computed/replayed verdicts are genuinely rejected end-to-end",
+  "timestamp": "2026-07-09T03:44:33.357Z"
+}

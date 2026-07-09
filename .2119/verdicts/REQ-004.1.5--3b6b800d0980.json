@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.5--3b6b800d0980",
+  "requirementId": "REQ-004.1.5",
+  "hash": "3b6b800d0980",
+  "verdict": "pass",
+  "summary": "hook.test.ts:69 uses an uncovered-MUST fixture so the real check fails, and asserts stop returns decision:block with a reason naming the failing requirement REQ-001.1.1 and the fix command 'npx rfc2119 check' (deny for gemini)",
+  "timestamp": "2026-07-09T03:43:53.645Z"
+}

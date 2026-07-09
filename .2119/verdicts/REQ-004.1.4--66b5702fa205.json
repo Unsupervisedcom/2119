@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.4--66b5702fa205",
+  "requirementId": "REQ-004.1.4",
+  "hash": "66b5702fa205",
+  "verdict": "pass",
+  "summary": "hook.test.ts:54 edits a lint-broken spec through the real handler and asserts hookSpecificOutput.additionalContext contains the actual violation rule REQ-001.2.2 under the correct event name (PostToolUse for claude, AfterTool for gemini)",
+  "timestamp": "2026-07-09T03:43:53.553Z"
+}

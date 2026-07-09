@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.5.5--f592df4a2402",
+  "requirementId": "REQ-003.5.5",
+  "hash": "f592df4a2402",
+  "verdict": "pass",
+  "summary": "cli.test.ts:172 runs review with piped non-TTY stdin via execFileSync and asserts completion (exit 1, pending reviews) plus the default-model recommendation in stdout; removing the isTTY guard at src/cli.ts:64 would prompt and break these assertions",
+  "timestamp": "2026-07-09T03:43:42.836Z"
+}

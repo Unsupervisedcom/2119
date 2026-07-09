@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.2.5--d967bc71d3e1",
+  "requirementId": "REQ-005.2.5",
+  "hash": "d967bc71d3e1",
+  "verdict": "pass",
+  "summary": "mutating the spec to a bare [verify] tag is asserted to produce a lint violation with rule REQ-005.2.5 naming REQ-001.1.2 via real parseSpec",
+  "timestamp": "2026-07-09T04:48:48.938Z"
+}

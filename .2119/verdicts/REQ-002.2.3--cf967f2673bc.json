@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.2.3--cf967f2673bc",
+  "requirementId": "REQ-002.2.3",
+  "hash": "cf967f2673bc",
+  "verdict": "pass",
+  "summary": "Unknown REQ-009.1.1 annotation yields a REQ-002.2.3 violation naming the ID, and a tombstoned target yields none — both directions of the criterion covered",
+  "timestamp": "2026-07-09T00:37:48.886Z"
+}

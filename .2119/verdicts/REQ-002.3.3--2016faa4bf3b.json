@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.3.3--2016faa4bf3b",
+  "requirementId": "REQ-002.3.3",
+  "hash": "2016faa4bf3b",
+  "verdict": "pass",
+  "summary": "Test parses check --json and asserts staleReviews, uncoveredRequirements, violations, and manualRequirements each track induced fixture changes (dropped annotation, added [manual] item)",
+  "timestamp": "2026-07-09T03:44:11.904Z"
+}

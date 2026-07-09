@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.2.5--da681b9ebc91",
+  "requirementId": "REQ-004.2.5",
+  "hash": "da681b9ebc91",
+  "verdict": "pass",
+  "summary": "test installs twice and asserts second.changed===false plus PostToolUse and Stop arrays each have length 1, so duplicate hook entries would fail",
+  "timestamp": "2026-07-09T03:43:19.393Z"
+}

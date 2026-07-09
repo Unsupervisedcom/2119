@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.1.4--32f28efd0032",
+  "requirementId": "REQ-002.1.4",
+  "hash": "32f28efd0032",
+  "verdict": "pass",
+  "summary": "Exact-array assertions findKeywords('It MUST NOT explode.')===['MUST NOT'], ['NOT RECOMMENDED'], and ['SHALL NOT','MUST'] fail if compounds match as separate tokens or shortest-first; exercises the real keyword matcher used by lint",
+  "timestamp": "2026-07-09T03:50:28.170Z"
+}

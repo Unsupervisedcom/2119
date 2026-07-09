@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.2.2--e3c143f1ddcc",
+  "requirementId": "REQ-001.2.2",
+  "hash": "e3c143f1ddcc",
+  "verdict": "pass",
+  "summary": "Test asserts REQ-001.2.2 violations for a statement with zero keywords and one with two keywords (MUST + SHOULD); a companion test guards against false positives from keywords inside inline code.",
+  "timestamp": "2026-07-09T03:49:23.364Z"
+}
