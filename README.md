@@ -88,10 +88,20 @@ Nothing physically prevents the implementing agent from running `2119 pass` on i
 | Claude Code | PostToolUse → context injection | Stop hook (hard block) | `2119 init --agent claude` |
 | Codex CLI | PostToolUse → context injection | Stop hook (hard block) | `2119 init --agent codex`, then trust via `/hooks` |
 | Gemini CLI | AfterTool → context injection | AfterAgent (hard block) | `2119 init --agent gemini` |
-| Pi / opencode | native TS plugins (planned) | commit block + nudge | AGENTS.md + git hook + CI |
-| Anything else | — | — | AGENTS.md + git hook + CI |
+| Pi / opencode | native TS plugins (planned) | commit block via universal layer | universal layer |
+| Anything else | via AGENTS.md instructions | commit + CI (hard gate) | universal layer |
 
-Codex and Gemini deliberately cloned Claude Code's hook contract (JSON on stdin; `decision` / `additionalContext` on stdout), so all three share one normalized entry point: `2119 hook <after-edit|stop|session-start> --platform <p>`. Hooks always exit 0 and speak JSON; a repo without 2119 set up gets a silent no-op, so user-level installs are safe. On platforms without hooks, the AGENTS.md section, the git pre-commit hook, and CI are the floor — weaker feedback, same gate.
+Codex and Gemini deliberately cloned Claude Code's hook contract (JSON on stdin; `decision` / `additionalContext` on stdout), so all three share one normalized entry point: `2119 hook <after-edit|stop|session-start> --platform <p>`. Hooks always exit 0 and speak JSON; a repo without 2119 set up gets a silent no-op, so user-level installs are safe.
+
+### The universal layer (any agent, no integration required)
+
+The enforcement itself is agent-agnostic by construction — lint, coverage, review hashing, and verdicts are a plain CLI with an exit code. Hooks only change *when* an agent hears about a failure, never *whether* the gate holds. Every `init` includes the universal layer:
+
+- **AGENTS.md section** (always written): teaches any agent that reads it — Pi, opencode, Cursor, Hermes, whatever ships next — to spec first, annotate tests, dispatch reviews, and run `npx rfc2119 check` before finishing.
+- **Git pre-commit hook** (`--git-hook`): blocks commits while `check` fails, regardless of which agent (or human) is committing.
+- **CI** (`--ci`): re-runs the same `check` on every pull request — the backstop no agent can route around, integrated or not.
+
+Same command, same verdicts, same gate everywhere; platforms with hooks just find out sooner.
 
 ## Choosing a reviewer model
 
