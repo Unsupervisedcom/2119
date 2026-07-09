@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.4.3--63ae511bc9d4",
-  "requirementId": "REQ-001.4.3",
-  "hash": "63ae511bc9d4",
-  "verdict": "pass",
-  "summary": "Test asserts an untagged requirement parses to coverage {kind: test}; sibling REQ-002.2.1 test confirms untagged MUST items are actually demanded coverage, so a changed default would fail",
-  "timestamp": "2026-07-09T00:37:39.611Z"
-}

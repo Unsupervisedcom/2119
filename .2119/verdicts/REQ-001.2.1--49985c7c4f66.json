@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.2.1--49985c7c4f66",
-  "requirementId": "REQ-001.2.1",
-  "hash": "49985c7c4f66",
-  "verdict": "pass",
-  "summary": "Tests assert parsed items receive derived IDs REQ-001.1.1/REQ-001.1.2 with correct sectionId from real parsing, and that a multi-line list item joins into a single requirement statement.",
-  "timestamp": "2026-07-09T03:49:23.268Z"
-}

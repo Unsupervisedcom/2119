@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.2.5--20f82b3977f1",
+  "requirementId": "REQ-004.2.5",
+  "hash": "20f82b3977f1",
+  "verdict": "pass",
+  "summary": "adapters.test installs claude twice, asserts second run reports changed=false and PostToolUse/Stop arrays each stay length 1 — genuine duplicate-entry check",
+  "timestamp": "2026-07-09T23:07:02.927Z"
+}

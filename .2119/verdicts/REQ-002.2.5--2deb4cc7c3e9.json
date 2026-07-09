@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.2.5--2deb4cc7c3e9",
+  "requirementId": "REQ-002.2.5",
+  "hash": "2deb4cc7c3e9",
+  "verdict": "pass",
+  "summary": "A section-level annotation REQ-001.1 is asserted to leave uncovered empty and mark both item IDs .1.1 and .1.2 covered—genuinely verifies section coverage propagation",
+  "timestamp": "2026-07-09T23:07:32.696Z"
+}

@@ -37,7 +37,7 @@ Then the loop:
 
 1. Have your agent plan each feature **as a spec** in `specs/` — `2119 lint` keeps the format honest.
 2. Build. Every MUST-level requirement needs a test annotated with its ID (`// 2119: REQ-001.2.3`).
-3. Run `npx rfc2119 check`. Fix lint/coverage failures directly; for pending judgment reviews, run `npx rfc2119 review` and dispatch each instruction file to a fresh-context subagent.
+3. Run `npx rfc2119 check`. Fix lint/coverage failures directly; for pending judgment reviews, run `npx rfc2119 review --dispatch` — it emits a ready-to-paste prompt that sends each instruction file to a fresh-context subagent, in parallel.
 4. Done means exit 0 — in your editor, at commit time, and in CI, all the same command.
 
 ## The spec format
@@ -74,7 +74,7 @@ What this subsystem is and why.
 The design splits enforcement by what each layer can actually guarantee:
 
 - **Deterministic checks carry the weight.** Lint and coverage are exact parsing, not vibes. They run identically from an agent hook, your shell, and CI — an agent can't talk its way past an exit code in CI.
-- **Judgment reviews close the tautology gap.** Review IDs embed a SHA-256 content hash of the requirement text plus its evidence files. Edit a covered test — or the requirement — and the old verdict silently stops counting; `check` fails until a fresh review passes. `2119 pass` refuses IDs whose hash doesn't match current content, so verdicts can't be pre-computed or replayed.
+- **Judgment reviews close the tautology gap.** Review IDs embed a SHA-256 content hash of the requirement text plus the exact evidence blocks that cover it: each annotated test through the next annotation, plus the file's prelude (imports and mocks — the classic test-neutering vector — stay under the hash). Edit a covered test — or the requirement — and the old verdict silently stops counting; edit an *unrelated* test in the same file and it doesn't. `2119 pass` refuses IDs whose hash doesn't match current content, so verdicts can't be pre-computed or replayed.
 - **Verdicts are committed, not hidden.** `.2119/verdicts/*.json` files carry the verdict, summary, and timestamp, so every review decision shows up in the PR diff for humans to audit.
 
 ### Residual risk, stated plainly
@@ -124,7 +124,7 @@ Deterministic facts get tests. Judgment calls get `[review]`. Things only a huma
 | `2119 init [--agent <p>] [--git-hook] [--ci]` | Scaffold and install integrations |
 | `2119 lint` | Spec format checks |
 | `2119 cover` | Requirement ↔ test traceability |
-| `2119 review` | Generate instruction files for stale/missing judgment reviews |
+| `2119 review [--dispatch]` | Generate instruction files for stale/missing judgment reviews; `--dispatch` adds a ready-to-paste parallel-subagent prompt |
 | `2119 pass/fail <review-id> --summary "…"` | Record a verdict (hash-verified) |
 | `2119 check [--json]` | Everything; the one exit code that matters |
 | `2119 prune` | Delete verdicts orphaned by content changes (explicit, so deletions show in your diff) |

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.1--598836ae2efb",
+  "requirementId": "REQ-004.3.1",
+  "hash": "598836ae2efb",
+  "verdict": "pass",
+  "summary": "cli.test runs init end-to-end in empty dir, asserts .2119.yml contains the '# 2119 configuration' comment and specs/REQ-001-example.md contains a Requirements template section",
+  "timestamp": "2026-07-09T23:07:09.343Z"
+}

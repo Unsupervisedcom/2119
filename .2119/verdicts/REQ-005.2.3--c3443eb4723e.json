@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.2.3--c3443eb4723e",
+  "requirementId": "REQ-005.2.3",
+  "hash": "c3443eb4723e",
+  "verdict": "pass",
+  "summary": "Test runs a 5s verify command with a 300ms override, asserts one REQ-005.2.3 violation whose message contains 'timeout' (process actually killed), and separately pins VERIFY_TIMEOUT_MS to 30000.",
+  "timestamp": "2026-07-09T23:07:09.667Z"
+}

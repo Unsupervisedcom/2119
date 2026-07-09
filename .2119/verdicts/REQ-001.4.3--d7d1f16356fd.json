@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.4.3--d7d1f16356fd",
+  "requirementId": "REQ-001.4.3",
+  "hash": "d7d1f16356fd",
+  "verdict": "pass",
+  "summary": "Asserts the untagged 'MUST spin' item parses to coverage {kind:test}, the load-bearing default classification derived by the parser; fails if untagged defaulted to review or manual.",
+  "timestamp": "2026-07-09T23:07:18.910Z"
+}

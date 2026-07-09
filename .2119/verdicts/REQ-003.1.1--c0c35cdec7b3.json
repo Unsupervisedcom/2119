@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.1.1--c0c35cdec7b3",
-  "requirementId": "REQ-003.1.1",
-  "hash": "c0c35cdec7b3",
-  "verdict": "pass",
-  "summary": "Test asserts one .2119/reviews/<reviewId>.md per target and that each body contains the requirement text, every evidence path, and both '2119 pass/fail <reviewId>' commands; test-quality file verified to list its covering test file",
-  "timestamp": "2026-07-09T03:01:17.442Z"
-}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.2.4--45c732663ab6",
+  "requirementId": "REQ-004.2.4",
+  "hash": "45c732663ab6",
+  "verdict": "pass",
+  "summary": "adapters.test seeds settings.json with permissions.allow and a PreToolUse hook, installs claude, then asserts both unrelated keys survive unchanged while PostToolUse gains the 2119 hook",
+  "timestamp": "2026-07-09T23:07:01.273Z"
+}

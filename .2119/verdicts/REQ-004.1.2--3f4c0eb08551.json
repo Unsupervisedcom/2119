@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.2--3f4c0eb08551",
+  "requirementId": "REQ-004.1.2",
+  "hash": "3f4c0eb08551",
+  "verdict": "pass",
+  "summary": "Test asserts every hook invocation (session-start, after-edit, stop, and even a bogus event with malformed 'not json' input) exits status 0 and emits parseable JSON on stdout (hookSpecificOutput/decision/systemMessage) — verifies exit-0-with-JSON contract including error paths.",
+  "timestamp": "2026-07-09T23:07:30.822Z"
+}

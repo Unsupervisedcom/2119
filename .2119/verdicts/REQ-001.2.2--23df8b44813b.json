@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.2.2--23df8b44813b",
+  "requirementId": "REQ-001.2.2",
+  "hash": "23df8b44813b",
+  "verdict": "pass",
+  "summary": "Test asserts REQ-001.2.2 violation both when the statement has zero keywords (widget spins) and when it has two (MUST + SHOULD), verifying the exactly-one-keyword rule from both sides.",
+  "timestamp": "2026-07-09T23:07:24.984Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.2.4--b1662b6c6455",
-  "requirementId": "REQ-004.2.4",
-  "hash": "b1662b6c6455",
-  "verdict": "pass",
-  "summary": "Test seeds .claude/settings.json with permissions.allow and a PreToolUse hook, installs claude, then asserts both survive unchanged while PostToolUse is added — would fail if merge clobbered unrelated keys.",
-  "timestamp": "2026-07-09T18:28:16.812Z"
-}

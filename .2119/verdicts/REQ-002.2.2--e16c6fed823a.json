@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.2.2--e16c6fed823a",
+  "requirementId": "REQ-002.2.2",
+  "hash": "e16c6fed823a",
+  "verdict": "pass",
+  "summary": "Test exercises buildAnnotationRegex against Python #, JS //, and Go /* */ comment styles and asserts the captured group splits into the exact ID list—genuine language-agnostic recognition, not keyword theater",
+  "timestamp": "2026-07-09T23:07:26.713Z"
+}

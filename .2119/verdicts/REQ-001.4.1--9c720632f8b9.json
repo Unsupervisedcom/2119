@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.4.1--9c720632f8b9",
+  "requirementId": "REQ-001.4.1",
+  "hash": "9c720632f8b9",
+  "verdict": "pass",
+  "summary": "cover.test gives only item-level annotations for siblings and asserts the [review: docs/**] item stays out of uncovered (uncovered===[]) and parses coverage {kind:review,globs:[docs/**]}; fails if review reqs demanded tests.",
+  "timestamp": "2026-07-09T23:07:14.899Z"
+}

@@ -2,26 +2,42 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+/** One unit of evidence hashed into a review ID: a whole file or an annotation block. */
+export interface HashPart {
+  /** Stable identity for the part in the hash stream (file path, or path#block). */
+  label: string;
+  content: string;
+}
+
 /**
  * Review IDs are `<req-id>--<hash12>`: the hash covers the requirement's
- * statement text plus the full content of every input file, sorted by path
- * (REQ-003.1.2). Any edit to the requirement or its evidence invalidates
- * previously recorded verdicts.
+ * statement text plus each evidence part in the caller's canonical order —
+ * file path, then position within the file (REQ-003.1.2). Any edit to the
+ * requirement or its evidence invalidates previously recorded verdicts.
  */
-export function computeReviewId(root: string, reqId: string, reqText: string, files: string[]): string {
+export function computeReviewId(reqId: string, reqText: string, parts: HashPart[]): string {
   const h = createHash("sha256");
   h.update(reqText);
-  for (const file of [...files].sort()) {
+  for (const p of parts) {
     h.update("\x00");
-    h.update(file);
+    h.update(p.label);
     h.update("\x00");
-    try {
-      h.update(readFileSync(join(root, file)));
-    } catch {
-      h.update("MISSING");
-    }
+    h.update(p.content);
   }
   return `${reqId}--${h.digest("hex").slice(0, 12)}`;
+}
+
+/** Whole-file evidence, sorted by path — for [review]-tagged requirements (REQ-003.1.3). */
+export function fileParts(root: string, files: string[]): HashPart[] {
+  return [...files].sort().map((file) => ({ label: file, content: readOrMissing(root, file) }));
+}
+
+export function readOrMissing(root: string, file: string): string {
+  try {
+    return readFileSync(join(root, file), "utf8");
+  } catch {
+    return "MISSING";
+  }
 }
 
 export function splitReviewId(reviewId: string): { requirementId: string; hash: string } | null {

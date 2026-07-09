@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.4.1--206fd6478652",
+  "requirementId": "REQ-002.4.1",
+  "hash": "206fd6478652",
+  "verdict": "pass",
+  "summary": "Fixture writes .2119.yml containing only prefix:FIX; lint then succeeds and reports '1 spec file(s) clean', proving the prefix is read while specs and test globs fall back to defaults—optional fields with sensible defaults verified",
+  "timestamp": "2026-07-09T23:07:44.219Z"
+}

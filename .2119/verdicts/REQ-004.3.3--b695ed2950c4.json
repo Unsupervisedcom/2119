@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.3--b695ed2950c4",
+  "requirementId": "REQ-004.3.3",
+  "hash": "b695ed2950c4",
+  "verdict": "pass",
+  "summary": "adapters.test asserts installGitHook writes a pre-commit running 'npx rfc2119 check', is idempotent on its own hook (changed=false, no refusal), and refuses a foreign my-linter hook with a 'manually' note while leaving it intact",
+  "timestamp": "2026-07-09T23:07:13.640Z"
+}

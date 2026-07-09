@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.4.2--02a530d95318",
-  "requirementId": "REQ-001.4.2",
-  "hash": "02a530d95318",
-  "verdict": "pass",
-  "summary": "With zero annotations, test asserts the [manual] item is absent from uncovered AND present in result.manual (which cli.ts prints in the check summary), so silent skipping or coverage enforcement would both fail the test",
-  "timestamp": "2026-07-09T00:37:39.516Z"
-}

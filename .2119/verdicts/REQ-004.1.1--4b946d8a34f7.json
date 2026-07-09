@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.1.1--4b946d8a34f7",
-  "requirementId": "REQ-004.1.1",
-  "hash": "4b946d8a34f7",
-  "verdict": "pass",
-  "summary": "cli.test.ts:199 invokes the compiled CLI 'hook <event> --platform claude' for session-start, after-edit, and stop with JSON on stdin; after-edit's additionalContext reflecting the stdin file_path proves the payload is actually parsed",
-  "timestamp": "2026-07-09T03:43:42.931Z"
-}

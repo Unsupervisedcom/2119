@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-005.1.2--e96cb031a76a",
-  "requirementId": "REQ-005.1.2",
-  "hash": "e96cb031a76a",
-  "verdict": "pass",
-  "summary": "test rewrites the instruction file content at the same path and asserts the recomputed reviewId differs — fails if only the path rather than file content were hashed",
-  "timestamp": "2026-07-09T04:48:32.115Z"
-}

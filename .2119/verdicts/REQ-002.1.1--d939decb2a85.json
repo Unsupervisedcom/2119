@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-002.1.1--d939decb2a85",
-  "requirementId": "REQ-002.1.1",
-  "hash": "d939decb2a85",
-  "verdict": "pass",
-  "summary": "lint.test.ts multi-violation test asserts REQ-001.1.1/.1.2/.1.4/.2.2/.2.3 are all detected on a real messy doc, and the fenced-block test asserts fenced headings/items produce zero violations and no structure; both run the real parseSpec that cli lint wraps, no mocks",
-  "timestamp": "2026-07-09T03:50:27.982Z"
-}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.2.4--0d13bf080a11",
+  "requirementId": "REQ-005.2.4",
+  "hash": "0d13bf080a11",
+  "verdict": "pass",
+  "summary": "Test asserts the verify-tagged REQ-001.1.2 appears in neither computeCoverage().uncovered nor computeReviewTargets(), genuinely exercising the annotation-coverage and judgment-review exemptions.",
+  "timestamp": "2026-07-09T23:07:09.760Z"
+}

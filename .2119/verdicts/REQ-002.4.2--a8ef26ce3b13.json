@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-002.4.2--a8ef26ce3b13",
-  "requirementId": "REQ-002.4.2",
-  "hash": "a8ef26ce3b13",
-  "verdict": "pass",
-  "summary": "Test runs check in an empty temp dir and asserts exit 2 with stderr containing '2119 init'; the guard is the shared requireInitialized() in src/cli.ts used by every command, so one command exercises the mechanism",
-  "timestamp": "2026-07-09T03:44:22.554Z"
-}

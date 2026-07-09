@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.5.2--5b7df25b0029",
+  "requirementId": "REQ-003.5.2",
+  "hash": "5b7df25b0029",
+  "verdict": "pass",
+  "summary": "cli.test.ts asserts review stdout contains 'Recommended reviewer model: a capable, cost-effective model'; review.test.ts asserts the generated test-quality instruction file contains 'Recommended reviewer model: opus' — both dispatch output and instruction file are checked from real generation.",
+  "timestamp": "2026-07-09T23:07:18.557Z"
+}

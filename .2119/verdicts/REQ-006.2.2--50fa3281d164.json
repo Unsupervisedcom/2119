@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-006.2.2--50fa3281d164",
+  "requirementId": "REQ-006.2.2",
+  "hash": "50fa3281d164",
+  "verdict": "pass",
+  "summary": "Test passes a verdict (check green), runs 'prune', and asserts 'removed 0 orphaned verdict(s)', the verdict file still exists, and 'check' still exits 0 afterwards.",
+  "timestamp": "2026-07-09T23:07:20.514Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-005.1.3--5f0ffa16b5d4",
-  "requirementId": "REQ-005.1.3",
-  "hash": "5f0ffa16b5d4",
-  "verdict": "pass",
-  "summary": "test reads the generated instruction file from disk and asserts the policy file's actual sentence is inlined under an Additional review criteria section with its source path",
-  "timestamp": "2026-07-09T04:48:32.215Z"
-}

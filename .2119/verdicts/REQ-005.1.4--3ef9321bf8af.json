@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.1.4--3ef9321bf8af",
+  "requirementId": "REQ-005.1.4",
+  "hash": "3ef9321bf8af",
+  "verdict": "pass",
+  "summary": "buildContext over a fixture whose [review] points at gone.md; asserts a REQ-005.1.4 reviewViolation whose message names both the requirement ID and the missing path.",
+  "timestamp": "2026-07-09T23:07:41.889Z"
+}

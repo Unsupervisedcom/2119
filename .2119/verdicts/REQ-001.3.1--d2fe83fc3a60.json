@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.3.1--d2fe83fc3a60",
-  "requirementId": "REQ-001.3.1",
-  "hash": "d2fe83fc3a60",
-  "verdict": "pass",
-  "summary": "Only spec change vs HEAD is the new REQ-006-maintenance.md file; no tracked spec was modified, so no existing ID was renumbered or reassigned to a different obligation",
-  "timestamp": "2026-07-09T19:08:53.611Z"
-}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.1.2--514f3aafd99a",
+  "requirementId": "REQ-002.1.2",
+  "hash": "514f3aafd99a",
+  "verdict": "pass",
+  "summary": "A statement whose extra keywords sit inside inline code spans yields no REQ-001.2.2 violation and parses keywords as SHOULD only; fails if code-span keywords were counted toward the normative keyword count.",
+  "timestamp": "2026-07-09T23:07:32.788Z"
+}

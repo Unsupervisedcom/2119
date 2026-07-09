@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.2.7--5d0dd7d1c46a",
+  "requirementId": "REQ-004.2.7",
+  "hash": "5d0dd7d1c46a",
+  "verdict": "pass",
+  "summary": "adapters.test asserts claude install writes .claude/agents/2119-reviewer.md with name/read-only/rfc2119-pass content, leaves user-customized content untouched on re-run, and never creates the file for gemini",
+  "timestamp": "2026-07-09T23:07:07.793Z"
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { buildContext, buildReport } from "./check.js";
-import { generateInstructions } from "./review.js";
+import { generateInstructions, renderDispatchPrompt } from "./review.js";
 import { pruneVerdicts, writeVerdict } from "./verdict.js";
 import { splitReviewId } from "./hash.js";
 import { runInit } from "./init.js";
@@ -89,6 +89,9 @@ switch (command) {
     );
     for (const t of tasks) {
       console.log(`- ${t.requirement.id} (${t.kind}): ${t.instructionPath}`);
+    }
+    if (args.includes("--dispatch")) {
+      console.log(`\n${renderDispatchPrompt(tasks)}`);
     }
     process.exit(1);
   }
@@ -191,6 +194,7 @@ usage: 2119 <command>
   lint      Validate spec files against the RFC 2119 document format
   cover     Verify every enforced requirement has a covering test annotation
   review    Generate judgment-review instruction files for stale/missing verdicts
+            (--dispatch also emits a ready-to-paste parallel-subagent prompt)
   pass      Record a passing review verdict:  2119 pass <review-id> --summary "..."
   fail      Record a failing review verdict:  2119 fail <review-id> --summary "..."
   check     lint + cover + review-verdict freshness; non-zero exit on any failure

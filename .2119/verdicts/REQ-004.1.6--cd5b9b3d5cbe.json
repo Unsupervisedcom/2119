@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.1.6--cd5b9b3d5cbe",
-  "requirementId": "REQ-004.1.6",
-  "hash": "cd5b9b3d5cbe",
-  "verdict": "pass",
-  "summary": "hook.test.ts:81 sets stop_hook_active on a fixture whose check genuinely fails (uncovered MUST) and asserts stop returns {}; ignoring the flag would return the block decision proven by the adjacent REQ-004.1.5 test on the same fixture",
-  "timestamp": "2026-07-09T03:44:04.532Z"
-}

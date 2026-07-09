@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.4.2--4e425e23edd9",
+  "requirementId": "REQ-001.4.2",
+  "hash": "4e425e23edd9",
+  "verdict": "pass",
+  "summary": "With zero annotations, test asserts the [manual] MUST item is excluded from uncovered AND surfaced in result.manual===[REQ-001.1.5], verifying both exemption and non-silent surfacing.",
+  "timestamp": "2026-07-09T23:07:16.971Z"
+}

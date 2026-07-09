@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.5.3--e1c8abcd4d5b",
+  "requirementId": "REQ-003.5.3",
+  "hash": "e1c8abcd4d5b",
+  "verdict": "pass",
+  "summary": "Test generates instructions with review_model pinned to opus and asserts the [review]-tagged (requirement-kind) instruction file says 'Recommended reviewer model: your current model' while the test-quality one says opus — distinguishes the two cases behaviorally.",
+  "timestamp": "2026-07-09T23:07:18.653Z"
+}

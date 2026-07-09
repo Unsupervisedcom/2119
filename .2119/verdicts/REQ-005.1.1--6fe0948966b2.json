@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-005.1.1--6fe0948966b2",
-  "requirementId": "REQ-005.1.1",
-  "hash": "6fe0948966b2",
-  "verdict": "pass",
-  "summary": "test parses real spec text and asserts the full coverage object (globs plus instructions path) and stripped statement text; root-relative resolution is exercised behaviorally by the 005.1.2/.3 fixture tests",
-  "timestamp": "2026-07-09T04:48:24.533Z"
-}

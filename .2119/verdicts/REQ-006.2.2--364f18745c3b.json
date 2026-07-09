@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-006.2.2--364f18745c3b",
-  "requirementId": "REQ-006.2.2",
-  "hash": "364f18745c3b",
-  "verdict": "pass",
-  "summary": "Test records a current verdict, confirms check passes, prunes, asserts 'removed 0', verdict file still present, and check exits 0 again — matching verdicts genuinely untouched",
-  "timestamp": "2026-07-09T19:08:37.515Z"
-}

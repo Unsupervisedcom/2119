@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.1.2--e0b8fc805957",
-  "requirementId": "REQ-001.1.2",
-  "hash": "e0b8fc805957",
-  "verdict": "pass",
-  "summary": "Test asserts REQ-001.1.2 violations both when the Overview section is deleted and when Overview appears after Requirements, exercising the real parseSpec with no mocks.",
-  "timestamp": "2026-07-09T03:49:12.510Z"
-}

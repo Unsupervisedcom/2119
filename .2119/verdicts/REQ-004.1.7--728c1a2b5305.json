@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.1.7--728c1a2b5305",
-  "requirementId": "REQ-004.1.7",
-  "hash": "728c1a2b5305",
-  "verdict": "pass",
-  "summary": "hook.test.ts:87 asserts session-start returns SessionStart hookSpecificOutput whose additionalContext equals SESSION_CONTEXT, plus a content check that the context mentions 'npx rfc2119 check', so an empty or missing injection fails",
-  "timestamp": "2026-07-09T03:44:04.624Z"
-}

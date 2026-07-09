@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.2.4--2d4fceb70c18",
-  "requirementId": "REQ-003.2.4",
-  "hash": "2d4fceb70c18",
-  "verdict": "pass",
-  "summary": "Writes a fail verdict and asserts verdictViolations emits a REQ-003.2.4 violation carrying the failure summary, then a superseding pass verdict clears it; CLI fail shares the exact handler with the e2e-tested pass command",
-  "timestamp": "2026-07-09T03:01:02.346Z"
-}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.2.7--1ea7432691f7",
-  "requirementId": "REQ-004.2.7",
-  "hash": "1ea7432691f7",
-  "verdict": "pass",
-  "summary": "Test verifies claude install writes .claude/agents/2119-reviewer.md containing 'name: 2119-reviewer', read-only 'Do not edit any files', and 'rfc2119 pass'; that a user-customized file is preserved on re-run; and that gemini install creates no such file — covers install, content, no-overwrite, and claude-only.",
-  "timestamp": "2026-07-09T18:28:22.324Z"
-}

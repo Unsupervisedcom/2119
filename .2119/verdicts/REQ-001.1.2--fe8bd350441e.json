@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.1.2--fe8bd350441e",
+  "requirementId": "REQ-001.1.2",
+  "hash": "fe8bd350441e",
+  "verdict": "pass",
+  "summary": "Test asserts REQ-001.1.2 violation both when the Overview section is stripped and when Requirements precedes Overview — genuinely exercises presence and ordering, not just presence.",
+  "timestamp": "2026-07-09T23:07:14.036Z"
+}

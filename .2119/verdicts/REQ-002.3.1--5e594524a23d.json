@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.3.1--5e594524a23d",
+  "requirementId": "REQ-002.3.1",
+  "hash": "5e594524a23d",
+  "verdict": "pass",
+  "summary": "cli.test.ts drives check through distinct lint, coverage, and review-freshness failures (each asserting status 1 and the specific rule) then a clean pass; bespoke.test.ts adds the verify leg (REQ-005.2.2) end-to-end—all four subsystems exercised",
+  "timestamp": "2026-07-09T23:07:37.316Z"
+}

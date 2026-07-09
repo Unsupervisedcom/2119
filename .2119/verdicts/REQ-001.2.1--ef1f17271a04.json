@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.2.1--ef1f17271a04",
+  "requirementId": "REQ-001.2.1",
+  "hash": "ef1f17271a04",
+  "verdict": "pass",
+  "summary": "Test asserts parsed item IDs equal [REQ-001.1.1, REQ-001.1.2] and sectionId REQ-001.1, directly verifying the REQ-NNN.M.K stable-ID scheme from section plus list position; a second test confirms multi-line items collapse to one requirement.",
+  "timestamp": "2026-07-09T23:07:23.729Z"
+}

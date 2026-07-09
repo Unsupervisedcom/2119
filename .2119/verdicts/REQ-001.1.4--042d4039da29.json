@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.1.4--042d4039da29",
+  "requirementId": "REQ-001.1.4",
+  "hash": "042d4039da29",
+  "verdict": "pass",
+  "summary": "Test asserts REQ-001.1.4 violation when a section uses REQ-002.1 in a REQ-001 file (wrong NNN) and when it jumps to REQ-001.3 out of sequence — exercises both file-number match and sequential-M checks.",
+  "timestamp": "2026-07-09T23:07:19.637Z"
+}

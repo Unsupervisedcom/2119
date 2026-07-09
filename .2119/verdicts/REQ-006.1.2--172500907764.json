@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-006.1.2--172500907764",
-  "requirementId": "REQ-006.1.2",
-  "hash": "172500907764",
-  "verdict": "pass",
-  "summary": "Test passes the sole review then reruns review, asserting reviewFiles length 0 and the all-current message; exercises cleanup path when pending set is empty (cleanup runs before the early return)",
-  "timestamp": "2026-07-09T19:08:37.330Z"
-}

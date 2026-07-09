@@ -12,6 +12,14 @@ Three commands make up this layer: `2119 lint` (spec format), `2119 cover`
 (requirement-to-test traceability), and `2119 check` (everything, including
 review verdict freshness from REQ-003).
 
+REQ-002.3.4 (a `--changed` flag) was removed unbuilt: coverage is a whole-repo
+property in both directions — an unchanged test can cover a changed requirement
+— so scoping the scan to git-changed files cannot answer "is everything
+covered" and would quietly weaken what `check` means. If large-repo performance
+ever becomes real (full `check` runs in ~0.2s here), the sound fix is `git
+ls-files` enumeration plus a content-keyed annotation cache, both of which
+preserve whole-repo semantics.
+
 ## Requirements
 
 ### REQ-002.1: Spec linting
@@ -35,7 +43,7 @@ review verdict freshness from REQ-003).
 1. `2119 check` MUST run lint, cover, review-verdict freshness (REQ-003.3), and verify commands (REQ-005.2), exiting non-zero if any of them fail.
 2. `2119 check` MUST complete in under 5 seconds on a repository with 100 spec files and 2000 test files, excluding time spent inside user-defined `[verify]` commands, so it is cheap enough to run from write-time hooks. [review: src/**]
 3. `2119 check --json` MUST emit a machine-readable report (violations, uncovered requirements, stale verdicts, manual requirements) for use by hooks and CI annotations.
-4. When invoked with `--changed`, `2119 check` SHOULD scope test-collection and lint work to files changed relative to the merge-base with the default branch, mirroring local git detection only (no network).
+4. REQUIREMENT REMOVED
 
 ### REQ-002.4: Configuration
 

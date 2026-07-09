@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.4--a75b4f2045ed",
+  "requirementId": "REQ-004.1.4",
+  "hash": "a75b4f2045ed",
+  "verdict": "pass",
+  "summary": "Edits BAD_SPEC (MUST removed) and asserts after-edit returns hookSpecificOutput.additionalContext containing real lint rule REQ-001.2.2 (no-keyword violation) under PostToolUse, plus Gemini's AfterTool event name — verifies injection via additional-context mechanism.",
+  "timestamp": "2026-07-09T23:07:30.822Z"
+}

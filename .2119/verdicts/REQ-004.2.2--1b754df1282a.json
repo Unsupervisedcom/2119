@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.2.2--1b754df1282a",
-  "requirementId": "REQ-004.2.2",
-  "hash": "1b754df1282a",
-  "verdict": "pass",
-  "summary": "adapters.test runs real installAgentHooks(root,'codex'), reads actual .codex/hooks.json and asserts all three --platform codex hook commands plus result.note contains '/hooks'; cli.test spawns the real CLI init --agent codex and asserts stdout prints both '/hooks' and '.codex/hooks.json' — genuine end-to-end verification of both hook registration and the trust note.",
-  "timestamp": "2026-07-09T18:30:35.704Z"
-}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.3.2--3bd05c4e10a7",
-  "requirementId": "REQ-001.3.2",
-  "hash": "3bd05c4e10a7",
-  "verdict": "pass",
-  "summary": "New spec REQ-006 uses the next sequential file number after REQ-005 and its items (REQ-006.1.1-2, REQ-006.2.1-2) are appended in-order; all other specs remain gap-free and sequential",
-  "timestamp": "2026-07-09T19:08:53.699Z"
-}

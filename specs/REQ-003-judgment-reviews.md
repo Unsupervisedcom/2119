@@ -21,11 +21,12 @@ their findings (not empty markers), and they live in version control.
 ### REQ-003.1: Review task generation
 
 1. `2119 review` MUST emit one self-contained review instruction file per requirement needing review, containing the requirement text, the covering test files' relevant content or paths, the verdict-recording command, and the review ID.
-2. A review ID MUST have the form `<req-id>--<hash12>` where `hash12` is the first 12 hex characters of the SHA-256 over the requirement statement text plus the full content of every covering test file, sorted by path.
+2. A review ID MUST have the form `<req-id>--<hash12>` where `hash12` is the first 12 hex characters of the SHA-256 over the requirement statement text plus each covering annotation's evidence block (REQ-003.1.7), ordered by file path then position within the file, so editing an unrelated test in a shared file does not invalidate the verdict.
 3. For `[review]`-tagged requirements (REQ-001.4), the hash input MUST be the requirement statement text plus the content of all files matching the tag's globs, so implementation edits invalidate the verdict.
 4. `2119 review` MUST skip requirements whose current review ID already has a valid verdict, so repeat runs only dispatch stale or missing reviews.
 5. Instruction files MUST direct the reviewer to answer one question — would these tests fail if this requirement were violated? — and to flag tautological assertions, over-mocking that bypasses the behavior under test, and assertions unrelated to the requirement's criterion.
 6. Instruction files MUST be written to `.2119/reviews/`, a directory that `2119 init` adds to `.gitignore`.
+7. An annotation's evidence block MUST comprise the file's prelude (all content before the file's first annotation, hashed once per file) plus the text from the annotation's line through the line before the file's next annotation or the end of file, so shared imports and mocks stay under the hash while unrelated tests fall outside it.
 
 ### REQ-003.2: Verdict recording
 
@@ -51,3 +52,8 @@ their findings (not empty markers), and they live in version control.
 3. Instruction files for `[review]`-tagged requirements MUST recommend the dispatching agent's own (typically stronger) model rather than the pinned `review_model`, since these are the judgment-heavy reviews.
 4. When `2119 review` runs interactively (stdin is a TTY) and no `review_model` is configured, it SHOULD prompt once for a model choice and persist the answer to `.2119.yml`.
 5. When stdin is not a TTY, `2119 review` MUST NOT block waiting for input, using the default model silently instead.
+
+### REQ-003.6: Dispatch ergonomics
+
+1. When invoked as `2119 review --dispatch`, the command MUST append a ready-to-paste dispatch prompt that assigns each pending instruction file to one fresh-context reviewer, so the orchestrating agent can launch reviews without composing prompts itself.
+2. The dispatch prompt MUST direct that reviews run in parallel where the platform supports it and that each reviewer records its own verdict via the pass/fail commands named in its instruction file.

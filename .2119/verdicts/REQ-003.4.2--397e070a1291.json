@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.4.2--397e070a1291",
+  "requirementId": "REQ-003.4.2",
+  "hash": "397e070a1291",
+  "verdict": "pass",
+  "summary": "README 'Residual risk, stated plainly' states the agent can self-pass and lists all four mitigations: committed/auditable verdicts, hash invalidation (no stale reuse), fresh-context dispatch, and CI re-running the same check",
+  "timestamp": "2026-07-09T23:07:23.043Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.1.1--cbe31733d8ff",
-  "requirementId": "REQ-001.1.1",
-  "hash": "cbe31733d8ff",
-  "verdict": "pass",
-  "summary": "Test parses identical content under mismatched filename (REQ-002-widgets.md) and asserts a REQ-001.1.1 violation from the real parser, with a matching-filename negative control asserting zero violations.",
-  "timestamp": "2026-07-09T03:49:12.414Z"
-}

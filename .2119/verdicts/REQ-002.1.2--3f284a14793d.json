@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-002.1.2--3f284a14793d",
-  "requirementId": "REQ-002.1.2",
-  "hash": "3f284a14793d",
-  "verdict": "pass",
-  "summary": "Test feeds a statement whose only bare keyword is SHOULD plus backticked 'MUST be fast'/'SHALL NOT lag' and asserts keywords===[SHOULD] with no REQ-001.2.2 violation; counting span keywords would yield 3 keywords and fail the exact assertions",
-  "timestamp": "2026-07-09T03:50:28.076Z"
-}

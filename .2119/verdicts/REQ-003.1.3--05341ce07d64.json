@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.1.3--05341ce07d64",
-  "requirementId": "REQ-003.1.3",
-  "hash": "05341ce07d64",
-  "verdict": "pass",
-  "summary": "Edits docs/guide.md (the sole glob-matched evidence file) and asserts the recomputed review ID changes, so glob-file content is genuinely in the hash input",
-  "timestamp": "2026-07-09T03:00:44.309Z"
-}

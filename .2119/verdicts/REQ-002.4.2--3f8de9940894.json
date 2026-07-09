@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.4.2--3f8de9940894",
+  "requirementId": "REQ-002.4.2",
+  "hash": "3f8de9940894",
+  "verdict": "pass",
+  "summary": "End-to-end: runs check in a repo with no .2119.yml and no specs, asserts exit status 2 (not a 0 zero-requirement pass) and stderr containing '2119 init'.",
+  "timestamp": "2026-07-09T23:07:20.603Z"
+}

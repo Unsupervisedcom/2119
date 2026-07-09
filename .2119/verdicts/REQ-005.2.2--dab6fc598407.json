@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.2.2--dab6fc598407",
+  "requirementId": "REQ-005.2.2",
+  "hash": "dab6fc598407",
+  "verdict": "pass",
+  "summary": "Failing verify command's stderr ('sync drift detected') and requirement ID both asserted in the emitted REQ-005.2.2 violation; end-to-end check test confirms check itself runs it.",
+  "timestamp": "2026-07-09T23:07:42.068Z"
+}

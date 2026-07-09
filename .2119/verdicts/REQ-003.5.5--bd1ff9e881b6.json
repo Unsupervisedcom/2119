@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.5.5--bd1ff9e881b6",
+  "requirementId": "REQ-003.5.5",
+  "hash": "bd1ff9e881b6",
+  "verdict": "pass",
+  "summary": "Test runs the real CLI 'review' with a piped (non-TTY) empty stdin; the process completes (would hang the test if it blocked on input) with status 1 and stdout showing the default 'a capable, cost-effective model' — verifies silent non-blocking default use.",
+  "timestamp": "2026-07-09T23:07:30.431Z"
+}

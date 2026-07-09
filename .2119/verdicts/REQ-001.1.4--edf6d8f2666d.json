@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.1.4--edf6d8f2666d",
-  "requirementId": "REQ-001.1.4",
-  "hash": "edf6d8f2666d",
-  "verdict": "pass",
-  "summary": "Test asserts REQ-001.1.4 violations for a section heading whose NNN differs from the filename (REQ-002.1 in a REQ-001 file) and for an out-of-sequence M value (.3 as the first section).",
-  "timestamp": "2026-07-09T03:49:23.171Z"
-}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.2.1--b7b22c130df0",
+  "requirementId": "REQ-005.2.1",
+  "hash": "b7b22c130df0",
+  "verdict": "pass",
+  "summary": "Verify command probes marker.txt via a relative path that only resolves when run from the repo root; exit 0 yields zero violations — validates both the cwd and the exit-0-means-satisfied semantics.",
+  "timestamp": "2026-07-09T23:07:41.979Z"
+}

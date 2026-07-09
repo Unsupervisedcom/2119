@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.2.3--7d0374c1e874",
+  "requirementId": "REQ-001.2.3",
+  "hash": "7d0374c1e874",
+  "verdict": "pass",
+  "summary": "Test renumbers item 2 to 3 and asserts a REQ-001.2.3 out-of-sequence violation; the same listNum-vs-position check also catches duplicates, so the gap case genuinely verifies sequential-from-1 numbering.",
+  "timestamp": "2026-07-09T23:07:28.699Z"
+}

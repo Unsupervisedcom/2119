@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-006.1.1--4ca55c38f026",
+  "requirementId": "REQ-006.1.1",
+  "hash": "4ca55c38f026",
+  "verdict": "pass",
+  "summary": "Test runs 'review', edits the covering test to mint a new review ID, runs 'review' again, and asserts the directory holds exactly one file that differs from the old one and the old instruction file no longer exists.",
+  "timestamp": "2026-07-09T23:07:20.226Z"
+}

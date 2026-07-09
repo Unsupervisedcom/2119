@@ -39,25 +39,99 @@ function targetsFor(root: string) {
   const anns: Annotation[] = [{ file: "tests/widget.test.js", line: 1, ids: ["REQ-001.1.1"] }];
   const coverage = computeCoverage(specs, anns, DEFAULT_ENFORCE);
   const config = loadConfig(root);
-  return computeReviewTargets(config, specs, coverage, ["tests/widget.test.js", "docs/guide.md"]);
+  return computeReviewTargets(config, specs, coverage, ["tests/widget.test.js", "docs/guide.md"], anns);
+}
+
+// Two annotated tests sharing one file, for evidence-block hashing tests.
+const GEARS = `# REQ-002: Gears
+
+## Overview
+
+Gears.
+
+## Requirements
+
+### REQ-002.1: Basics
+
+1. The gear MUST turn.
+2. The gear MUST stop.
+`;
+
+const GEAR_LINES = [
+  "import { gear } from './gear.js'", // line 1: prelude
+  "",
+  "// covers turn", //                    line 3: annotation for REQ-002.1.1
+  "test('turns', () => { expect(gear.turn()).toBe(true) })",
+  "// spacer inside block A", //          line 5: still block A
+  "// covers stop", //                    line 6: annotation for REQ-002.1.2
+  "test('stops', () => { expect(gear.stop()).toBe(true) })",
+];
+
+function gearTargets(root: string, lines: string[]): Record<string, string> {
+  writeFileSync(join(root, "tests/gear.test.js"), lines.join("\n") + "\n");
+  const specs = [parseSpec("REQ-002-gears.md", "REQ", GEARS)];
+  const anns: Annotation[] = [
+    { file: "tests/gear.test.js", line: 3, ids: ["REQ-002.1.1"] },
+    { file: "tests/gear.test.js", line: 6, ids: ["REQ-002.1.2"] },
+  ];
+  const coverage = computeCoverage(specs, anns, DEFAULT_ENFORCE);
+  const targets = computeReviewTargets(loadConfig(root), specs, coverage, [], anns);
+  return Object.fromEntries(targets.map((t) => [t.requirement.id, t.reviewId]));
 }
 
 describe("judgment reviews", () => {
   // 2119: REQ-003.1.2
-  it("builds review IDs as <req-id>--<hash12> over statement text plus sorted evidence content", () => {
+  it("scopes review IDs to evidence blocks: unrelated edits in a shared file do not invalidate", () => {
     const { root } = fixture();
-    const id = computeReviewId(root, "REQ-001.1.1", "The widget MUST spin.", ["tests/widget.test.js"]);
-    expect(id).toMatch(/^REQ-001\.1\.1--[0-9a-f]{12}$/);
-    expect(splitReviewId(id)).toEqual({ requirementId: "REQ-001.1.1", hash: id.slice(-12) });
+    const lines = [...GEAR_LINES];
+    const before = gearTargets(root, lines);
+    expect(before["REQ-002.1.1"]).toMatch(/^REQ-002\.1\.1--[0-9a-f]{12}$/);
+    expect(splitReviewId(before["REQ-002.1.1"])).toEqual({
+      requirementId: "REQ-002.1.1",
+      hash: before["REQ-002.1.1"].slice(-12),
+    });
 
-    // Any edit to a covering test invalidates the ID.
-    writeFileSync(join(root, "tests/widget.test.js"), "test('spins', () => { expect(1).toBe(1) })\n");
-    const after = computeReviewId(root, "REQ-001.1.1", "The widget MUST spin.", ["tests/widget.test.js"]);
-    expect(after).not.toBe(id);
+    // Editing test B invalidates only B's verdict; A's review ID is stable.
+    lines[6] = "test('stops', () => { expect(gear.stop()).toBe('halted') })";
+    const afterB = gearTargets(root, lines);
+    expect(afterB["REQ-002.1.1"]).toBe(before["REQ-002.1.1"]);
+    expect(afterB["REQ-002.1.2"]).not.toBe(before["REQ-002.1.2"]);
 
-    // Changing the requirement text also invalidates it.
-    const reworded = computeReviewId(root, "REQ-001.1.1", "The widget MUST rotate.", ["tests/widget.test.js"]);
-    expect(reworded).not.toBe(after);
+    // Editing the covered test itself still invalidates.
+    lines[3] = "test('turns', () => { expect(gear.turn()).toBe('spinning') })";
+    expect(gearTargets(root, lines)["REQ-002.1.1"]).not.toBe(afterB["REQ-002.1.1"]);
+
+    // Changing the requirement statement text also invalidates.
+    const part = { label: "tests/gear.test.js#0", content: lines[3] };
+    expect(computeReviewId("REQ-002.1.1", "The gear MUST turn.", [part])).not.toBe(
+      computeReviewId("REQ-002.1.1", "The gear MUST rotate.", [part]),
+    );
+  });
+
+  // 2119: REQ-003.1.7
+  it("hashes the file prelude once and extends each block to the next annotation or EOF", () => {
+    const { root } = fixture();
+    const lines = [...GEAR_LINES];
+    const before = gearTargets(root, lines);
+
+    // The prelude (shared imports/mocks) is under every block's hash: swapping
+    // the import for a mock invalidates both verdicts.
+    lines[0] = "import { gear } from './mock-gear.js'";
+    const preludeEdit = gearTargets(root, lines);
+    expect(preludeEdit["REQ-002.1.1"]).not.toBe(before["REQ-002.1.1"]);
+    expect(preludeEdit["REQ-002.1.2"]).not.toBe(before["REQ-002.1.2"]);
+
+    // A block runs from its annotation through the line before the next one…
+    lines[4] = "// edited spacer, still inside block A";
+    const spacerEdit = gearTargets(root, lines);
+    expect(spacerEdit["REQ-002.1.1"]).not.toBe(preludeEdit["REQ-002.1.1"]);
+    expect(spacerEdit["REQ-002.1.2"]).toBe(preludeEdit["REQ-002.1.2"]);
+
+    // …and the file's last block runs to end of file.
+    lines.push("// trailing helper appended after the last test");
+    const eofEdit = gearTargets(root, lines);
+    expect(eofEdit["REQ-002.1.1"]).toBe(spacerEdit["REQ-002.1.1"]);
+    expect(eofEdit["REQ-002.1.2"]).not.toBe(spacerEdit["REQ-002.1.2"]);
   });
 
   // 2119: REQ-003.1.3
@@ -206,8 +280,9 @@ describe("judgment reviews", () => {
       "REQ",
       SPEC.replace("Policy MUST be sensible. [review]", "REQUIREMENT REMOVED"),
     );
-    const coverage = computeCoverage([tombSpec], [{ file: "tests/widget.test.js", line: 1, ids: ["REQ-001.1.1"] }], DEFAULT_ENFORCE);
-    const targets = computeReviewTargets(loadConfig(root), [tombSpec], coverage, []);
+    const anns: Annotation[] = [{ file: "tests/widget.test.js", line: 1, ids: ["REQ-001.1.1"] }];
+    const coverage = computeCoverage([tombSpec], anns, DEFAULT_ENFORCE);
+    const targets = computeReviewTargets(loadConfig(root), [tombSpec], coverage, [], anns);
     expect(targets.map((t) => t.requirement.id)).not.toContain("REQ-001.1.3");
     // An old verdict for the tombstoned requirement produces no violation.
     writeVerdict(root, `REQ-001.1.3--${"a".repeat(12)}`, "REQ-001.1.3", "pass", "obsolete");

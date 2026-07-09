@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-002.2.4--ff9e139fd1f1",
-  "requirementId": "REQ-002.2.4",
-  "hash": "ff9e139fd1f1",
-  "verdict": "pass",
-  "summary": "Zero-annotation run asserts REQ-002.2.4 messages list both uncovered IDs and include .1.1's statement text ('spin'); cli.test.ts leg 2 confirms the non-zero exit",
-  "timestamp": "2026-07-09T00:38:00.981Z"
-}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.1.4--fe7cb0117299",
+  "requirementId": "REQ-002.1.4",
+  "hash": "fe7cb0117299",
+  "verdict": "pass",
+  "summary": "findKeywords returns ['MUST NOT'], ['NOT RECOMMENDED'], and ['SHALL NOT','MUST'] exactly, verifying compound keywords are matched longest-first as single units rather than split into MUST+word.",
+  "timestamp": "2026-07-09T23:07:26.695Z"
+}

@@ -2,8 +2,9 @@ import { mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from 
 import { join } from "node:path";
 import type { Config } from "./config.js";
 import type { CoverageResult } from "./cover.js";
-import type { Requirement, SpecFile, Verdict, Violation } from "./model.js";
-import { computeReviewId } from "./hash.js";
+import type { Annotation, Requirement, SpecFile, Verdict, Violation } from "./model.js";
+import { computeReviewId, fileParts } from "./hash.js";
+import { evidenceBlockParts } from "./annotations.js";
 import { matchGlobs } from "./files.js";
 import { allRequirements } from "./spec.js";
 
@@ -30,6 +31,7 @@ export function computeReviewTargets(
   specs: SpecFile[],
   coverage: CoverageResult,
   repoFiles: string[],
+  annotations: Annotation[],
 ): Omit<ReviewTask, "instructionPath">[] {
   const out: Omit<ReviewTask, "instructionPath">[] = [];
   for (const req of allRequirements(specs)) {
@@ -40,8 +42,10 @@ export function computeReviewTargets(
       const anns = coverage.covered.get(req.id);
       if (!anns || anns.length === 0) continue; // cover already fails this
       const evidence = [...new Set(anns.map((a) => a.file))].sort();
+      // Hash the annotation blocks, not whole files, so unrelated edits in a
+      // shared test file don't invalidate this verdict (REQ-003.1.2/.7).
       out.push({
-        reviewId: computeReviewId(config.root, req.id, req.text, evidence),
+        reviewId: computeReviewId(req.id, req.text, evidenceBlockParts(config.root, anns, annotations)),
         requirement: req,
         evidence,
         kind: "test-quality",
@@ -54,7 +58,7 @@ export function computeReviewTargets(
       // instruction file participates in the hash (REQ-005.1.2).
       const hashed = req.coverage.instructions ? [req.coverage.instructions, ...evidence] : evidence;
       out.push({
-        reviewId: computeReviewId(config.root, req.id, req.text, hashed),
+        reviewId: computeReviewId(req.id, req.text, fileParts(config.root, hashed)),
         requirement: req,
         evidence,
         kind: "requirement",
@@ -126,6 +130,23 @@ export function generateInstructions(
     writeFileSync(join(config.root, instructionPath), renderInstructions(t, config.reviewModel, custom));
     return { ...t, instructionPath };
   });
+}
+
+/** Ready-to-paste dispatch prompt for the orchestrating agent (REQ-003.6). */
+export function renderDispatchPrompt(tasks: ReviewTask[]): string {
+  const lines = tasks.map(
+    (t, i) =>
+      `${i + 1}. Read ${t.instructionPath} and follow it exactly: judge ${t.requirement.id} and record your own verdict with the \`pass\`/\`fail\` command it names. Report findings; do not edit files.`,
+  );
+  return `--- dispatch prompt (paste to your orchestrating agent) ---
+
+Dispatch ${tasks.length} fresh-context reviewer subagent(s) — run them in parallel where your
+platform supports it, one per instruction file, none sharing context with the code's author:
+
+${lines.join("\n")}
+
+Each instruction file is self-contained. When all reviewers have recorded their
+verdicts, re-run \`npx rfc2119 check\`.`;
 }
 
 function renderInstructions(

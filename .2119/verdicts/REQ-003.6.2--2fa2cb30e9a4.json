@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.6.2--2fa2cb30e9a4",
+  "requirementId": "REQ-003.6.2",
+  "hash": "2fa2cb30e9a4",
+  "verdict": "pass",
+  "summary": "Test asserts the real --dispatch prompt contains 'in parallel where your platform supports it' and 'record your own verdict with the pass/fail command it names' — string match is appropriate since the requirement constrains prompt text; content is generated, not stubbed.",
+  "timestamp": "2026-07-09T23:07:30.624Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.3.2--15a833cde98d",
-  "requirementId": "REQ-004.3.2",
-  "hash": "15a833cde98d",
-  "verdict": "pass",
-  "summary": "e2e test runs init twice on an existing AGENTS.md, asserts exactly one begin/end marker pair, preserved original content, and presence of spec-first, annotation-format, fresh-context review, and check-gate text",
-  "timestamp": "2026-07-09T03:43:19.583Z"
-}

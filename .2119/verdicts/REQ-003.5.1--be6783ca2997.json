@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.5.1--be6783ca2997",
+  "requirementId": "REQ-003.5.1",
+  "hash": "be6783ca2997",
+  "verdict": "pass",
+  "summary": "Test loads real config: asserts DEFAULT_REVIEW_MODEL is the platform-neutral 'a capable, cost-effective model' with explicit=false, then writes review_model: opus to .2119.yml and reloads, asserting reviewModel=opus and explicit=true — genuinely verifies default and configurability.",
+  "timestamp": "2026-07-09T23:07:18.453Z"
+}

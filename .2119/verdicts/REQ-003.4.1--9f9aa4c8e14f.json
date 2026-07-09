@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.4.1--9f9aa4c8e14f",
+  "requirementId": "REQ-003.4.1",
+  "hash": "9f9aa4c8e14f",
+  "verdict": "pass",
+  "summary": "review.test.ts reads generated instruction file and asserts it contains 'fresh-context reviewer' and 'must not be the agent that wrote the code'; keyword matching is the correct check since the criterion is what the instruction text directs",
+  "timestamp": "2026-07-09T23:07:21.633Z"
+}

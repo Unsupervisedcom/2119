@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.1.2--0a7887205b4b",
+  "requirementId": "REQ-005.1.2",
+  "hash": "0a7887205b4b",
+  "verdict": "pass",
+  "summary": "Records the reviewId, rewrites policy.md content, recomputes, and asserts the reviewId changed — genuinely proves the instruction file content is hashed into the ID.",
+  "timestamp": "2026-07-09T23:07:41.702Z"
+}

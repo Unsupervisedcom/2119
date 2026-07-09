@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.1--f3df342073bf",
+  "requirementId": "REQ-004.1.1",
+  "hash": "f3df342073bf",
+  "verdict": "pass",
+  "summary": "Test invokes real CLI 'hook <event> --platform claude' for all three events with JSON on stdin: session-start returns hookSpecificOutput, after-edit parses tool_input.file_path and returns lint context (REQ-001.2.2), stop returns a decision — genuinely exercises event dispatch and stdin JSON.",
+  "timestamp": "2026-07-09T23:07:30.719Z"
+}

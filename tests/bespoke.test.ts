@@ -41,7 +41,7 @@ function fixture(spec = SPEC): string {
 function targetsFor(root: string) {
   const specs = [parseSpec(join(root, "specs/REQ-001-widgets.md"), "REQ")];
   const coverage = computeCoverage(specs, [], DEFAULT_ENFORCE);
-  return { specs, targets: computeReviewTargets(loadConfig(root), specs, coverage, ["docs/guide.md"]) };
+  return { specs, targets: computeReviewTargets(loadConfig(root), specs, coverage, ["docs/guide.md"], []) };
 }
 
 describe("bespoke validation (REQ-005)", () => {

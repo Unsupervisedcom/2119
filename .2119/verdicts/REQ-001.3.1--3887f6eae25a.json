@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.3.1--3887f6eae25a",
+  "requirementId": "REQ-001.3.1",
+  "hash": "3887f6eae25a",
+  "verdict": "pass",
+  "summary": "Git history shows no ID renumbered or reassigned: the only removal (REQ-002.3.4, formerly the --changed scoping SHOULD) kept its number as a REQUIREMENT REMOVED tombstone, and REQ-002.3.1 was reworded within the same 'what check runs' obligation, not reassigned.",
+  "timestamp": "2026-07-09T23:07:34.910Z"
+}

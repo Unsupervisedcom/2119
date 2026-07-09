@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.1.3--3682abd32947",
+  "requirementId": "REQ-005.1.3",
+  "hash": "3682abd32947",
+  "verdict": "pass",
+  "summary": "Reads the generated instruction file and asserts the actual policy.md prose plus an 'Additional review criteria' section are inlined — not just a path reference.",
+  "timestamp": "2026-07-09T23:07:41.795Z"
+}

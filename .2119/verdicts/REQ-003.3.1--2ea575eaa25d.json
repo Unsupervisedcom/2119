@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.3.1--2ea575eaa25d",
-  "requirementId": "REQ-003.3.1",
-  "hash": "2ea575eaa25d",
-  "verdict": "pass",
-  "summary": "Asserts three missing-verdict violations under rule REQ-003.3.1 naming the requirement, and that a verdict recorded under an old hash still produces a staleness violation for that requirement",
-  "timestamp": "2026-07-09T03:01:02.442Z"
-}

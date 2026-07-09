@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-002.2.1--bd1b6bbc7d2b",
-  "requirementId": "REQ-002.2.1",
-  "hash": "bd1b6bbc7d2b",
-  "verdict": "pass",
-  "summary": "With only .1.1 annotated, computeCoverage reports exactly the MUST NOT item uncovered while SHOULD stays exempt under DEFAULT_ENFORCE — per-requirement exact-ID demand verified",
-  "timestamp": "2026-07-09T00:37:48.701Z"
-}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.2.1--df05b62cfcdf",
-  "requirementId": "REQ-004.2.1",
-  "hash": "df05b62cfcdf",
-  "verdict": "pass",
-  "summary": "Test runs the real installAgentHooks(root,'claude') against a temp dir and reads the actual .claude/settings.json, asserting PostToolUse matcher 'Edit|Write' plus after-edit/stop/session-start hook commands — no mocks, would fail if any of the three hooks were missing or mis-matched.",
-  "timestamp": "2026-07-09T18:30:35.607Z"
-}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.3.1--a6eb7ad3da16",
+  "requirementId": "REQ-003.3.1",
+  "hash": "a6eb7ad3da16",
+  "verdict": "pass",
+  "summary": "review.test.ts asserts verdictViolations returns one REQ-003.3.1 violation per uncovered target (3) with empty verdicts, and that a verdict against an old hash (0*12) still surfaces the requirement ID as stale",
+  "timestamp": "2026-07-09T23:07:17.140Z"
+}

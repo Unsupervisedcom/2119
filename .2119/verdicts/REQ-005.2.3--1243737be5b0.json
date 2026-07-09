@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-005.2.3--1243737be5b0",
-  "requirementId": "REQ-005.2.3",
-  "hash": "1243737be5b0",
-  "verdict": "pass",
-  "summary": "test now pins exported VERIFY_TIMEOUT_MS to 30_000 (the default check uses, src/check.ts:64 passes no override) and behaviorally proves a 5s command is killed at a 300ms timeout and reported under REQ-005.2.3 with a timeout message",
-  "timestamp": "2026-07-09T04:48:41.757Z"
-}

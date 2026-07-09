@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.1.1--1f25bb2cecba",
+  "requirementId": "REQ-002.1.1",
+  "hash": "1f25bb2cecba",
+  "verdict": "pass",
+  "summary": "One test asserts a multi-violation doc reports all five structure rules (001.1.1/1.2/1.4/2.2/2.3); another asserts a fenced markdown block yields zero violations and no phantom sections/items, proving fenced content is ignored.",
+  "timestamp": "2026-07-09T23:07:20.912Z"
+}

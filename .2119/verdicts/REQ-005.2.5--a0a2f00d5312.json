@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.2.5--a0a2f00d5312",
+  "requirementId": "REQ-005.2.5",
+  "hash": "a0a2f00d5312",
+  "verdict": "pass",
+  "summary": "Test replaces [verify: cmd] with bare [verify], parses, and asserts a REQ-005.2.5 violation referencing REQ-001.1.2 is emitted; fails if the empty-command lint is dropped.",
+  "timestamp": "2026-07-09T23:07:09.853Z"
+}

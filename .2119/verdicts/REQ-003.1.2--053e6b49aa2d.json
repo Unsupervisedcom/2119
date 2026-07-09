@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.2--053e6b49aa2d",
+  "requirementId": "REQ-003.1.2",
+  "hash": "053e6b49aa2d",
+  "verdict": "pass",
+  "summary": "Asserts the <req>--<hash12> format and splitReviewId, then that editing an unrelated test in a shared file leaves the ID stable while editing the covered test or the requirement text changes it.",
+  "timestamp": "2026-07-09T23:07:20.795Z"
+}

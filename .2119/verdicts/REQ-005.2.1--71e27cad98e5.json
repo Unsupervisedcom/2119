@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-005.2.1--71e27cad98e5",
-  "requirementId": "REQ-005.2.1",
-  "hash": "71e27cad98e5",
-  "verdict": "pass",
-  "summary": "verify command tests marker.txt relative to cwd and the file exists only in the fixture root, so zero violations proves execution from repo root with exit 0 treated as satisfied",
-  "timestamp": "2026-07-09T04:48:41.560Z"
-}

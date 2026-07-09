@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-002.2.5--2f4df9102e91",
-  "requirementId": "REQ-002.2.5",
-  "hash": "2f4df9102e91",
-  "verdict": "pass",
-  "summary": "Section-level annotation REQ-001.1 leaves uncovered empty and marks .1.1 and .1.2 covered — fails outright if section IDs are not expanded to items",
-  "timestamp": "2026-07-09T00:38:01.076Z"
-}

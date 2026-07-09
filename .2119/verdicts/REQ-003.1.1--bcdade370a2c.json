@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.1--bcdade370a2c",
+  "requirementId": "REQ-003.1.1",
+  "hash": "bcdade370a2c",
+  "verdict": "pass",
+  "summary": "Reads each generated file from disk at .2119/reviews/<id>.md and asserts it contains the requirement text, every evidence file path, the pass and fail commands with the review ID, and the covering test path for the test-quality task.",
+  "timestamp": "2026-07-09T23:07:20.699Z"
+}

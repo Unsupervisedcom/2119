@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.4.1--f6093fb4d683",
-  "requirementId": "REQ-003.4.1",
-  "hash": "f6093fb4d683",
-  "verdict": "pass",
-  "summary": "Asserts generated instruction files contain the fresh-context-reviewer directive and 'must not be the agent that wrote the code'; the criterion is instruction-file wording, which text containment verifies directly",
-  "timestamp": "2026-07-09T03:01:14.042Z"
-}

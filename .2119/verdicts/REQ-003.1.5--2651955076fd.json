@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.5--2651955076fd",
+  "requirementId": "REQ-003.1.5",
+  "hash": "2651955076fd",
+  "verdict": "pass",
+  "summary": "Reads the test-quality instruction file and asserts it contains the would-it-fail question plus the Tautological/Over-mocking/Unrelated flag directives; a text-presence requirement whose criterion is exactly that text.",
+  "timestamp": "2026-07-09T23:07:21.094Z"
+}

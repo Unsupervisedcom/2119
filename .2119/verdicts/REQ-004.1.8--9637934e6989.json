@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.1.8--9637934e6989",
-  "requirementId": "REQ-004.1.8",
-  "hash": "9637934e6989",
-  "verdict": "pass",
-  "summary": "hook.test.ts:98 runs all three events via the real handler in a bare temp dir with no .2119.yml/specs and asserts each returns exactly {}; any thrown error or error payload would fail the equality",
-  "timestamp": "2026-07-09T03:44:04.720Z"
-}

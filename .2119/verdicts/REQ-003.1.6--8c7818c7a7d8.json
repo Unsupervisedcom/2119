@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.1.6--8c7818c7a7d8",
-  "requirementId": "REQ-003.1.6",
-  "hash": "8c7818c7a7d8",
-  "verdict": "pass",
-  "summary": "Test runs init and asserts .gitignore gains .2119/reviews/ and never .2119/verdicts; the REQ-003.2.3 test in the same file reads generated instruction files out of .2119/reviews/, covering the write location",
-  "timestamp": "2026-07-09T03:44:22.651Z"
-}

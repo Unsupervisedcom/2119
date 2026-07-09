@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.3--5031492babc2",
+  "requirementId": "REQ-003.2.3",
+  "hash": "5031492babc2",
+  "verdict": "pass",
+  "summary": "cli.test.ts forges the real review ID's 12-char hash and runs pass end-to-end, asserting exit 1, 'Stale review ID' stderr, and that check still fails (no verdict recorded)",
+  "timestamp": "2026-07-09T23:07:10.755Z"
+}

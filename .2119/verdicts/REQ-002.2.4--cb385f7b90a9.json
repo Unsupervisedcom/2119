@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.2.4--cb385f7b90a9",
+  "requirementId": "REQ-002.2.4",
+  "hash": "cb385f7b90a9",
+  "verdict": "pass",
+  "summary": "With zero annotations the test asserts REQ-002.2.4 violation messages include both the requirement ID and its statement text ('spin')—confirms uncovered IDs and their text are listed",
+  "timestamp": "2026-07-09T23:07:30.718Z"
+}

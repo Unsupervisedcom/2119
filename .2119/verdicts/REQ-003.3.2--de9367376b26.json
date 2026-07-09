@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.3.2--de9367376b26",
+  "requirementId": "REQ-003.3.2",
+  "hash": "de9367376b26",
+  "verdict": "pass",
+  "summary": "review.test.ts replaces a [review] requirement with 'REQUIREMENT REMOVED' (spec.ts sets removed=true), asserts it is absent from review targets, and that an old verdict for it produces no violation message",
+  "timestamp": "2026-07-09T23:07:19.144Z"
+}

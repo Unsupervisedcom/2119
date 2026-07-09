@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.4--a6a98b3df255",
+  "requirementId": "REQ-003.2.4",
+  "hash": "a6a98b3df255",
+  "verdict": "pass",
+  "summary": "review.test.ts records a fail verdict and asserts verdictViolations flags rule REQ-003.2.4 with the summary, then a subsequent pass on the same review ID supersedes it, leaving no violation",
+  "timestamp": "2026-07-09T23:07:12.475Z"
+}

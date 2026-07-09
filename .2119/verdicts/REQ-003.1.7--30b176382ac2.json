@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.7--30b176382ac2",
+  "requirementId": "REQ-003.1.7",
+  "hash": "30b176382ac2",
+  "verdict": "pass",
+  "summary": "Asserts prelude edits invalidate both blocks' IDs, a spacer edit inside block A invalidates only A (block extends past its annotation to the next), and an appended EOF line invalidates only the last block.",
+  "timestamp": "2026-07-09T23:07:21.284Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.1.9--5a6a5c9a7a35",
-  "requirementId": "REQ-004.1.9",
-  "hash": "5a6a5c9a7a35",
-  "verdict": "pass",
-  "summary": "hook.test.ts:106 plants a syntactically broken .2119.yml and asserts handleHook('stop') returns a JSON payload whose systemMessage contains '2119 hook error'; a thrown/uncaught error would fail the test rather than be masked by mocks",
-  "timestamp": "2026-07-09T03:44:13.256Z"
-}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.5.3--1d13b5d0ddd4",
-  "requirementId": "REQ-003.5.3",
-  "hash": "1d13b5d0ddd4",
-  "verdict": "pass",
-  "summary": "review.test.ts pins review_model to opus yet asserts the [review]-kind instruction file says 'Recommended reviewer model: your current model' while only the test-quality file gets opus",
-  "timestamp": "2026-07-09T03:00:07.292Z"
-}

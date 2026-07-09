@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.2.6--4fccaa58a485",
+  "requirementId": "REQ-001.2.6",
+  "hash": "4fccaa58a485",
+  "verdict": "pass",
+  "summary": "Test asserts findKeywords returns [] for lowercase must/should/required/may and that a lowercased MUST statement produces a 'no RFC 2119 keyword' violation — confirms case-sensitive UPPERCASE-only recognition per RFC 8174.",
+  "timestamp": "2026-07-09T23:07:30.688Z"
+}

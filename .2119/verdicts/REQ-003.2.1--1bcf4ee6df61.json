@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.1--1bcf4ee6df61",
+  "requirementId": "REQ-003.2.1",
+  "hash": "1bcf4ee6df61",
+  "verdict": "pass",
+  "summary": "review.test.ts round-trips writeVerdict through readVerdicts asserting requirementId, hash==reviewId.slice(-12), summary, and an ISO 8601 timestamp read back from .2119/verdicts/",
+  "timestamp": "2026-07-09T23:07:06.537Z"
+}

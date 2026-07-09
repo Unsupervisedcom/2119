@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.1.3--7e2331a3e03a",
+  "requirementId": "REQ-001.1.3",
+  "hash": "7e2331a3e03a",
+  "verdict": "pass",
+  "summary": "Test asserts REQ-001.1.3 violation both when Requirements contains prose but no REQ-NNN.M subsection and when the Requirements heading is absent entirely — covers both failure modes behaviorally.",
+  "timestamp": "2026-07-09T23:07:18.139Z"
+}

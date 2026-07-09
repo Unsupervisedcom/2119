@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.3.3--32c77000d907",
+  "requirementId": "REQ-002.3.3",
+  "hash": "32c77000d907",
+  "verdict": "pass",
+  "summary": "Test parses check --json and asserts ok, staleReviews, uncoveredRequirements, violations, and manualRequirements each track actual mutated fixture state (dropping the annotation flips uncovered; adding a [manual] req surfaces it)—reflects real state, not a static shape",
+  "timestamp": "2026-07-09T23:07:42.981Z"
+}

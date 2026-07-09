@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.2.3--bda810a24277",
+  "requirementId": "REQ-002.2.3",
+  "hash": "bda810a24277",
+  "verdict": "pass",
+  "summary": "Two-leg test: unknown ID REQ-009.1.1 yields a REQ-002.2.3 violation naming it, and a REQUIREMENT REMOVED tombstone suppresses the violation for a real ID—both directions verified",
+  "timestamp": "2026-07-09T23:07:28.724Z"
+}

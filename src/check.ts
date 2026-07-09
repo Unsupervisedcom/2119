@@ -44,7 +44,7 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
   const annotations = scanAnnotations(root, testFiles, config.prefix);
   const coverage = computeCoverage(specs, annotations, config.enforce);
 
-  const reviewTargets = config.reviews ? computeReviewTargets(config, specs, coverage, repoFiles) : [];
+  const reviewTargets = config.reviews ? computeReviewTargets(config, specs, coverage, repoFiles, annotations) : [];
   const verdicts = readVerdicts(root);
   const reviewViolations = verdictViolations(reviewTargets, verdicts);
 

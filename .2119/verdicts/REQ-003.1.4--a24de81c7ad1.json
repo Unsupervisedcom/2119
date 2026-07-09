@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.4--a24de81c7ad1",
+  "requirementId": "REQ-003.1.4",
+  "hash": "a24de81c7ad1",
+  "verdict": "pass",
+  "summary": "Writes a passing verdict for one target's current review ID, then asserts generateInstructions emits tasks only for the two remaining requirements, skipping the satisfied one.",
+  "timestamp": "2026-07-09T23:07:20.995Z"
+}

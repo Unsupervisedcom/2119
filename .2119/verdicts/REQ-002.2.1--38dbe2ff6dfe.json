@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.2.1--38dbe2ff6dfe",
+  "requirementId": "REQ-002.2.1",
+  "hash": "38dbe2ff6dfe",
+  "verdict": "pass",
+  "summary": "cover.test.ts drives computeCoverage with a single annotation and asserts the un-annotated MUST NOT lands in uncovered while the SHOULD is skipped—fails if annotations stopped being required",
+  "timestamp": "2026-07-09T23:07:24.710Z"
+}

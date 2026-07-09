@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.6.1--32dee3822885",
+  "requirementId": "REQ-003.6.1",
+  "hash": "32dee3822885",
+  "verdict": "pass",
+  "summary": "Test asserts plain 'review' omits the dispatch prompt while 'review --dispatch' emits it with a header and one numbered assignment per pending review ('1. Read .2119/reviews/FIX-001.1.1--<hash>.md', likewise for 1.1.2) — real CLI, two pending files matched.",
+  "timestamp": "2026-07-09T23:07:30.523Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.2.1--3ee738428826",
-  "requirementId": "REQ-003.2.1",
-  "hash": "3ee738428826",
-  "verdict": "pass",
-  "summary": "Round-trips writeVerdict through readVerdicts off real disk in .2119/verdicts and asserts requirementId, 12-char hash from the review ID, summary, and ISO timestamp; CLI pass wiring is exercised e2e in cli.test.ts",
-  "timestamp": "2026-07-09T03:00:53.106Z"
-}

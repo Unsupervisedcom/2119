@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.1.1--13911ef0bd1f",
+  "requirementId": "REQ-005.1.1",
+  "hash": "13911ef0bd1f",
+  "verdict": "pass",
+  "summary": "Parses [review: docs/**, instructions: .2119/review/policy.md] and asserts coverage splits globs from the instructions path and strips both from req.text; fails if instructions: is not extracted.",
+  "timestamp": "2026-07-09T23:07:41.612Z"
+}

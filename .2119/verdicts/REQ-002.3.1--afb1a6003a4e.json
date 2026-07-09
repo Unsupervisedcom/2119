@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-002.3.1--afb1a6003a4e",
-  "requirementId": "REQ-002.3.1",
-  "hash": "afb1a6003a4e",
-  "verdict": "pass",
-  "summary": "cli.test.ts drives dist/cli.js check through lint, coverage, and verdict-freshness failures (each exits 1 with the right rule, 0 once fixed) and bespoke.test.ts proves the verify leg by deleting marker.txt to flip check to exit 1 with REQ-005.2.2",
-  "timestamp": "2026-07-09T04:48:24.435Z"
-}

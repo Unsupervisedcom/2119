@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-005.2.4--d33e06ad4d5b",
-  "requirementId": "REQ-005.2.4",
-  "hash": "d33e06ad4d5b",
-  "verdict": "pass",
-  "summary": "with zero annotations the verify-tagged MUST is asserted absent from coverage.uncovered and from review targets — removing the kind!==test exemption in cover.ts would put REQ-001.1.2 in uncovered and fail the test",
-  "timestamp": "2026-07-09T04:48:48.838Z"
-}
