@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Verdict, VerdictKind } from "./model.js";
 
@@ -27,6 +27,26 @@ export function readVerdicts(root: string): Map<string, Verdict> {
     }
   }
   return out;
+}
+
+/**
+ * Delete verdict files whose review ID matches no current target (REQ-006.2).
+ * Verdicts for current targets are never touched, so a passing check stays
+ * passing. Returns the deleted review IDs.
+ */
+export function pruneVerdicts(root: string, currentIds: Set<string>): string[] {
+  const dir = join(root, VERDICTS_DIR);
+  const pruned: string[] = [];
+  if (!existsSync(dir)) return pruned;
+  for (const name of readdirSync(dir)) {
+    if (!name.endsWith(".json")) continue;
+    const reviewId = name.replace(/\.json$/, "");
+    if (!currentIds.has(reviewId)) {
+      unlinkSync(join(dir, name));
+      pruned.push(reviewId);
+    }
+  }
+  return pruned;
 }
 
 /**

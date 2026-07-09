@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.3.2--137244939d10",
-  "requirementId": "REQ-001.3.2",
-  "hash": "137244939d10",
-  "verdict": "pass",
-  "summary": "New requirement REQ-004.2.7 is appended at the end of section REQ-004.2 with the next sequential number (after .6 [manual]); every section and item across all five specs is sequential from 1, matching the append-at-end rule.",
-  "timestamp": "2026-07-09T18:30:16.787Z"
-}

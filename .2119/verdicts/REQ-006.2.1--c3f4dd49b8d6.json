@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-006.2.1--c3f4dd49b8d6",
+  "requirementId": "REQ-006.2.1",
+  "hash": "c3f4dd49b8d6",
+  "verdict": "pass",
+  "summary": "Test orphans a passed verdict by editing the covering test, runs prune, asserts stdout lists 'pruned .2119/verdicts/<id>.json', 'removed 1', and the file no longer exists",
+  "timestamp": "2026-07-09T19:08:37.421Z"
+}

@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Config } from "./config.js";
 import type { CoverageResult } from "./cover.js";
@@ -100,8 +100,17 @@ export function generateInstructions(
   verdicts: Map<string, Verdict>,
 ): ReviewTask[] {
   const pending = targets.filter((t) => verdicts.get(t.reviewId)?.verdict !== "pass");
+  // Keep the directory exactly in sync with the pending set — stale
+  // instruction files from prior rounds are misleading (REQ-006.1).
+  const dir = join(config.root, REVIEWS_DIR);
+  mkdirSync(dir, { recursive: true });
+  const pendingIds = new Set(pending.map((t) => t.reviewId));
+  for (const file of readdirSync(dir)) {
+    if (file.endsWith(".md") && !pendingIds.has(file.replace(/\.md$/, ""))) {
+      unlinkSync(join(dir, file));
+    }
+  }
   if (pending.length === 0) return [];
-  mkdirSync(join(config.root, REVIEWS_DIR), { recursive: true });
   return pending.map((t) => {
     const instructionPath = `${REVIEWS_DIR}/${t.reviewId}.md`;
     // Inline custom criteria so the reviewer needs no extra fetches (REQ-005.1.3).

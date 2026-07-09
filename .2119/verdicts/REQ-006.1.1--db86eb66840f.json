@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-006.1.1--db86eb66840f",
+  "requirementId": "REQ-006.1.1",
+  "hash": "db86eb66840f",
+  "verdict": "pass",
+  "summary": "Real CLI subprocess test: edits covering test to mint a new review ID, reruns review, asserts old .md is gone and only 1 file remains — fails if stale-instruction deletion is skipped",
+  "timestamp": "2026-07-09T19:08:37.240Z"
+}

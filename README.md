@@ -127,6 +127,7 @@ Deterministic facts get tests. Judgment calls get `[review]`. Things only a huma
 | `2119 review` | Generate instruction files for stale/missing judgment reviews |
 | `2119 pass/fail <review-id> --summary "…"` | Record a verdict (hash-verified) |
 | `2119 check [--json]` | Everything; the one exit code that matters |
+| `2119 prune` | Delete verdicts orphaned by content changes (explicit, so deletions show in your diff) |
 | `2119 hook <event> --platform <p>` | Agent hook entry point (used by installed hooks) |
 
 ## Configuration (`.2119.yml`, all optional)

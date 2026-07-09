@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.3.3--7685cd0a3a41",
+  "requirementId": "REQ-001.3.3",
+  "hash": "7685cd0a3a41",
+  "verdict": "pass",
+  "summary": "No requirements were removed this round and every section's item numbering is gap-free; the REQUIREMENT REMOVED tombstone convention is intact and referenced by REQ-002.2.3/REQ-003.3.2",
+  "timestamp": "2026-07-09T19:08:53.793Z"
+}

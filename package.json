@@ -1,6 +1,6 @@
 {
   "name": "rfc2119",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Spec-driven test enforcement for coding agents: RFC 2119 requirements docs, requirement-to-test traceability, and judgment reviews that are hard to cheat.",
   "license": "MIT",
   "repository": {

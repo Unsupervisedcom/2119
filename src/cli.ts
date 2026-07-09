@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { buildContext, buildReport } from "./check.js";
 import { generateInstructions } from "./review.js";
-import { writeVerdict } from "./verdict.js";
+import { pruneVerdicts, writeVerdict } from "./verdict.js";
 import { splitReviewId } from "./hash.js";
 import { runInit } from "./init.js";
 import { handleHook, type HookEvent, type HookPlatform } from "./hook.js";
@@ -148,6 +148,16 @@ switch (command) {
     process.exit(report.ok ? 0 : 1);
   }
 
+  case "prune": {
+    const ctx = buildContext(root);
+    requireInitialized(ctx);
+    const current = new Set(ctx.reviewTargets.map((t) => t.reviewId));
+    const pruned = pruneVerdicts(root, current);
+    for (const id of pruned) console.log(`pruned .2119/verdicts/${id}.json`);
+    console.log(`prune: removed ${pruned.length} orphaned verdict(s), kept ${ctx.verdicts.size - pruned.length}`);
+    break;
+  }
+
   case "init": {
     runInit(root, args);
     break;
@@ -184,6 +194,7 @@ usage: 2119 <command>
   pass      Record a passing review verdict:  2119 pass <review-id> --summary "..."
   fail      Record a failing review verdict:  2119 fail <review-id> --summary "..."
   check     lint + cover + review-verdict freshness; non-zero exit on any failure
+  prune     Delete verdicts whose review ID matches no current requirement content
   hook      Agent hook entry point: 2119 hook <after-edit|stop|session-start> --platform <p>
 `);
     process.exit(command ? 2 : 0);

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.4.2--2936edcdfc62",
+  "requirementId": "REQ-003.4.2",
+  "hash": "2936edcdfc62",
+  "verdict": "pass",
+  "summary": "README 'Residual risk, stated plainly' section states the agent can run 2119 pass itself and lists all mitigations: committed/auditable verdicts, hash invalidation (no stale reuse), fresh-context dispatch, and CI re-running the check",
+  "timestamp": "2026-07-09T19:08:54.059Z"
+}
