@@ -1,5 +1,6 @@
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { createRequire } from "node:module";
 
 export type AgentName = "claude" | "codex" | "gemini";
 
@@ -8,7 +9,12 @@ interface HookEntry {
   hooks: { type: "command"; command: string; timeout?: number }[];
 }
 
-const CMD = (event: string, platform: string) => `npx rfc2119 hook ${event} --platform ${platform}`;
+// Generated commands pin the version that generated them: a gate that floats
+// its own version can change behavior with no repository change (REQ-004.3.7).
+export const PKG_VERSION = (createRequire(import.meta.url)("../package.json") as { version: string }).version;
+const PINNED = `rfc2119@${PKG_VERSION}`;
+
+const CMD = (event: string, platform: string) => `npx ${PINNED} hook ${event} --platform ${platform}`;
 
 function shellHooks(platform: "claude" | "codex"): Record<string, HookEntry[]> {
   return {
@@ -103,7 +109,9 @@ export function installAgentHooks(root: string, agent: AgentName): { path: strin
   let changed = false;
   for (const [event, entries] of Object.entries(spec.hooks())) {
     const existing = hooks[event] ?? [];
-    const already = JSON.stringify(existing).includes("2119 hook");
+    // Recognize our entries whether pinned (rfc2119@x.y.z hook) or from an
+    // older unpinned install (rfc2119 hook), so upgrades never duplicate.
+    const already = /2119(@\S+)?\s+hook/.test(JSON.stringify(existing));
     if (already) continue;
     hooks[event] = [...existing, ...entries];
     changed = true;
@@ -122,9 +130,9 @@ export function installAgentHooks(root: string, agent: AgentName): { path: strin
 const PRE_COMMIT_MARKER = "# 2119 pre-commit hook";
 const PRE_COMMIT = `#!/bin/sh
 ${PRE_COMMIT_MARKER}
-npx rfc2119 check || {
+npx ${PINNED} check || {
   echo ""
-  echo "Commit blocked: 2119 check failed. Fix the issues or run 'npx rfc2119 review'."
+  echo "Commit blocked: 2119 check failed. Fix the issues or run 'npx ${PINNED} review'."
   exit 1
 }
 `;
@@ -147,7 +155,16 @@ export function installGitHook(root: string): { path: string; changed: boolean; 
   return { path: ".git/hooks/pre-commit", changed: true };
 }
 
-const CI_WORKFLOW = `name: "2119"
+// 2119 is a traceability gate, not a test runner: the generated workflow
+// always carries a separate project-test step so passing CI can never mean
+// "traceable but failing tests" (REQ-004.3.6).
+function ciWorkflow(root: string): string {
+  const testStep = existsSync(join(root, "package.json"))
+    ? `      # 2119 does not run tests — the project suite is its own gate.
+      - run: npm test`
+    : `      # TODO: add your project's test-suite step here — 2119 does not run tests.
+      # - run: <your test command>`;
+  return `name: "2119"
 
 on:
   pull_request:
@@ -162,8 +179,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npx --yes rfc2119 check
+${testStep}
+      - run: npx --yes ${PINNED} check
 `;
+}
 
 /** Write the CI backstop workflow (REQ-004.3.4). */
 export function installCi(root: string): { path: string; changed: boolean } {
@@ -171,6 +190,6 @@ export function installCi(root: string): { path: string; changed: boolean } {
   const path = join(root, rel);
   if (existsSync(path)) return { path: rel, changed: false };
   mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, CI_WORKFLOW);
+  writeFileSync(path, ciWorkflow(root));
   return { path: rel, changed: true };
 }

@@ -14,9 +14,9 @@ describe("agent adapters", () => {
     expect(result.changed).toBe(true);
     const settings = JSON.parse(readFileSync(join(root, ".claude/settings.json"), "utf8"));
     expect(settings.hooks.PostToolUse[0].matcher).toBe("Edit|Write");
-    expect(settings.hooks.PostToolUse[0].hooks[0].command).toContain("2119 hook after-edit --platform claude");
-    expect(settings.hooks.Stop[0].hooks[0].command).toContain("2119 hook stop");
-    expect(settings.hooks.SessionStart[0].hooks[0].command).toContain("2119 hook session-start");
+    expect(settings.hooks.PostToolUse[0].hooks[0].command).toContain("hook after-edit --platform claude");
+    expect(settings.hooks.Stop[0].hooks[0].command).toContain("hook stop");
+    expect(settings.hooks.SessionStart[0].hooks[0].command).toContain("hook session-start");
   });
 
   // 2119: REQ-004.2.2
@@ -25,9 +25,9 @@ describe("agent adapters", () => {
     const result = installAgentHooks(root, "codex");
     const settings = JSON.parse(readFileSync(join(root, ".codex/hooks.json"), "utf8"));
     expect(settings.hooks.PostToolUse[0].matcher).toBe("Edit|Write");
-    expect(settings.hooks.PostToolUse[0].hooks[0].command).toContain("2119 hook after-edit --platform codex");
-    expect(settings.hooks.Stop[0].hooks[0].command).toContain("2119 hook stop --platform codex");
-    expect(settings.hooks.SessionStart[0].hooks[0].command).toContain("2119 hook session-start --platform codex");
+    expect(settings.hooks.PostToolUse[0].hooks[0].command).toContain("hook after-edit --platform codex");
+    expect(settings.hooks.Stop[0].hooks[0].command).toContain("hook stop --platform codex");
+    expect(settings.hooks.SessionStart[0].hooks[0].command).toContain("hook session-start --platform codex");
     expect(result.note).toContain("/hooks");
   });
 
@@ -56,7 +56,7 @@ describe("agent adapters", () => {
     installAgentHooks(root, "gemini");
     const settings = JSON.parse(readFileSync(join(root, ".gemini/settings.json"), "utf8"));
     expect(settings.hooks.AfterTool[0].matcher).toBe("write_file|replace");
-    expect(settings.hooks.AfterAgent[0].hooks[0].command).toContain("2119 hook stop --platform gemini");
+    expect(settings.hooks.AfterAgent[0].hooks[0].command).toContain("hook stop --platform gemini");
     expect(settings.hooks.AfterTool[0].hooks[0].timeout).toBeGreaterThanOrEqual(1000); // ms, not seconds
     expect(settings.hooks.SessionStart).toBeDefined();
   });
@@ -76,7 +76,7 @@ describe("agent adapters", () => {
     const settings = JSON.parse(readFileSync(join(root, ".claude/settings.json"), "utf8"));
     expect(settings.permissions.allow).toEqual(["Bash(npm test)"]);
     expect(settings.hooks.PreToolUse[0].hooks[0].command).toBe("echo hi");
-    expect(settings.hooks.PostToolUse[0].hooks[0].command).toContain("2119 hook");
+    expect(settings.hooks.PostToolUse[0].hooks[0].command).toMatch(/2119(@\S+)? hook/);
   });
 
   // 2119: REQ-004.2.5
@@ -97,7 +97,7 @@ describe("agent adapters", () => {
     const first = installGitHook(root);
     expect(first.changed).toBe(true);
     const body = readFileSync(join(root, ".git/hooks/pre-commit"), "utf8");
-    expect(body).toContain("npx rfc2119 check");
+    expect(body).toMatch(/npx rfc2119(@\S+)? check/);
 
     const again = installGitHook(root);
     expect(again.changed).toBe(false);
@@ -119,7 +119,7 @@ describe("agent adapters", () => {
     expect(result.changed).toBe(true);
     const body = readFileSync(join(root, ".github/workflows/2119.yml"), "utf8");
     expect(body).toContain("pull_request");
-    expect(body).toContain("2119 check");
+    expect(body).toMatch(/rfc2119(@\S+)? check/);
     expect(existsSync(join(root, ".github/workflows/2119.yml"))).toBe(true);
   });
 });

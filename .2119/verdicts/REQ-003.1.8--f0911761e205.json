@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.8--f0911761e205",
+  "requirementId": "REQ-003.1.8",
+  "hash": "f0911761e205",
+  "verdict": "pass",
+  "summary": "Genuine test with a proper contrast case: a non-covering shared fixture is edited; with shared_evidence configured the computed reviewId changes, and without it the reviewId is unchanged — proving the shared file joins the hash only when opted in, through the real computeReviewTargets pipeline (not keyword matching).",
+  "timestamp": "2026-07-10T19:09:33.305Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.4--198af2c39331",
+  "requirementId": "REQ-004.3.4",
+  "hash": "198af2c39331",
+  "verdict": "pass",
+  "summary": "Test runs real installCi and reads written .github/workflows/2119.yml, asserting it contains the 'pull_request' trigger and runs 'rfc2119 check'; fails if the workflow omits either the PR trigger or the check command.",
+  "timestamp": "2026-07-10T19:08:33.359Z"
+}

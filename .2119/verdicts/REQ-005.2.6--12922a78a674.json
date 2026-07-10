@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.2.6--12922a78a674",
+  "requirementId": "REQ-005.2.6",
+  "hash": "12922a78a674",
+  "verdict": "pass",
+  "summary": "README line 69 states verbatim that verify commands execute arbitrary shell from spec files and 'carry the same trust level as package.json scripts'; scaling.md reiterates it for the untrusted-PR policy.",
+  "timestamp": "2026-07-10T19:08:37.344Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.3.5--763b1453429b",
+  "requirementId": "REQ-002.3.5",
+  "hash": "763b1453429b",
+  "verdict": "pass",
+  "summary": "Genuine behavioral test: a [verify] command writes a marker file and exits 1; plain check runs it (marker present, exit 1), while check --no-verify leaves no marker (real fs proof the shell was skipped), exits 0, and surfaces the req ID under 'Manual requirements' with '[verify skipped: --no-verify]' — real CLI subprocess, no mocks.",
+  "timestamp": "2026-07-10T19:09:33.201Z"
+}

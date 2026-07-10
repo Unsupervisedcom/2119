@@ -27,6 +27,7 @@ their findings (not empty markers), and they live in version control.
 5. Instruction files MUST direct the reviewer to answer one question — would these tests fail if this requirement were violated? — and to flag tautological assertions, over-mocking that bypasses the behavior under test, and assertions unrelated to the requirement's criterion.
 6. Instruction files MUST be written to `.2119/reviews/`, a directory that `2119 init` adds to `.gitignore`.
 7. An annotation's evidence block MUST comprise the file's prelude (all content before the file's first annotation, hashed once per file) plus the text from the annotation's line through the line before the file's next annotation or the end of file, so shared imports and mocks stay under the hash while unrelated tests fall outside it.
+8. When the optional `shared_evidence` config key lists globs, the content of every matching file MUST be included in the hash input of every test-quality review, so shared fixtures and helper modules cannot change without invalidating the verdicts that depend on them.
 
 ### REQ-003.2: Verdict recording
 

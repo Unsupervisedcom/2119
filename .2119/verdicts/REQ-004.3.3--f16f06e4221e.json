@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.3--f16f06e4221e",
+  "requirementId": "REQ-004.3.3",
+  "hash": "f16f06e4221e",
+  "verdict": "pass",
+  "summary": "Test installs pre-commit hook and asserts body runs 'rfc2119 check'; re-run is no-op; then seeds a foreign 'my-linter' pre-commit and asserts install refuses (changed false, refused mentions 'manually') leaving my-linter intact — both install and refuse-to-clobber verified.",
+  "timestamp": "2026-07-10T19:08:31.512Z"
+}

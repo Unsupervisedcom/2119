@@ -44,8 +44,14 @@ export function computeReviewTargets(
       const evidence = [...new Set(anns.map((a) => a.file))].sort();
       // Hash the annotation blocks, not whole files, so unrelated edits in a
       // shared test file don't invalidate this verdict (REQ-003.1.2/.7).
+      // Configured shared fixtures/helpers join every test-quality hash, so
+      // they can't be neutered without invalidating verdicts (REQ-003.1.8).
+      const parts = [
+        ...evidenceBlockParts(config.root, anns, annotations),
+        ...fileParts(config.root, matchGlobs(repoFiles, config.sharedEvidence)),
+      ];
       out.push({
-        reviewId: computeReviewId(req.id, req.text, evidenceBlockParts(config.root, anns, annotations)),
+        reviewId: computeReviewId(req.id, req.text, parts),
         requirement: req,
         evidence,
         kind: "test-quality",

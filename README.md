@@ -11,6 +11,8 @@
 
 This repo practices what it enforces: 2119's own requirements live in [`specs/`](specs/), every MUST has an annotated test, and `.2119/verdicts/` holds the committed review verdicts.
 
+**What 2119 is not:** it is **not a test runner** (`check` never executes your suite — run `npm test && npx rfc2119 check`, both, always), **not a CI replacement** (it's one exit code your CI calls), and **not a security boundary** (a deliberate cheater is made *conspicuous*, not impossible). These boundaries are deliberate and [enforced as reviewed requirements](specs/REQ-008-honest-boundaries.md) — the reasoning lives in [docs/design.md](docs/design.md), and [docs/scaling.md](docs/scaling.md) covers hardening for larger or more formal projects.
+
 ## Use it in your repo
 
 You don't clone this repo — npm delivers the tool. From your project root:
@@ -126,7 +128,7 @@ Deterministic facts get tests. Judgment calls get `[review]`. Things only a huma
 | `2119 cover` | Requirement ↔ test traceability |
 | `2119 review [--dispatch]` | Generate instruction files for stale/missing judgment reviews; `--dispatch` adds a ready-to-paste parallel-subagent prompt |
 | `2119 pass/fail <review-id> --summary "…"` | Record a verdict (hash-verified) |
-| `2119 check [--json]` | Everything; the one exit code that matters |
+| `2119 check [--json] [--no-verify]` | Everything; the one exit code that matters (`--no-verify` skips `[verify]` shell for untrusted-PR CI) |
 | `2119 prune` | Delete verdicts orphaned by content changes (explicit, so deletions show in your diff) |
 | `2119 hook <event> --platform <p>` | Agent hook entry point (used by installed hooks) |
 
@@ -140,6 +142,8 @@ enforce: ["MUST", "MUST NOT", "SHALL", "SHALL NOT", "REQUIRED"]
 reviews: true          # set false to disable the judgment layer
 review_model: "opus"   # advisory, platform-specific; default recommends
                        # "a capable, cost-effective model"
+shared_evidence: []    # globs of shared fixtures/helpers hashed into every
+                       # test-quality review (see docs/scaling.md)
 ```
 
 ## What's in this repo
@@ -154,6 +158,7 @@ Nothing here needs to be copied into your project — `init` generates everythin
 | `.2119/verdicts/` | Real committed verdicts from the fresh-context reviews that gated this code |
 | `.2119.yml` · `AGENTS.md` · `.claude/agents/` | This repo dogfooding its own `init` output |
 | `docs/rfc-conformance.md` | Clause-by-clause accounting against RFC 2119 and RFC 8174 |
+| `docs/design.md` · `docs/scaling.md` | Design decisions & non-goals; hardening for formal projects |
 
 ## Cost and scale
 

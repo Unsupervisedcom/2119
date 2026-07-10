@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.2.2--e231223f4a6e",
+  "requirementId": "REQ-004.2.2",
+  "hash": "e231223f4a6e",
+  "verdict": "pass",
+  "summary": "adapters test reads written .codex/hooks.json asserting all three hooks with --platform codex and result.note contains '/hooks'; cli test runs real 'init --agent codex' and asserts stdout prints both '/hooks' and '.codex/hooks.json' — the print-to-user path is verified end to end.",
+  "timestamp": "2026-07-10T19:08:22.752Z"
+}

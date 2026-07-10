@@ -18,6 +18,8 @@ export interface Config {
   reviewModel: string;
   /** True when review_model was set in .2119.yml (vs. defaulted). */
   reviewModelExplicit: boolean;
+  /** Globs of shared fixtures/helpers hashed into every test-quality review (REQ-003.1.8). */
+  sharedEvidence: string[];
   /** True when a .2119.yml file was found. */
   explicit: boolean;
 }
@@ -62,6 +64,7 @@ export function loadConfig(root: string): Config {
     reviews: raw.reviews === undefined ? true : Boolean(raw.reviews),
     reviewModel: typeof raw.review_model === "string" ? raw.review_model : DEFAULT_REVIEW_MODEL,
     reviewModelExplicit: typeof raw.review_model === "string",
+    sharedEvidence: stringList(raw.shared_evidence) ?? [],
     explicit,
   };
 }

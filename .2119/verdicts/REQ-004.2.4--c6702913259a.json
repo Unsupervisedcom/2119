@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.2.4--c6702913259a",
+  "requirementId": "REQ-004.2.4",
+  "hash": "c6702913259a",
+  "verdict": "pass",
+  "summary": "Test pre-seeds .claude/settings.json with permissions.allow and a PreToolUse hook, runs real installAgentHooks, then asserts both survive unchanged while PostToolUse is added — genuinely proves merge preserves unrelated keys, not a tautology.",
+  "timestamp": "2026-07-10T19:08:29.007Z"
+}

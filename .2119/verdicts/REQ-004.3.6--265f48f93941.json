@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.6--265f48f93941",
+  "requirementId": "REQ-004.3.6",
+  "hash": "265f48f93941",
+  "verdict": "pass",
+  "summary": "Test invokes real installCi and reads generated .github/workflows/2119.yml: asserts '- run: npm test' precedes the rfc2119 step with a package.json, and the placeholder '2119 does not run tests' with no npm test step otherwise — fails if the separate test step or placeholder regressed.",
+  "timestamp": "2026-07-10T19:08:26.889Z"
+}

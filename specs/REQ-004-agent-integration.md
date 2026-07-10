@@ -47,3 +47,5 @@ plugins and are planned as thin native packages.
 3. `2119 init --git-hook` MUST install a git pre-commit hook that runs `2119 check`, refusing to overwrite an existing pre-commit hook it did not create.
 4. `2119 init --ci` MUST write a GitHub Actions workflow that runs `2119 check` on pull requests.
 5. The AGENTS.md section MUST state that CI runs the same check, so agents on hookless platforms know the gate cannot be skipped.
+6. The generated CI workflow MUST include a project test-suite step separate from the `2119 check` step — auto-filled as `npm test` when the repository has a package.json, and otherwise a placeholder stating that 2119 does not run tests.
+7. Generated hook, pre-commit, and CI commands MUST pin the exact rfc2119 package version that generated them, so the gate's behavior cannot drift with unreviewed upstream releases.

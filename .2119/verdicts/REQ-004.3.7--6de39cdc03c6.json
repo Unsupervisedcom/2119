@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.7--6de39cdc03c6",
+  "requirementId": "REQ-004.3.7",
+  "hash": "6de39cdc03c6",
+  "verdict": "pass",
+  "summary": "Test drives real installAgentHooks/installGitHook/installCi and asserts each emits 'rfc2119@'+PKG_VERSION in settings.json, pre-commit, and the CI workflow, plus not.toMatch(/rfc2119 check/) proving no unpinned invocation survives — genuinely fails if pinning drops.",
+  "timestamp": "2026-07-10T19:08:26.997Z"
+}

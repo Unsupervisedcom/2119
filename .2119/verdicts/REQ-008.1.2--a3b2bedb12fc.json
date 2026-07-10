@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-008.1.2--a3b2bedb12fc",
+  "requirementId": "REQ-008.1.2",
+  "hash": "a3b2bedb12fc",
+  "verdict": "pass",
+  "summary": "README line 14 ('What 2119 is not:'), before the 'Use it in your repo' adoption section, prominently states it is not a test runner, not a CI replacement, and not a security boundary, and links to docs/design.md.",
+  "timestamp": "2026-07-10T19:08:44.302Z"
+}

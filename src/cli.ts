@@ -6,6 +6,7 @@ import { splitReviewId } from "./hash.js";
 import { runInit } from "./init.js";
 import { handleHook, type HookEvent, type HookPlatform } from "./hook.js";
 import { CONFIG_FILENAME } from "./config.js";
+import { allRequirements } from "./spec.js";
 import { appendFileSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createInterface } from "node:readline/promises";
@@ -49,6 +50,7 @@ usage: 2119 <command>
   pass      Record a passing review verdict:  2119 pass <review-id> --summary "..."
   fail      Record a failing review verdict:  2119 fail <review-id> --summary "..."
   check     lint + cover + review-verdict freshness; non-zero exit on any failure
+            (--json machine output; --no-verify skips [verify] shell commands)
   prune     Delete verdicts whose review ID matches no current requirement content
   hook      Agent hook entry point: 2119 hook <after-edit|stop|session-start> --platform <p>
 `;
@@ -162,9 +164,20 @@ switch (command) {
   }
 
   case "check": {
-    const ctx = buildContext(root, { runVerify: true });
+    // --no-verify: CI for untrusted contributions can refuse to execute
+    // spec-supplied shell; the requirements surface like [manual] instead of
+    // silently dropping (REQ-002.3.5).
+    const noVerify = args.includes("--no-verify");
+    const ctx = buildContext(root, { runVerify: !noVerify });
     requireInitialized(ctx);
     const report = buildReport(ctx);
+    if (noVerify) {
+      for (const req of allRequirements(ctx.specs)) {
+        if (!req.removed && req.coverage.kind === "verify") {
+          report.manualRequirements.push({ id: req.id, text: `${req.text} [verify skipped: --no-verify]` });
+        }
+      }
+    }
     if (args.includes("--json")) {
       console.log(JSON.stringify(report, null, 2));
     } else {

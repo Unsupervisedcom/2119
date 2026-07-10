@@ -44,6 +44,7 @@ preserve whole-repo semantics.
 2. `2119 check` MUST complete in under 5 seconds on a repository with 100 spec files and 2000 test files, excluding time spent inside user-defined `[verify]` commands, so it is cheap enough to run from write-time hooks. [review: src/**]
 3. `2119 check --json` MUST emit a machine-readable report (violations, uncovered requirements, stale verdicts, manual requirements) for use by hooks and CI annotations.
 4. REQUIREMENT REMOVED
+5. When invoked with `--no-verify`, `2119 check` MUST skip `[verify]` command execution and surface those requirements alongside the manual exemptions, so CI for untrusted contributions can refuse to execute spec-supplied shell without silently dropping the requirements.
 
 ### REQ-002.4: Configuration
 
