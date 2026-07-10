@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.3.2--74a52c26b250",
+  "requirementId": "REQ-001.3.2",
+  "hash": "74a52c26b250",
+  "verdict": "pass",
+  "summary": "New requirements are appended with next sequential number: REQ-003.7 follows REQ-003.6, REQ-007 is a new file/section; every section numbers items from 1 with no gaps.",
+  "timestamp": "2026-07-10T17:51:17.259Z"
+}

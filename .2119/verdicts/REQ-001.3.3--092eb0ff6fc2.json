@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.3.3--092eb0ff6fc2",
+  "requirementId": "REQ-001.3.3",
+  "hash": "092eb0ff6fc2",
+  "verdict": "pass",
+  "summary": "The sole removed requirement (REQ-002.3.4) keeps its number with body replaced by the exact text 'REQUIREMENT REMOVED'; no other tombstone gaps exist.",
+  "timestamp": "2026-07-10T17:51:17.352Z"
+}

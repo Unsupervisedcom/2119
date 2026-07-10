@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.7.3--dd9420ef82ff",
+  "requirementId": "REQ-003.7.3",
+  "hash": "dd9420ef82ff",
+  "verdict": "pass",
+  "summary": "Test renames a valid verdict to a mismatched filename and asserts check exits 1 with 'filename does not match reviewId' — genuinely verifies filename-mismatch is treated as malformed rather than counted.",
+  "timestamp": "2026-07-10T17:51:34.130Z"
+}

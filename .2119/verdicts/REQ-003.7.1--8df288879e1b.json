@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.7.1--8df288879e1b",
+  "requirementId": "REQ-003.7.1",
+  "hash": "8df288879e1b",
+  "verdict": "pass",
+  "summary": "Test drives the real CLI: a bare {reviewId} and a typo'd verdict 'passd' both make check exit 1 (fail-closed), while a genuine CLI-written record makes check exit 0 — genuine behavioral verification of counting only well-formed records, not tautological or mocked.",
+  "timestamp": "2026-07-10T17:51:33.943Z"
+}

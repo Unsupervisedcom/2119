@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.7.2--d253b491fe00",
+  "requirementId": "REQ-003.7.2",
+  "hash": "d253b491fe00",
+  "verdict": "pass",
+  "summary": "Test truncates a committed verdict to invalid JSON and asserts check exits 1 with the verdict's file path, the [REQ-003.7.2] rule tag, and the reason 'unparseable JSON' in stderr — verifies loud violation naming file+reason, not a silent skip/pass.",
+  "timestamp": "2026-07-10T17:51:34.034Z"
+}

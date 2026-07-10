@@ -57,3 +57,16 @@ their findings (not empty markers), and they live in version control.
 
 1. When invoked as `2119 review --dispatch`, the command MUST append a ready-to-paste dispatch prompt that assigns each pending instruction file to one fresh-context reviewer, so the orchestrating agent can launch reviews without composing prompts itself.
 2. The dispatch prompt MUST direct that reviews run in parallel where the platform supports it and that each reviewer records its own verdict via the pass/fail commands named in its instruction file.
+
+### REQ-003.7: Verdict record validation
+
+Found in the field (2026-07-10): the verdict reader accepted any JSON containing a `reviewId`,
+and the gate failed only on a literal `fail` — so a record with a missing or typo'd verdict
+field counted as passing. Gates fail closed: a verdict earns a pass only by being a fully
+well-formed record. This adds no protection against a deliberate self-pass (the documented
+residual risk — a well-formed fake is as easy to write as a malformed one); it protects against
+accidental corruption (mangled merges, hand-edits) silently reading as green.
+
+1. A verdict record MUST be counted by the gate only when its `verdict` field is exactly `pass` or `fail`, its `summary` is a nonempty string, its `requirementId` equals the requirement component of its `reviewId`, its `hash` equals the review ID's 12-character suffix, and its `timestamp` parses as a date.
+2. A verdict file that fails to parse or whose record fails validation MUST produce a check violation identifying the file and the reason, rather than being silently skipped or counted as passing.
+3. A verdict file whose filename is not exactly `<reviewId>.json` MUST be treated as malformed, so the check gate and `2119 prune` agree on which file a verdict lives in.

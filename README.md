@@ -75,7 +75,7 @@ The design splits enforcement by what each layer can actually guarantee:
 
 - **Deterministic checks carry the weight.** Lint and coverage are exact parsing, not vibes. They run identically from an agent hook, your shell, and CI — an agent can't talk its way past an exit code in CI.
 - **Judgment reviews close the tautology gap.** Review IDs embed a SHA-256 content hash of the requirement text plus the exact evidence blocks that cover it: each annotated test through the next annotation, plus the file's prelude (imports and mocks — the classic test-neutering vector — stay under the hash). Edit a covered test — or the requirement — and the old verdict silently stops counting; edit an *unrelated* test in the same file and it doesn't. `2119 pass` refuses IDs whose hash doesn't match current content, so verdicts can't be pre-computed or replayed.
-- **Verdicts are committed, not hidden.** `.2119/verdicts/*.json` files carry the verdict, summary, and timestamp, so every review decision shows up in the PR diff for humans to audit.
+- **Verdicts are committed, not hidden — and schema-validated.** `.2119/verdicts/*.json` files carry the verdict, summary, and timestamp, so every review decision shows up in the PR diff for humans to audit. The gate counts a verdict only as a fully well-formed record; a malformed file (mangled merge, missing field, wrong filename) is a loud check violation, never a silent pass.
 
 ### Residual risk, stated plainly
 

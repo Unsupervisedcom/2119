@@ -6,7 +6,7 @@ import { parseSpec } from "./spec.js";
 import { scanAnnotations } from "./annotations.js";
 import { computeCoverage, type CoverageResult } from "./cover.js";
 import { computeReviewTargets, verdictViolations, type ReviewTask } from "./review.js";
-import { readVerdicts } from "./verdict.js";
+import { scanVerdicts } from "./verdict.js";
 import { runVerifyCommands } from "./verify.js";
 import { allRequirements } from "./spec.js";
 import type { SpecFile, Verdict, Violation } from "./model.js";
@@ -45,8 +45,9 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
   const coverage = computeCoverage(specs, annotations, config.enforce);
 
   const reviewTargets = config.reviews ? computeReviewTargets(config, specs, coverage, repoFiles, annotations) : [];
-  const verdicts = readVerdicts(root);
-  const reviewViolations = verdictViolations(reviewTargets, verdicts);
+  // Malformed verdict files are loud violations, not silent passes or skips (REQ-003.7.2).
+  const { verdicts, violations: malformedVerdicts } = scanVerdicts(root);
+  const reviewViolations = [...malformedVerdicts, ...verdictViolations(reviewTargets, verdicts)];
 
   // [review: instructions: <path>] pointing at a missing file (REQ-005.1.4).
   for (const req of allRequirements(specs)) {
