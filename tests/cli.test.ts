@@ -167,6 +167,10 @@ describe("cli end-to-end", () => {
     expect(body).toContain("fresh-context subagent");
     expect(body).toMatch(/npx rfc2119 check.*must exit 0/s);
     expect(body).toContain("CI runs the same check");
+    // 0.6 topics: draft-time spec critique + reviewer diversity (REQ-004.3.2).
+    expect(body).toContain("critique the draft\nrequirements");
+    expect(body).toContain("review --audit");
+    expect(body).toContain("different providers");
   });
 
   // 2119: REQ-003.5.2, REQ-003.5.5

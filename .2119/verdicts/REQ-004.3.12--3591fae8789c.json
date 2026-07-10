@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.12--3591fae8789c",
+  "requirementId": "REQ-004.3.12",
+  "hash": "3591fae8789c",
+  "verdict": "pass",
+  "summary": "Test runs real init, asserts stdout contains 'npx rfc2119 check' and 'npx rfc2119 init --agent' and rejects bare backtick '2119 init'; init prints npx-prefixed guidance throughout.",
+  "timestamp": "2026-07-10T22:57:12.699Z"
+}

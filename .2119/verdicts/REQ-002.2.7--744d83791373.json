@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.2.7--744d83791373",
+  "requirementId": "REQ-002.2.7",
+  "hash": "744d83791373",
+  "verdict": "pass",
+  "summary": "rigor test feeds scanAnnotations a string-literal marker, a call-argument marker, a genuine // comment, an indented # comment, and a non-leader REM line, asserting only the two comment-leader lines count and that comment_leaders=['REM'] extends without admitting the string literal; the exploit case is rejected.",
+  "timestamp": "2026-07-10T22:58:45.455Z"
+}

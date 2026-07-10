@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.1.6--507697184e74",
-  "requirementId": "REQ-004.1.6",
-  "hash": "507697184e74",
-  "verdict": "pass",
-  "summary": "Uses a failing fixture (uncovered MUST) so a block would normally be emitted, then asserts handleHook stop with stop_hook_active:true returns {} — discriminating proof the loop guard short-circuits before the check.",
-  "timestamp": "2026-07-09T23:07:39.434Z"
-}

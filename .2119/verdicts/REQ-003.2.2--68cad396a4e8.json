@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.2.2--68cad396a4e8",
-  "requirementId": "REQ-003.2.2",
-  "hash": "68cad396a4e8",
-  "verdict": "pass",
-  "summary": "writeVerdict emits plain JSON.stringify records to .2119/verdicts/*.json; init.ts gitignores only .2119/reviews/ and never verdicts, so verdicts stay committed and appear in PR diffs",
-  "timestamp": "2026-07-09T23:07:08.532Z"
-}

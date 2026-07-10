@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.1.1--3e8f3130284f",
+  "requirementId": "REQ-001.1.1",
+  "hash": "3e8f3130284f",
+  "verdict": "pass",
+  "summary": "parseSpec tests reject both boundary counterexamples: content before the H1 (rigor 'before' violation) and a heading whose REQ-NNN mismatches the filename prefix (lint REQ-002 file vs REQ-001 heading), with clean positive cases; real parser, no mocks.",
+  "timestamp": "2026-07-10T22:58:36.852Z"
+}

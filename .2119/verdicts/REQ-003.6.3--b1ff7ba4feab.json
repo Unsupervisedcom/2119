@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.6.3--b1ff7ba4feab",
+  "requirementId": "REQ-003.6.3",
+  "hash": "b1ff7ba4feab",
+  "verdict": "pass",
+  "summary": "Real CLI test: passes a verdict for FIX-001.1.1, runs review --audit, asserts audit file generated for the passing-verdict req only (unreviewed FIX-001.1.2 gets none), body carries construct-counterexample and pass-only-if-none directives, and the verdict file is byte-identical before/after. Minor untested near-miss: a failing (not merely absent) verdict is not exercised.",
+  "timestamp": "2026-07-10T23:03:33.182Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.9--3e22c036924b",
+  "requirementId": "REQ-003.1.9",
+  "hash": "3e22c036924b",
+  "verdict": "pass",
+  "summary": "rigor test adds a [review: docs/autth/**] tag whose typo'd glob matches nothing and asserts real check exits 1 with stderr [REQ-003.1.9] and the unmatched glob; a silent degrade to text-only hash would emit no such violation. Impl message also names the requirement id though the test only asserts the glob.",
+  "timestamp": "2026-07-10T22:58:59.757Z"
+}

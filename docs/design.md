@@ -44,7 +44,9 @@ this tool exists to catch in tests. Where real provenance is needed, it comes fr
 the **independent-runner pattern**, a CI job or bot account that the authoring agent cannot log
 in as re-dispatches the judgment reviews and commits the verdicts itself. The committer identity
 on a protected branch *is* the attestation — enforced by your git host, not by fields anyone can
-type. Recipe in [`scaling.md`](scaling.md).
+type. This is presented as a **reference architecture** — the recipe in [`scaling.md`](scaling.md)
+describes the shape; an executable example has not shipped yet, and we say so rather than
+overclaim "supported."
 
 ## Specs are agent context; ritual text is banned
 

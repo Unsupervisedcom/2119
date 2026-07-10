@@ -37,11 +37,12 @@ preserve whole-repo semantics.
 4. `2119 cover` MUST fail when an enforced requirement has zero covering annotations, listing every uncovered requirement ID and its statement text.
 5. An annotation referencing a section ID (e.g. `REQ-002.1`) MUST count as covering every requirement item within that section.
 6. `2119 cover` SHOULD support a configurable severity set in `.2119.yml` so projects can also enforce coverage for `SHOULD`-level requirements.
+7. An annotation marker MUST be recognized only when the marker's line begins (after optional whitespace) with a comment leader — `//`, `#`, `*`, `/*`, `--`, `;`, `%`, or `<!--` by default, extendable via a `comment_leaders` list in `.2119.yml` — so markers inside string literals, generated output, or prose never count as coverage.
 
 ### REQ-002.3: The check command
 
 1. `2119 check` MUST run lint, cover, review-verdict freshness (REQ-003.3), and verify commands (REQ-005.2), exiting non-zero if any of them fail.
-2. `2119 check` MUST complete in under 5 seconds on a repository with 100 spec files and 2000 test files, excluding time spent inside user-defined `[verify]` commands, so it is cheap enough to run from write-time hooks. [review: src/**]
+2. `2119 check` MUST complete in under 5 seconds on a repository with 100 spec files and 2000 test files, excluding time spent inside user-defined `[verify]` commands, so it is cheap enough to run from write-time hooks.
 3. `2119 check --json` MUST emit a machine-readable report (violations, uncovered requirements, stale verdicts, manual requirements) for use by hooks and CI annotations.
 4. REQUIREMENT REMOVED
 5. When invoked with `--no-verify`, `2119 check` MUST skip `[verify]` command execution and surface those requirements alongside the manual exemptions, so CI for untrusted contributions can refuse to execute spec-supplied shell without silently dropping the requirements.
@@ -50,3 +51,4 @@ preserve whole-repo semantics.
 
 1. 2119 MUST read configuration from `.2119.yml` at the repository root, with every field optional and sensible defaults (specs at `specs/**/*REQ-*.md`, tests at common test globs, prefix `REQ`).
 2. Running any command in a repository with no `.2119.yml` and no spec files MUST produce a clear "not initialized" message pointing at `2119 init`, not a zero-requirement pass.
+3. The not-initialized determination MUST depend on whether the spec globs match any files, not on whether a specs directory exists, so an empty `specs/` directory can never produce a zero-requirement pass.

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.3.1--21136677713e",
-  "requirementId": "REQ-001.3.1",
-  "hash": "21136677713e",
-  "verdict": "pass",
-  "summary": "No ID renumbered/reassigned: all spec item numbers are sequential and REQ-002.3.4 is tombstoned rather than reused; new work appended as REQ-003.7 and REQ-007 sections.",
-  "timestamp": "2026-07-10T17:51:17.167Z"
-}

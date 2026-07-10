@@ -12,6 +12,22 @@ export function buildAnnotationRegex(prefix: string): RegExp {
 }
 
 /**
+ * Markers count only on lines that begin (after whitespace) with a comment
+ * leader, so string literals, generated output, and prose never produce
+ * coverage (REQ-002.2.7). `comment_leaders` in .2119.yml extends the set.
+ */
+export const DEFAULT_COMMENT_LEADERS = ["//", "#", "*", "/*", "--", ";", "%", "<!--"];
+
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+export function buildLeaderRegex(extraLeaders: string[] = []): RegExp {
+  const leaders = [...new Set([...DEFAULT_COMMENT_LEADERS, ...extraLeaders])]
+    .sort((a, b) => b.length - a.length)
+    .map(escapeRe);
+  return new RegExp(`^\\s*(?:${leaders.join("|")})`);
+}
+
+/**
  * Evidence blocks for test-quality review hashing (REQ-003.1.7): each covering
  * annotation contributes its file's prelude (everything before the file's
  * first annotation, hashed once per file) plus the annotation's line through
@@ -47,8 +63,14 @@ export function evidenceBlockParts(root: string, covering: Annotation[], all: An
   return parts;
 }
 
-export function scanAnnotations(root: string, testFiles: string[], prefix: string): Annotation[] {
+export function scanAnnotations(
+  root: string,
+  testFiles: string[],
+  prefix: string,
+  commentLeaders: string[] = [],
+): Annotation[] {
   const out: Annotation[] = [];
+  const leaderRe = buildLeaderRegex(commentLeaders);
   for (const file of testFiles) {
     let content: string;
     try {
@@ -60,6 +82,7 @@ export function scanAnnotations(root: string, testFiles: string[], prefix: strin
     const lines = content.split(/\r?\n/);
     const re = buildAnnotationRegex(prefix);
     lines.forEach((line, idx) => {
+      if (!leaderRe.test(line)) return; // not a comment line (REQ-002.2.7)
       re.lastIndex = 0;
       let m: RegExpExecArray | null;
       while ((m = re.exec(line)) !== null) {

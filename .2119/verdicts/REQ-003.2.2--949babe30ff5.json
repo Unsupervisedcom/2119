@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.2.2--949babe30ff5",
-  "requirementId": "REQ-003.2.2",
-  "hash": "949babe30ff5",
-  "verdict": "pass",
-  "summary": "init.ts only adds .2119/reviews/ to .gitignore and never .2119/verdicts; writeVerdict emits plain JSON; git check-ignore confirms verdict files are NOT ignored and committed verdicts are present in the repo.",
-  "timestamp": "2026-07-10T17:51:26.224Z"
-}

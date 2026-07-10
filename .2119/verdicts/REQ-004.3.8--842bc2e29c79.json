@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.8--842bc2e29c79",
+  "requirementId": "REQ-004.3.8",
+  "hash": "842bc2e29c79",
+  "verdict": "pass",
+  "summary": "Test creates an empty specs/ directory (the pre-existing-but-globs-match-nothing case) then runs real init and asserts specs/REQ-001-example.md now exists — rejects the 'empty dir silently accepted' counterexample the requirement forbids.",
+  "timestamp": "2026-07-10T22:58:20.327Z"
+}

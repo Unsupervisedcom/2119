@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.11--f38af3a3084f",
+  "requirementId": "REQ-004.1.11",
+  "hash": "f38af3a3084f",
+  "verdict": "pass",
+  "summary": "Test drives a real unroutable registry through handleHook and asserts elapsed<1000ms, normal 'spec-driven testing' context present, and no 'is available' notice — genuinely rejects the network-failure-breaks-hook and result-altered counterexamples; no mocking of the probe.",
+  "timestamp": "2026-07-10T22:58:04.996Z"
+}

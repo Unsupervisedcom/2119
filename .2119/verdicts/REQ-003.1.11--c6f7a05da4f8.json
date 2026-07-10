@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.11--c6f7a05da4f8",
+  "requirementId": "REQ-003.1.11",
+  "hash": "c6f7a05da4f8",
+  "verdict": "pass",
+  "summary": "Instruction generator asserts the generated review file carries the 'bad requirement honestly tested is still a bad requirement' clause (the Judge-the-requirement-too directive); a mutant dropping that block fails the test.",
+  "timestamp": "2026-07-10T22:59:20.283Z"
+}

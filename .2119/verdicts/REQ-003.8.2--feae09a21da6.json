@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.2--feae09a21da6",
+  "requirementId": "REQ-003.8.2",
+  "hash": "feae09a21da6",
+  "verdict": "pass",
+  "summary": "Current review.ts templates contain a catching clause for every corpus case: counterexample/conjunct-enumeration obligation (001-004,006,007,009,010), tautology+over-mocking flags (008,011), judge-the-requirement mechanism/untestable clause (005,011), and the audit template's negative-space probe (006,007); the two pass controls survive without false-fail.",
+  "timestamp": "2026-07-10T22:59:54.364Z"
+}

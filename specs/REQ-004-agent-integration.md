@@ -29,6 +29,8 @@ plugins and are planned as thin native packages.
 7. `session-start` MUST inject a short description of the 2119 workflow via the platform's additional-context mechanism.
 8. A hook invoked in a repository where 2119 is not set up MUST emit a no-op response instead of an error, so user-level hook installs are safe.
 9. Hook handler errors MUST be caught and reported inside the JSON response rather than crashing the process.
+10. When a cached daily registry probe has found a newer rfc2119 version than the one running, `session-start` MUST include a one-line upgrade notice (naming the versions and `init --refresh`) in its additional context, so agents of users who never check for updates learn about them at session start.
+11. The upgrade probe MUST NOT delay any hook by more than one second or affect its result: probes are cached (at most one per day, in a gitignored location), time-boxed, and silent on any network failure.
 
 ### REQ-004.2: Platform adapters
 
@@ -39,13 +41,19 @@ plugins and are planned as thin native packages.
 5. Adapter installation MUST be idempotent: running init twice produces no duplicate hook entries.
 6. Native plugin packages for Pi and opencode MAY be provided as separate thin packages that shell out to the same CLI. [manual]
 7. `2119 init --agent claude` MUST also install a `2119-reviewer` subagent definition at `.claude/agents/2119-reviewer.md` (a fresh-context, read-only reviewer that records verdicts), without overwriting an existing file at that path.
+8. `2119 init --agent claude` MUST maintain the same marker-delimited workflow section in `CLAUDE.md` as in `AGENTS.md` (Claude Code reliably reads only `CLAUDE.md`), with identical idempotence and content rules.
 
 ### REQ-004.3: Universal fallback layer
 
 1. `2119 init` MUST create a commented `.2119.yml` and a template spec when none exist.
-2. `2119 init` MUST append a marker-delimited workflow section to `AGENTS.md` describing spec-first planning, test annotations, judgment reviews, and the `2119 check` gate, exactly once.
+2. `2119 init` MUST append a marker-delimited workflow section to `AGENTS.md` describing spec-first planning, draft-time spec critique (dispatch a fresh reviewer to critique new requirements — outcome-stated, individually testable, one obligation each — before writing tests), test annotations, judgment reviews, reviewer-model diversity (use models from different providers routinely or as periodic `review --audit` sweeps, especially for challenging or high-consequence requirements), and the `2119 check` gate, exactly once.
 3. `2119 init --git-hook` MUST install a git pre-commit hook that runs `2119 check`, refusing to overwrite an existing pre-commit hook it did not create.
 4. `2119 init --ci` MUST write a GitHub Actions workflow that runs `2119 check` on pull requests.
 5. The AGENTS.md section MUST state that CI runs the same check, so agents on hookless platforms know the gate cannot be skipped.
-6. The generated CI workflow MUST include a project test-suite step separate from the `2119 check` step — auto-filled as `npm test` when the repository has a package.json, and otherwise a placeholder stating that 2119 does not run tests.
+6. The generated CI workflow MUST prepare the project and run its test suite as steps separate from the `2119 check` step — for npm repositories, installing dependencies and then running `npm test` so the workflow is executable on a clean runner, and otherwise a placeholder stating that 2119 does not run tests.
 7. Generated hook, pre-commit, and CI commands MUST pin the exact rfc2119 package version that generated them, so the gate's behavior cannot drift with unreviewed upstream releases.
+8. `2119 init` MUST create the template spec whenever the spec globs match no files, not merely when the specs directory is absent, so a repository with an empty `specs/` directory is repaired rather than silently accepted.
+9. `2119 init --refresh` MUST update every 2119-generated artifact it can identify (marker-delimited sections, 2119-created hooks, the generated CI workflow, and their pinned versions) to the current package version, while never modifying content it did not generate.
+10. `2119 init` MUST validate all arguments before writing anything, so an invalid invocation leaves the repository untouched.
+11. The generated `.2119.yml` MUST include commented examples of every user-facing option, including `review_model`, `shared_evidence`, `comment_leaders`, and `audit`, so adopters discover options where they edit configuration.
+12. Command guidance printed by `init` MUST use invocations that resolve without a global install (`npx rfc2119 ...`), matching how adopters actually invoked the tool.

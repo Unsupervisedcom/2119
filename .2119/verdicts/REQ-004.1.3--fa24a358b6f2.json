@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.3--fa24a358b6f2",
+  "requirementId": "REQ-004.1.3",
+  "hash": "fa24a358b6f2",
+  "verdict": "pass",
+  "summary": "extractEditedPaths test asserts both file_path and Codex apply_patch (Update/Add File) parsing; out-of-scope app.py edit on a spec with real lint violations returns {} — glob filter genuinely exercised, would surface violations if removed.",
+  "timestamp": "2026-07-10T22:58:20.326Z"
+}

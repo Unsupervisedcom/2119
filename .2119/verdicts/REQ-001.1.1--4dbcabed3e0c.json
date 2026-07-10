@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.1.1--4dbcabed3e0c",
-  "requirementId": "REQ-001.1.1",
-  "hash": "4dbcabed3e0c",
-  "verdict": "pass",
-  "summary": "Test parses VALID under mismatched filename REQ-002 (heading says REQ-001) and asserts a REQ-001.1.1 violation, then confirms none under matching filename — genuine positive+negative check of heading/filename-prefix agreement.",
-  "timestamp": "2026-07-09T23:07:12.815Z"
-}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.7--749927896360",
+  "requirementId": "REQ-004.1.7",
+  "hash": "749927896360",
+  "verdict": "pass",
+  "summary": "session-start asserts SessionStart event name and additionalContext equals SESSION_CONTEXT, plus SESSION_CONTEXT contains 'npx rfc2119 check' confirming real workflow guidance; undefined hookSpecificOutput if injection omitted.",
+  "timestamp": "2026-07-10T22:58:31.273Z"
+}

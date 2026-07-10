@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-008.1.3--f57d0273d731",
+  "requirementId": "REQ-008.1.3",
+  "hash": "f57d0273d731",
+  "verdict": "pass",
+  "summary": "design.md records provenance-fields rejection ('self-reported provenance is unenforceable decoration') and names the independent-runner pattern (CI/bot identity the author cannot log in as; committer identity on protected branch is the attestation) as reference architecture pending an executable example.",
+  "timestamp": "2026-07-10T22:57:21.661Z"
+}

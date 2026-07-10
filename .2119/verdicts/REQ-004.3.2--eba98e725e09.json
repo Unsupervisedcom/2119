@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.3.2--eba98e725e09",
-  "requirementId": "REQ-004.3.2",
-  "hash": "eba98e725e09",
-  "verdict": "pass",
-  "summary": "cli.test runs init twice on existing AGENTS.md, asserts exactly one begin/end marker pair, preserves prior content, and verifies the section names spec-first planning, annotation example, fresh-context review, and the check-must-exit-0 gate",
-  "timestamp": "2026-07-09T23:07:11.896Z"
-}

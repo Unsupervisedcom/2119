@@ -111,12 +111,18 @@ export function generateInstructions(
 ): ReviewTask[] {
   const pending = targets.filter((t) => verdicts.get(t.reviewId)?.verdict !== "pass");
   // Keep the directory exactly in sync with the pending set — stale
-  // instruction files from prior rounds are misleading (REQ-006.1).
+  // instruction files from prior rounds are misleading (REQ-006.1). Audit
+  // files stay while their verdict is still a current pass (REQ-003.6.3).
   const dir = join(config.root, REVIEWS_DIR);
   mkdirSync(dir, { recursive: true });
   const pendingIds = new Set(pending.map((t) => t.reviewId));
+  const passingIds = new Set(
+    targets.filter((t) => verdicts.get(t.reviewId)?.verdict === "pass").map((t) => t.reviewId),
+  );
   for (const file of readdirSync(dir)) {
-    if (file.endsWith(".md") && !pendingIds.has(file.replace(/\.md$/, ""))) {
+    if (file.endsWith(".audit.md")) {
+      if (!passingIds.has(file.replace(/\.audit\.md$/, ""))) unlinkSync(join(dir, file));
+    } else if (file.endsWith(".md") && !pendingIds.has(file.replace(/\.md$/, ""))) {
       unlinkSync(join(dir, file));
     }
   }
@@ -133,7 +139,68 @@ export function generateInstructions(
         custom = { path: customPath, content: "(file missing — see the check violation for this requirement)" };
       }
     }
-    writeFileSync(join(config.root, instructionPath), renderInstructions(t, config.reviewModel, custom));
+    writeFileSync(join(config.root, instructionPath), renderInstructions(t, config.reviewModels, custom));
+    return { ...t, instructionPath };
+  });
+}
+
+/**
+ * Adversarial audit instructions for requirements whose current review IDs
+ * already have passing verdicts (REQ-003.6.3). Never touches verdicts; a
+ * failed audit is recorded through the standard fail command and supersedes
+ * the pass. Generated only under --audit or `audit: always` (REQ-003.6.4).
+ */
+export function generateAuditInstructions(
+  config: Config,
+  targets: Omit<ReviewTask, "instructionPath">[],
+  verdicts: Map<string, Verdict>,
+): ReviewTask[] {
+  const passing = targets.filter((t) => verdicts.get(t.reviewId)?.verdict === "pass");
+  const dir = join(config.root, REVIEWS_DIR);
+  mkdirSync(dir, { recursive: true });
+  return passing.map((t) => {
+    const instructionPath = `${REVIEWS_DIR}/${t.reviewId}.audit.md`;
+    const evidenceList = t.evidence.length ? t.evidence.map((f) => `- ${f}`).join("\n") : "- (none)";
+    writeFileSync(
+      join(config.root, instructionPath),
+      `# 2119 Adversarial Audit: ${t.requirement.id}
+
+This requirement's review previously PASSED. You are the adversary: your job is to break that
+verdict, not to confirm it. You did not write the code or the tests under audit.
+
+## Requirement
+
+> ${t.requirement.text}
+
+*(${t.requirement.id}, keyword: ${t.requirement.keywords[0] ?? "n/a"})*
+
+## Evidence files
+
+${evidenceList}
+
+## Your task
+
+**Construct a concrete mutant or input under which this requirement is violated while every
+covering test stays green.** Enumerate the requirement's conjuncts and boundary terms; probe the
+negative space (what must be refused, not what is accepted); consider shared fixtures, preludes,
+and paths the tests never touch. Reason from the requirement's text, never from the
+implementation's current behavior.
+
+- If you find such a counterexample: record a FAIL with the mutant described concretely enough
+  to reproduce.
+- Only if you genuinely cannot construct one after honest effort: record a PASS stating the
+  strongest candidate you tried and why it fails to survive.
+
+## Recording your verdict
+
+\`\`\`
+npx rfc2119 pass ${t.reviewId} --summary "audit: <strongest attempted counterexample and why it dies>"
+npx rfc2119 fail ${t.reviewId} --summary "audit: <the counterexample, reproducibly>"
+\`\`\`
+
+Do not edit any files; report, don't fix.
+`,
+    );
     return { ...t, instructionPath };
   });
 }
@@ -157,7 +224,7 @@ verdicts, re-run \`npx rfc2119 check\`.`;
 
 function renderInstructions(
   t: Omit<ReviewTask, "instructionPath">,
-  reviewModel: string,
+  reviewModels: string[],
   custom?: { path: string; content: string },
 ): string {
   const evidenceList = t.evidence.length
@@ -172,17 +239,26 @@ Read the requirement and each evidence file's tests annotated with \`2119: ${t.r
 - **Tautological assertions** — tests that assert what they just set up, or that cannot fail.
 - **Over-mocking** — mocks/stubs that bypass the very behavior the requirement constrains.
 - **Unrelated assertions** — tests that reference the requirement ID but assert something other than its criterion.
-- **Keyword theater** — string/keyword matching standing in for behavioral verification.`
+- **Keyword theater** — string/keyword matching standing in for behavioral verification.
+
+**Counterexample obligation:** enumerate the requirement's conjuncts and boundary terms (words
+like "comment", "exactly", "only", "begins with"). For each, construct the nearest violating
+input — the almost-conforming case the requirement forbids — and confirm a test rejects it.
+Do not reason from the implementation's current behavior; reason from the requirement's text.
+A review that cannot name a rejected counterexample for a boundary term is not a pass.`
       : `**Is this requirement genuinely satisfied by the current state of the evidence files?**
 
 Read the requirement and the evidence files and judge compliance directly. This requirement was tagged \`[review]\` because it needs judgment rather than a test.`;
 
   // Judgment-heavy [review]-tagged requirements warrant the dispatcher's own
   // (typically stronger) model; routine test-quality reviews suit the pinned
-  // cheaper tier (REQ-003.5.2, REQ-003.5.3).
+  // cheaper tier (REQ-003.5.2, REQ-003.5.3). Multiple configured models mean
+  // every one must review and pass (REQ-003.5.6).
   const modelLine =
     t.kind === "test-quality"
-      ? `Recommended reviewer model: ${reviewModel} (advisory — use the nearest tier your platform offers).`
+      ? reviewModels.length > 1
+        ? `Recommended reviewer models: each of ${reviewModels.join(", ")} reviews independently; record pass only when all of them pass (advisory — use the nearest tiers your platform offers).`
+        : `Recommended reviewer model: ${reviewModels[0]} (advisory — use the nearest tier your platform offers).`
       : `Recommended reviewer model: your current model — this is a judgment-heavy review.`;
 
   return `# 2119 Judgment Review: ${t.requirement.id}
@@ -206,6 +282,10 @@ ${evidenceList}
 ## Your task
 
 ${question}
+
+**Judge the requirement too:** if the requirement itself is ambiguous, untestable, or states an
+implementation mechanism rather than an observable outcome, fail with that finding — a bad
+requirement honestly tested is still a bad requirement.
 ${custom ? `\n## Additional review criteria\n\n*(from \`${custom.path}\` — these extend the requirement above)*\n\n${custom.content}\n` : ""}
 ## Recording your verdict
 

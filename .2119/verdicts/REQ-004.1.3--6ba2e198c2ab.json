@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.1.3--6ba2e198c2ab",
-  "requirementId": "REQ-004.1.3",
-  "hash": "6ba2e198c2ab",
-  "verdict": "pass",
-  "summary": "extractEditedPaths test asserts file_path plus Codex apply_patch 'Update/Add File' lines parse to the exact path array; second test edits app.py (outside spec/test globs) and asserts handleHook returns {} — genuine, not tautological.",
-  "timestamp": "2026-07-09T23:07:30.721Z"
-}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.3.1--f5b28cd8b05f",
-  "requirementId": "REQ-001.3.1",
-  "hash": "f5b28cd8b05f",
-  "verdict": "pass",
-  "summary": "No ID renumbered or reassigned: when REQ-002.3.4 (--changed) was retired it was tombstoned in place and REQ-002.3.5 kept its number instead of shifting up; all section item numbers still map to their original obligations.",
-  "timestamp": "2026-07-10T19:09:22.123Z"
-}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.1.2--bfe70bd276fc",
+  "requirementId": "REQ-002.1.2",
+  "hash": "bfe70bd276fc",
+  "verdict": "pass",
+  "summary": "lint test puts MUST and SHALL NOT inside inline code spans and asserts only the out-of-span SHOULD counts (keywords==['SHOULD'], no REQ-001.2.2 violation); rigor adds multi-backtick spans; exercises real findKeywords/stripInlineCode.",
+  "timestamp": "2026-07-10T22:58:43.573Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.5.6--3bf352dcde30",
+  "requirementId": "REQ-003.5.6",
+  "hash": "3bf352dcde30",
+  "verdict": "pass",
+  "summary": "Test configures review_model as a two-item list and asserts both the dispatch stdout ('opus, gpt-5.6-sol') and the instruction file's 'each of opus, gpt-5.6-sol reviews independently; record pass only when all of them pass' guidance; an 'any-of' rendering or dropped list fails it.",
+  "timestamp": "2026-07-10T22:59:41.643Z"
+}

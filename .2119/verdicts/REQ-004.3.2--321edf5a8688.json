@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.2--321edf5a8688",
+  "requirementId": "REQ-004.3.2",
+  "hash": "321edf5a8688",
+  "verdict": "pass",
+  "summary": "Runs real init on a pre-existing AGENTS.md and asserts begin/end markers appear exactly once (toHaveLength 1), pre-existing content preserved, plus a distinct phrase per mandated topic: spec-first, RFC2119 keyword, annotation example, fresh-context subagent, check-must-exit-0, draft critique, review --audit, different providers.",
+  "timestamp": "2026-07-10T22:58:12.253Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-008.2.1--ec3576645763",
+  "requirementId": "REQ-008.2.1",
+  "hash": "ec3576645763",
+  "verdict": "pass",
+  "summary": "docs/scaling.md covers all seven required topics: exact-version pinning, test suite as a separate CI gate, CODEOWNERS for specs and verdicts, independent-runner recipe, explicit evidence globs over bare [review], shared_evidence for fixtures, and a --no-verify [verify] policy for untrusted PRs.",
+  "timestamp": "2026-07-10T22:57:27.221Z"
+}

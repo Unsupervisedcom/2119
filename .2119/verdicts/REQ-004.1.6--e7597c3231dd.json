@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.6--e7597c3231dd",
+  "requirementId": "REQ-004.1.6",
+  "hash": "e7597c3231dd",
+  "verdict": "pass",
+  "summary": "Uses a fixture that otherwise blocks (uncovered MUST); with stop_hook_active=true the handler returns {} — proving the loop guard short-circuits before the block path, not a trivially-empty case.",
+  "timestamp": "2026-07-10T22:58:27.072Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.10--524c5a820960",
+  "requirementId": "REQ-004.1.10",
+  "hash": "524c5a820960",
+  "verdict": "pass",
+  "summary": "Cache seeded with latest 99.0.0 drives session-start additionalContext to contain '99.0.0 is available', the running PKG_VERSION, and 'init --refresh'; dynamic version read from cache, not hardcoded. Inverse (no-newer) covered by 004.1.7/.11.",
+  "timestamp": "2026-07-10T22:58:37.204Z"
+}

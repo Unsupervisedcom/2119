@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.3.2--ecc7e59ebbc3",
+  "requirementId": "REQ-002.3.2",
+  "hash": "ecc7e59ebbc3",
+  "verdict": "pass",
+  "summary": "perf test generates 100 spec files and 2000 annotated test files and runs the real check CLI, asserting elapsed under 5000ms; guards against pathological blowup at the exact stated scale. Minor gap: no [verify] command present so the exclusion clause is untested, but the core observable is genuinely measured.",
+  "timestamp": "2026-07-10T22:58:50.440Z"
+}

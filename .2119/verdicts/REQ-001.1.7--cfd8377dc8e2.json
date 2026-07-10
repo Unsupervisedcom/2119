@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.1.7--cfd8377dc8e2",
+  "requirementId": "REQ-001.1.7",
+  "hash": "cfd8377dc8e2",
+  "verdict": "pass",
+  "summary": "rigor test writes a second FIX-001 spec and runs real lint, asserting exit 1 plus stderr naming [REQ-001.1.7] and FIX-001; duplicate detection lives in buildContext cross-file, so removing it fails the test.",
+  "timestamp": "2026-07-10T22:58:38.913Z"
+}

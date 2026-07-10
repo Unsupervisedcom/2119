@@ -20,6 +20,12 @@ export interface Config {
   reviewModelExplicit: boolean;
   /** Globs of shared fixtures/helpers hashed into every test-quality review (REQ-003.1.8). */
   sharedEvidence: string[];
+  /** All recommended reviewer models; reviewModel is their display join (REQ-003.5.6). */
+  reviewModels: string[];
+  /** Extra comment leaders recognized for annotations (REQ-002.2.7). */
+  commentLeaders: string[];
+  /** "always" makes plain `review` also generate audit instructions (REQ-003.6.4). */
+  auditAlways: boolean;
   /** True when a .2119.yml file was found. */
   explicit: boolean;
 }
@@ -55,6 +61,9 @@ export function loadConfig(root: string): Config {
     raw = (parsed ?? {}) as Record<string, unknown>;
   }
   const prefix = typeof raw.prefix === "string" ? raw.prefix : "REQ";
+  // review_model accepts a single value or a list; all values are advisory
+  // strings resolved by the dispatching agent, never invoked here (REQ-003.5.6).
+  const reviewModels = stringList(raw.review_model) ?? [DEFAULT_REVIEW_MODEL];
   return {
     root,
     specs: stringList(raw.specs) ?? [`specs/**/*${prefix}-*.md`],
@@ -62,9 +71,12 @@ export function loadConfig(root: string): Config {
     prefix,
     enforce: stringList(raw.enforce) ?? DEFAULT_ENFORCE,
     reviews: raw.reviews === undefined ? true : Boolean(raw.reviews),
-    reviewModel: typeof raw.review_model === "string" ? raw.review_model : DEFAULT_REVIEW_MODEL,
-    reviewModelExplicit: typeof raw.review_model === "string",
+    reviewModel: reviewModels.join(", "),
+    reviewModelExplicit: raw.review_model !== undefined,
+    reviewModels,
     sharedEvidence: stringList(raw.shared_evidence) ?? [],
+    commentLeaders: stringList(raw.comment_leaders) ?? [],
+    auditAlways: raw.audit === "always",
     explicit,
   };
 }

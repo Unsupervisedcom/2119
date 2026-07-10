@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-008.2.2--4cf901bd3a5c",
+  "requirementId": "REQ-008.2.2",
+  "hash": "4cf901bd3a5c",
+  "verdict": "pass",
+  "summary": "Both README (line 114) and scaling.md ('Periodic adversarial audits') advise periodic cross-provider review --audit sweeps and individual audits of particularly challenging/high-consequence requirements.",
+  "timestamp": "2026-07-10T22:57:27.310Z"
+}

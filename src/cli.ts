@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { buildContext, buildReport } from "./check.js";
-import { generateInstructions, renderDispatchPrompt } from "./review.js";
+import { generateAuditInstructions, generateInstructions, renderDispatchPrompt } from "./review.js";
 import { pruneVerdicts, writeVerdict } from "./verdict.js";
 import { splitReviewId } from "./hash.js";
 import { runInit } from "./init.js";
@@ -46,7 +46,8 @@ usage: 2119 <command>
   lint      Validate spec files against the RFC 2119 document format
   cover     Verify every enforced requirement has a covering test annotation
   review    Generate judgment-review instruction files for stale/missing verdicts
-            (--dispatch also emits a ready-to-paste parallel-subagent prompt)
+            (--dispatch emits a paste-ready parallel prompt; --audit also generates
+            adversarial audits of passing verdicts)
   pass      Record a passing review verdict:  2119 pass <review-id> --summary "..."
   fail      Record a failing review verdict:  2119 fail <review-id> --summary "..."
   check     lint + cover + review-verdict freshness; non-zero exit on any failure
@@ -108,9 +109,24 @@ switch (command) {
       }
     }
     const tasks = generateInstructions(ctx.config, ctx.reviewTargets, ctx.verdicts);
-    if (tasks.length === 0) {
+    // Audit generation is explicit-only: the flag or `audit: always`, never
+    // the plain loop (REQ-003.6.4).
+    const auditTasks =
+      args.includes("--audit") || ctx.config.auditAlways
+        ? generateAuditInstructions(ctx.config, ctx.reviewTargets, ctx.verdicts)
+        : [];
+    if (auditTasks.length > 0) {
+      console.log(`${auditTasks.length} adversarial audit(s) generated for passing verdicts:`);
+      for (const t of auditTasks) console.log(`- ${t.requirement.id} (audit): ${t.instructionPath}`);
+      console.log("");
+    }
+    if (tasks.length === 0 && auditTasks.length === 0) {
       console.log("review: all judgment reviews have current passing verdicts");
       break;
+    }
+    if (tasks.length === 0) {
+      console.log("review: no pending reviews; dispatch the audits above to fresh-context reviewers.");
+      process.exit(1);
     }
     console.log(
       `${tasks.length} judgment review(s) pending. Dispatch each to a FRESH-CONTEXT reviewer\n` +
@@ -224,7 +240,7 @@ switch (command) {
     } catch {
       // Malformed/absent stdin: proceed with an empty payload.
     }
-    console.log(JSON.stringify(handleHook(root, event as HookEvent, platform, payload)));
+    console.log(JSON.stringify(await handleHook(root, event as HookEvent, platform, payload)));
     break;
   }
 

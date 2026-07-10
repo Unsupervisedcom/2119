@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-005.2.6--7c769b65a0af",
-  "requirementId": "REQ-005.2.6",
-  "hash": "7c769b65a0af",
-  "verdict": "pass",
-  "summary": "README line 67 states verify commands 'execute arbitrary shell from spec files: they carry the same trust level as package.json scripts' — meets the criterion verbatim.",
-  "timestamp": "2026-07-09T23:07:09.944Z"
-}

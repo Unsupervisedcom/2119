@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.5--4f7a83c27a2e",
+  "requirementId": "REQ-004.1.5",
+  "hash": "4f7a83c27a2e",
+  "verdict": "pass",
+  "summary": "stop on an uncovered-MUST fixture asserts decision=block, reason contains the failing REQ-001.1.1 and 'npx rfc2119 check' fix command; Gemini variant asserts decision=deny. Genuinely tied to a real check failure.",
+  "timestamp": "2026-07-10T22:58:25.330Z"
+}

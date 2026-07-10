@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.3.3--00dc158463b2",
-  "requirementId": "REQ-001.3.3",
-  "hash": "00dc158463b2",
-  "verdict": "pass",
-  "summary": "The one removed requirement (REQ-002.3.4, formerly the --changed flag) keeps its number with body replaced by the exact text 'REQUIREMENT REMOVED', so tests/verdicts referencing it never dangle.",
-  "timestamp": "2026-07-10T19:09:22.329Z"
-}

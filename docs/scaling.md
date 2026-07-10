@@ -90,6 +90,19 @@ shared_evidence:
 Their content then joins every test-quality hash. The cost is honest churn: editing a shared
 helper re-opens every dependent review, which is exactly what should happen.
 
+## Periodic adversarial audits (cross-provider)
+
+Fresh context is not fresh framing: reviewers sharing one model family and one instruction
+template share blind spots. `2119 review --audit` generates adversarial instructions for every
+currently-passing verdict — the auditor's job is to construct a mutant under which the
+requirement is violated while the tests stay green, and a recorded `fail` flips the gate. As a
+QA cadence: monthly, dispatched to a model from a **different provider** than your routine
+reviewer. Between sweeps, audit individually the requirements that are particularly challenging
+or high-consequence — multi-clause invariants, security boundaries, statistical formulas. The
+first field deployment's sampled audit found rubber-stamps at a 2-in-12 rate; assume yours has
+some too. (`audit: "always"` in `.2119.yml` runs audits on every review cycle — off by default,
+since it multiplies review cost on every run.)
+
 ## `[verify]` policy for untrusted contributions
 
 `[verify: <command>]` executes shell from spec files — the same trust level as `package.json`

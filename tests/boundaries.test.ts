@@ -26,13 +26,15 @@ const tmp = () => realpathSync(mkdtempSync(join(tmpdir(), "2119-bound-")));
 describe("honest-boundary mechanics (0.5)", () => {
   // 2119: REQ-004.3.6
   it("generated CI carries a project-test step separate from the check step", () => {
-    // With a package.json: auto-filled npm test.
+    // With a package.json: executable on a clean runner — dependencies are
+    // installed BEFORE the tests, which run before the check step.
     const withPkg = tmp();
     writeFileSync(join(withPkg, "package.json"), "{}");
     installCi(withPkg);
     const workflow = readFileSync(join(withPkg, ".github/workflows/2119.yml"), "utf8");
+    expect(workflow).toContain("- run: npm ci");
     expect(workflow).toContain("- run: npm test");
-    expect(workflow).toContain("check");
+    expect(workflow.indexOf("npm ci")).toBeLessThan(workflow.indexOf("npm test"));
     expect(workflow.indexOf("npm test")).toBeLessThan(workflow.indexOf("rfc2119"));
 
     // Without one: a loud placeholder, never a silent omission.

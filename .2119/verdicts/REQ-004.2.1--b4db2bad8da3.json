@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.2.1--b4db2bad8da3",
-  "requirementId": "REQ-004.2.1",
-  "hash": "b4db2bad8da3",
-  "verdict": "pass",
-  "summary": "installAgentHooks(root,'claude') writes real .claude/settings.json; test parses it and asserts PostToolUse[0].matcher=='Edit|Write' with after-edit command, plus Stop and SessionStart entries carrying the '2119 hook' commands — verifies all three hooks registered.",
-  "timestamp": "2026-07-09T23:07:46.299Z"
-}

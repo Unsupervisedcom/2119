@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.3.4--be66d5d15cb3",
-  "requirementId": "REQ-004.3.4",
-  "hash": "be66d5d15cb3",
-  "verdict": "pass",
-  "summary": "installCi writes .github/workflows/2119.yml; test reads it and asserts both the pull_request trigger and the rfc2119 check step are present — fails if either is dropped.",
-  "timestamp": "2026-07-09T23:07:41.431Z"
-}

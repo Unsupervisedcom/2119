@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.11--daf06d983153",
+  "requirementId": "REQ-004.3.11",
+  "hash": "daf06d983153",
+  "verdict": "pass",
+  "summary": "Test runs real init and asserts generated .2119.yml contains review_model, shared_evidence, comment_leaders, audit (plus enforce, reviews); init.ts emits all four as commented examples, so dropping any option fails the test.",
+  "timestamp": "2026-07-10T22:57:12.607Z"
+}

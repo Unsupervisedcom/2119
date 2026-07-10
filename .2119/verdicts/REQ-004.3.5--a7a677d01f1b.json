@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.5--a7a677d01f1b",
+  "requirementId": "REQ-004.3.5",
+  "hash": "a7a677d01f1b",
+  "verdict": "pass",
+  "summary": "Same real-init test asserts the appended AGENTS.md body contains 'CI runs the same check', directly matching the requirement's criterion that the section state CI runs the same gate; absence would fail the assertion.",
+  "timestamp": "2026-07-10T22:58:13.875Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-002.3.2--1d37b12fd039",
-  "requirementId": "REQ-002.3.2",
-  "hash": "1d37b12fd039",
-  "verdict": "pass",
-  "summary": "Benchmarked a synthetic 100-spec/2000-test repo: full 'check' (lint+cover, and even reviews=true evidence hashing) runs in 0.13-0.18s; walk/matchGlobs/scanAnnotations are all O(files) with no quadratic scans.",
-  "timestamp": "2026-07-10T17:51:26.132Z"
-}

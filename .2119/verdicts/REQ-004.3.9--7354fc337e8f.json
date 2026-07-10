@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.9--7354fc337e8f",
+  "requirementId": "REQ-004.3.9",
+  "hash": "7354fc337e8f",
+  "verdict": "pass",
+  "summary": "Test downgrades the pinned rfc2119 version in generated .claude/settings.json and .github/workflows/2119.yml to 0.4.0 and adds a foreign other.yml, runs init --refresh, then asserts both generated artifacts are re-pinned to PKG_VERSION while the foreign file is byte-for-byte unchanged — rejects both the stale-pin and clobbers-foreign-content counterexamples.",
+  "timestamp": "2026-07-10T22:58:25.363Z"
+}

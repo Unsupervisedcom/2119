@@ -20,9 +20,13 @@ export const RFC2119_KEYWORDS = [
 const KEYWORD_RE = new RegExp(`\\b(?:${RFC2119_KEYWORDS.join("|")})\\b`, "g");
 const TOMBSTONE = "REQUIREMENT REMOVED";
 
-/** Replace inline code spans so their contents are ignored (REQ-002.1.2). */
+/**
+ * Replace inline code spans so their contents are ignored (REQ-002.1.2).
+ * CommonMark allows spans delimited by runs of N backticks; match the run
+ * length so ``…`` spans (which may contain single backticks) are stripped too.
+ */
 export function stripInlineCode(text: string): string {
-  return text.replace(/`[^`]*`/g, "`…`");
+  return text.replace(/(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/g, "`…`").replace(/`[^`]*`/g, "`…`");
 }
 
 export function findKeywords(text: string): string[] {
@@ -132,7 +136,10 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
     pending = null;
   };
 
-  let inFence: string | null = null;
+  // Open fence: char + length; a close requires >= the opening run of the
+  // same character (CommonMark), so a ```` fence isn't closed by ``` inside.
+  let inFence: { char: string; len: number } | null = null;
+  let sawContent = false;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -140,14 +147,27 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
 
     // Fenced code blocks are content, not structure: headings, list items,
     // and keywords inside them are ignored entirely (REQ-002.1.1).
-    const fence = line.match(/^\s*(```|~~~)/);
+    const fence = line.match(/^\s*(`{3,}|~{3,})/);
     if (fence) {
-      inFence = inFence === fence[1] ? null : (inFence ?? fence[1]);
+      const char = fence[1][0];
+      const len = fence[1].length;
+      if (inFence && inFence.char === char && len >= inFence.len) inFence = null;
+      else if (!inFence) inFence = { char, len };
       continue;
     }
     if (inFence) continue;
 
     const h1 = line.match(/^# (.+)$/);
+    // The H1 title must be the file's first content (REQ-001.1.1).
+    if (title === null && !h1 && line.trim() !== "" && !sawContent) {
+      sawContent = true;
+      violations.push({
+        file: path,
+        line: lineNo,
+        rule: "REQ-001.1.1",
+        message: `Spec must begin with "# ${expectedDocId ?? `${prefix}-NNN`}: Title"; found content before it`,
+      });
+    }
     const h2 = line.match(/^## (.+)$/);
     const h3 = line.match(/^### (.+)$/);
 

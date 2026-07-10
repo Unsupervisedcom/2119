@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.2.2--56643cfa63a6",
-  "requirementId": "REQ-004.2.2",
-  "hash": "56643cfa63a6",
-  "verdict": "pass",
-  "summary": "adapters.test writes all three codex hooks to .codex/hooks.json (matcher Edit|Write, --platform codex commands) and cli.test runs init --agent codex end-to-end asserting stdout prints /hooks trust note and .codex/hooks.json",
-  "timestamp": "2026-07-09T23:06:56.716Z"
-}

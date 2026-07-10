@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-008.1.1--dc0012d67b7e",
+  "requirementId": "REQ-008.1.1",
+  "hash": "dc0012d67b7e",
+  "verdict": "pass",
+  "summary": "docs/design.md has all six stances with rationale: not a test runner, composes-not-replicates CI, not a security boundary, verdicts as audit docs not attestations, specs as agent context with ritual text banned, simplicity via escape hatches.",
+  "timestamp": "2026-07-10T22:57:21.476Z"
+}

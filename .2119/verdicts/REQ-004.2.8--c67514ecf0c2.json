@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.2.8--c67514ecf0c2",
+  "requirementId": "REQ-004.2.8",
+  "hash": "c67514ecf0c2",
+  "verdict": "pass",
+  "summary": "Runs real init --agent claude and asserts CLAUDE.md contains the begin marker and the identical production AGENTS_MD_SECTION constant also present in AGENTS.md, then re-runs to confirm exactly one 2119:begin — covers same-content and idempotence conjuncts.",
+  "timestamp": "2026-07-10T22:58:07.140Z"
+}

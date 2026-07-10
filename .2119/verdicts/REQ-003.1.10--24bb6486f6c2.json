@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.10--24bb6486f6c2",
+  "requirementId": "REQ-003.1.10",
+  "hash": "24bb6486f6c2",
+  "verdict": "pass",
+  "summary": "rigor test runs review and asserts the generated instruction file contains 'Counterexample obligation', matches 'nearest violating input', 'not a pass', and the bad-requirement clause; string matching is the correct verification for a text-generation requirement and would fail if the generator dropped the directive.",
+  "timestamp": "2026-07-10T22:59:01.487Z"
+}

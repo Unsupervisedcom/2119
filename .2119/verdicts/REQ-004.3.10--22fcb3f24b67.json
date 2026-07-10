@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.10--22fcb3f24b67",
+  "requirementId": "REQ-004.3.10",
+  "hash": "22fcb3f24b67",
+  "verdict": "pass",
+  "summary": "Test invokes init with an invalid --agent value and an unknown flag, asserting status 2 and readdirSync(root) strictly equals [] in both cases — genuinely rejects the 'invalid invocation still writes files' counterexample the requirement forbids.",
+  "timestamp": "2026-07-10T22:58:27.217Z"
+}

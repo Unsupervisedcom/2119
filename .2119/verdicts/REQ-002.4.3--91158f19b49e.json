@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.4.3--91158f19b49e",
+  "requirementId": "REQ-002.4.3",
+  "hash": "91158f19b49e",
+  "verdict": "pass",
+  "summary": "rigor test creates an existing-but-empty specs/ dir with no .2119.yml and asserts check exits 2 'not set up'; a dir-existence-based determination would read initialized and yield a zero-requirement pass (exit 0/1), so the test discriminates the forbidden implementation.",
+  "timestamp": "2026-07-10T22:58:52.856Z"
+}

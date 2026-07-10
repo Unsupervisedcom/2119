@@ -98,7 +98,11 @@ function installReviewerAgent(root: string): boolean {
  * Merge 2119 hooks into an agent's settings file without touching unrelated
  * keys (REQ-004.2.4) and without duplicating entries on re-run (REQ-004.2.5).
  */
-export function installAgentHooks(root: string, agent: AgentName): { path: string; changed: boolean; note?: string } {
+export function installAgentHooks(
+  root: string,
+  agent: AgentName,
+  opts: { refresh?: boolean } = {},
+): { path: string; changed: boolean; note?: string } {
   const spec = AGENT_FILES[agent];
   const path = join(root, spec.path);
   let settings: Record<string, unknown> = {};
@@ -116,6 +120,9 @@ export function installAgentHooks(root: string, agent: AgentName): { path: strin
     hooks[event] = [...existing, ...entries];
     changed = true;
   }
+  if (opts.refresh) {
+    changed = repinHookCommands(hooks) || changed;
+  }
   if (changed) {
     settings.hooks = hooks;
     mkdirSync(dirname(path), { recursive: true });
@@ -125,6 +132,23 @@ export function installAgentHooks(root: string, agent: AgentName): { path: strin
     changed = installReviewerAgent(root) || changed;
   }
   return { path: spec.path, changed, note: spec.note };
+}
+
+/** Re-pin any 2119 hook commands (pinned or legacy-unpinned) to the current version. */
+function repinHookCommands(hooks: Record<string, HookEntry[]>): boolean {
+  let changed = false;
+  for (const entries of Object.values(hooks)) {
+    for (const entry of entries) {
+      for (const h of entry.hooks ?? []) {
+        const updated = h.command.replace(/\brfc2119(@\S+)?(\s+hook\b)/, `${PINNED}$2`);
+        if (updated !== h.command) {
+          h.command = updated;
+          changed = true;
+        }
+      }
+    }
+  }
+  return changed;
 }
 
 const PRE_COMMIT_MARKER = "# 2119 pre-commit hook";
@@ -138,11 +162,19 @@ npx ${PINNED} check || {
 `;
 
 /** Install a git pre-commit hook, refusing to clobber someone else's (REQ-004.3.3). */
-export function installGitHook(root: string): { path: string; changed: boolean; refused?: string } {
+export function installGitHook(root: string, opts: { refresh?: boolean } = {}): { path: string; changed: boolean; refused?: string } {
   const path = join(root, ".git/hooks/pre-commit");
   if (existsSync(path)) {
     const existing = readFileSync(path, "utf8");
-    if (existing.includes(PRE_COMMIT_MARKER)) return { path: ".git/hooks/pre-commit", changed: false };
+    if (existing.includes(PRE_COMMIT_MARKER)) {
+      // Ours: --refresh rewrites it with the current pin (REQ-004.3.9).
+      if (opts.refresh && existing !== PRE_COMMIT) {
+        writeFileSync(path, PRE_COMMIT);
+        chmodSync(path, 0o755);
+        return { path: ".git/hooks/pre-commit", changed: true };
+      }
+      return { path: ".git/hooks/pre-commit", changed: false };
+    }
     return {
       path: ".git/hooks/pre-commit",
       changed: false,
@@ -161,9 +193,10 @@ export function installGitHook(root: string): { path: string; changed: boolean; 
 function ciWorkflow(root: string): string {
   const testStep = existsSync(join(root, "package.json"))
     ? `      # 2119 does not run tests — the project suite is its own gate.
+      - run: npm ci
       - run: npm test`
     : `      # TODO: add your project's test-suite step here — 2119 does not run tests.
-      # - run: <your test command>`;
+      # - run: <your install + test commands>`;
   return `name: "2119"
 
 on:
@@ -185,11 +218,41 @@ ${testStep}
 }
 
 /** Write the CI backstop workflow (REQ-004.3.4). */
-export function installCi(root: string): { path: string; changed: boolean } {
+export function installCi(root: string, opts: { refresh?: boolean } = {}): { path: string; changed: boolean } {
   const rel = ".github/workflows/2119.yml";
   const path = join(root, rel);
-  if (existsSync(path)) return { path: rel, changed: false };
+  if (existsSync(path)) {
+    // Only a workflow we generated (identified by its name) is refreshed (REQ-004.3.9).
+    if (opts.refresh && readFileSync(path, "utf8").startsWith('name: "2119"')) {
+      const next = ciWorkflow(root);
+      if (readFileSync(path, "utf8") !== next) {
+        writeFileSync(path, next);
+        return { path: rel, changed: true };
+      }
+    }
+    return { path: rel, changed: false };
+  }
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, ciWorkflow(root));
   return { path: rel, changed: true };
+}
+
+/**
+ * Re-pin every 2119-generated artifact found in the repo without requiring
+ * the original init flags (REQ-004.3.9). Returns the paths it changed.
+ */
+export function refreshPinnedArtifacts(root: string): string[] {
+  const changed: string[] = [];
+  for (const agent of Object.keys(AGENT_FILES) as AgentName[]) {
+    const p = join(root, AGENT_FILES[agent].path);
+    if (!existsSync(p)) continue;
+    if (installAgentHooks(root, agent, { refresh: true }).changed) changed.push(AGENT_FILES[agent].path);
+  }
+  if (existsSync(join(root, ".git/hooks/pre-commit"))) {
+    if (installGitHook(root, { refresh: true }).changed) changed.push(".git/hooks/pre-commit");
+  }
+  if (existsSync(join(root, ".github/workflows/2119.yml"))) {
+    if (installCi(root, { refresh: true }).changed) changed.push(".github/workflows/2119.yml");
+  }
+  return changed;
 }

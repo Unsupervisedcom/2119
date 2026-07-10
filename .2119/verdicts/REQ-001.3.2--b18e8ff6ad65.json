@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-001.3.2--b18e8ff6ad65",
-  "requirementId": "REQ-001.3.2",
-  "hash": "b18e8ff6ad65",
-  "verdict": "pass",
-  "summary": "All six spec files number items sequentially from 1 with no gaps; the only removed item (REQ-002.3.4) sits at its section's end, consistent with append-only numbering.",
-  "timestamp": "2026-07-09T23:07:10.408Z"
-}

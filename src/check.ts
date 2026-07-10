@@ -34,14 +34,33 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
   const config = loadConfig(root);
   const repoFiles = walk(root);
   const specPaths = matchGlobs(repoFiles, config.specs);
-  const notInitialized = !config.explicit && specPaths.length === 0 && !existsSync(join(root, "specs"));
+  // Glob-match only: an empty specs/ directory must never read as initialized
+  // and green-light a zero-requirement pass (REQ-002.4.3).
+  const notInitialized = !config.explicit && specPaths.length === 0;
 
   const specs = specPaths.map((p) => parseSpec(join(root, p), config.prefix));
   const lintViolations = specs.flatMap((s) => s.violations);
 
+  // Duplicate document IDs make requirement IDs ambiguous (REQ-001.1.7).
+  const byDocId = new Map<string, string>();
+  for (const s of specs) {
+    if (!s.docId) continue;
+    const prior = byDocId.get(s.docId);
+    if (prior) {
+      lintViolations.push({
+        file: s.path,
+        line: 1,
+        rule: "REQ-001.1.7",
+        message: `Document ID ${s.docId} is also declared by ${prior}`,
+      });
+    } else {
+      byDocId.set(s.docId, s.path);
+    }
+  }
+
   const specPathSet = new Set(specPaths.map((p) => join(root, p)));
   const testFiles = matchGlobs(repoFiles, config.tests).filter((p) => !specPathSet.has(join(root, p)));
-  const annotations = scanAnnotations(root, testFiles, config.prefix);
+  const annotations = scanAnnotations(root, testFiles, config.prefix, config.commentLeaders);
   const coverage = computeCoverage(specs, annotations, config.enforce);
 
   const reviewTargets = config.reviews ? computeReviewTargets(config, specs, coverage, repoFiles, annotations) : [];
@@ -49,15 +68,28 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
   const { verdicts, violations: malformedVerdicts } = scanVerdicts(root);
   const reviewViolations = [...malformedVerdicts, ...verdictViolations(reviewTargets, verdicts)];
 
-  // [review: instructions: <path>] pointing at a missing file (REQ-005.1.4).
+  // [review: instructions: <path>] pointing at a missing file (REQ-005.1.4),
+  // and [review: <globs>] matching nothing — a typo'd glob must fail loudly
+  // instead of degrading to a text-only hash (REQ-003.1.9).
   for (const req of allRequirements(specs)) {
+    if (req.removed) continue;
+    const specPath = specs.find((s) => s.sections.some((sec) => sec.items.includes(req)))?.path ?? "<unknown spec>";
     const path = req.coverage.instructions;
-    if (!req.removed && path && !existsSync(join(root, path))) {
+    if (path && !existsSync(join(root, path))) {
       reviewViolations.push({
-        file: specs.find((s) => s.sections.some((sec) => sec.items.includes(req)))?.path ?? "<unknown spec>",
+        file: specPath,
         line: req.line,
         rule: "REQ-005.1.4",
         message: `${req.id} references a missing review instruction file: ${path}`,
+      });
+    }
+    const globs = req.coverage.globs;
+    if (req.coverage.kind === "review" && globs?.length && matchGlobs(repoFiles, globs).length === 0) {
+      reviewViolations.push({
+        file: specPath,
+        line: req.line,
+        rule: "REQ-003.1.9",
+        message: `${req.id} has [review] globs matching no files (${globs.join(", ")}); fix the globs or the evidence`,
       });
     }
   }

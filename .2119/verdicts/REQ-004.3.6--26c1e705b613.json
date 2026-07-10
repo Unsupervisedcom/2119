@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.6--26c1e705b613",
+  "requirementId": "REQ-004.3.6",
+  "hash": "26c1e705b613",
+  "verdict": "pass",
+  "summary": "Real installCi test: with package.json the workflow has separate 'npm ci' then 'npm test' steps ordered before the rfc2119 check step (indexOf assertions catch merge/reorder mutants); without package.json it asserts the 'does not run tests' placeholder and absence of 'npm test'. Both branches genuinely verified.",
+  "timestamp": "2026-07-10T23:03:35.349Z"
+}

@@ -111,6 +111,7 @@ Judgment reviews are scoped, single-question tasks, so we recommend **a capable 
 
 - Don't go too small: round one of this repo's own reviews surfaced findings like masked assertions and a parser violating its own spec — subtle calls that weak models tend to rubber-stamp. On Claude Code, an Opus-class model is a solid choice.
 - `[review]`-tagged requirements are the judgment-heavy ones; their instruction files deliberately recommend the dispatching agent's own (typically stronger) model instead of the pinned one.
+- **Diversify, then audit.** A single model family shares blind spots — `review_model` accepts a list (every listed model reviews; all must pass), and `2119 review --audit` generates *adversarial* instructions that challenge passing verdicts ("construct a mutant that violates the requirement while the tests stay green"). Run an audit sweep periodically with a model from a different provider, and audit your particularly challenging or high-consequence requirements individually — that's where rubber-stamps hide.
 
 ## Choosing test vs. review vs. verify vs. manual
 
@@ -126,7 +127,7 @@ Deterministic facts get tests. Judgment calls get `[review]`. Things only a huma
 | `2119 init [--agent <p>] [--git-hook] [--ci]` | Scaffold and install integrations |
 | `2119 lint` | Spec format checks |
 | `2119 cover` | Requirement ↔ test traceability |
-| `2119 review [--dispatch]` | Generate instruction files for stale/missing judgment reviews; `--dispatch` adds a ready-to-paste parallel-subagent prompt |
+| `2119 review [--dispatch] [--audit]` | Generate instruction files for stale/missing judgment reviews; `--dispatch` adds a ready-to-paste parallel-subagent prompt; `--audit` adds adversarial audits of passing verdicts |
 | `2119 pass/fail <review-id> --summary "…"` | Record a verdict (hash-verified) |
 | `2119 check [--json] [--no-verify]` | Everything; the one exit code that matters (`--no-verify` skips `[verify]` shell for untrusted-PR CI) |
 | `2119 prune` | Delete verdicts orphaned by content changes (explicit, so deletions show in your diff) |
@@ -144,6 +145,10 @@ review_model: "opus"   # advisory, platform-specific; default recommends
                        # "a capable, cost-effective model"
 shared_evidence: []    # globs of shared fixtures/helpers hashed into every
                        # test-quality review (see docs/scaling.md)
+comment_leaders: []    # extra comment leaders for annotation lines, beyond
+                       # //, #, *, /*, --, ;, %, <!--
+audit: "off"           # "always" generates adversarial audits of passing
+                       # verdicts on every review run (default: only --audit)
 ```
 
 ## What's in this repo

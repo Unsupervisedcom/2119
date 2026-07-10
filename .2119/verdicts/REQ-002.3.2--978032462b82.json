@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-002.3.2--978032462b82",
-  "requirementId": "REQ-002.3.2",
-  "hash": "978032462b82",
-  "verdict": "pass",
-  "summary": "check pipeline is linear in repo size: one recursive walk skipping node_modules/.git/dist, a single compiled picomatch pass, per-file annotation scan gated by a .includes('2119:') short-circuit, and map-based coverage; no O(n^2) over file content and verify time is excluded—comfortably under 5s for 100 specs/2000 tests",
-  "timestamp": "2026-07-09T23:07:42.652Z"
-}

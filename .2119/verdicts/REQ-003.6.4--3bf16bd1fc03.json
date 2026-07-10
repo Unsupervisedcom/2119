@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.6.4--3bf16bd1fc03",
+  "requirementId": "REQ-003.6.4",
+  "hash": "3bf16bd1fc03",
+  "verdict": "pass",
+  "summary": "Test rejects the uninvited case (default config: plain review + check produce no .audit.md) and confirms audit:always opts plain review in; both directions of the default-off gate are pinned, so a mutant auditing by default or ignoring audit:always fails.",
+  "timestamp": "2026-07-10T22:59:46.599Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-004.1.9--d8e8ed289c0a",
-  "requirementId": "REQ-004.1.9",
-  "hash": "d8e8ed289c0a",
-  "verdict": "pass",
-  "summary": "Writes a malformed .2119.yml so config parsing throws inside dispatch, then asserts handleHook stop returns an object whose systemMessage contains '2119 hook error' — genuinely triggers and confirms the try/catch reports errors in JSON instead of crashing.",
-  "timestamp": "2026-07-09T23:07:46.206Z"
-}

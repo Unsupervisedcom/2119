@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.1--ad77d225face",
+  "requirementId": "REQ-003.8.1",
+  "hash": "ad77d225face",
+  "verdict": "pass",
+  "summary": "eval/calibration/ holds 13 fixture cases; each carries requirement + evidence + expected_verdict frontmatter + a Why reason, spanning the known escapes (string-literal annotation, conjunct drop, state-space, grammar edge, mechanism-not-outcome, partial purge, precedence, truthy noop, masked defaults, golden e2e, unobservable internal) plus two pass controls.",
+  "timestamp": "2026-07-10T22:59:51.721Z"
+}

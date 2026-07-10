@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.4--2651c3d13359",
+  "requirementId": "REQ-004.1.4",
+  "hash": "2651c3d13359",
+  "verdict": "pass",
+  "summary": "Editing a BAD_SPEC injects hookSpecificOutput.additionalContext containing the real lint rule REQ-001.2.2 (no-keyword) with PostToolUse event; Gemini variant asserts AfterTool event name. Returns {} if injection omitted.",
+  "timestamp": "2026-07-10T22:58:22.815Z"
+}

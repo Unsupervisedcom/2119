@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.9--cc0169246dc7",
+  "requirementId": "REQ-004.1.9",
+  "hash": "cc0169246dc7",
+  "verdict": "pass",
+  "summary": "Malformed .2119.yml makes buildContext throw; handleHook returns a resolved object with systemMessage containing '2119 hook error' rather than rejecting — test fails if the throw escaped or wasn't reported.",
+  "timestamp": "2026-07-10T22:58:35.333Z"
+}
