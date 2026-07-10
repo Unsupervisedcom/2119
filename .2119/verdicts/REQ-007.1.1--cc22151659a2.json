@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-007.1.1--cc22151659a2",
+  "requirementId": "REQ-007.1.1",
+  "hash": "cc22151659a2",
+  "verdict": "pass",
+  "summary": "Real subprocess test runs the built CLI for help/--help/-h (and bare invocation), asserting exit 0 and stdout containing 'usage: 2119 <command>'; matches cli.ts short-circuit and would fail on any non-zero exit or missing usage.",
+  "timestamp": "2026-07-10T17:12:11.607Z"
+}

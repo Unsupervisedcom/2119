@@ -37,6 +37,36 @@ function flag(args: string[], name: string): string | undefined {
 
 const [, , command, ...args] = process.argv;
 
+const USAGE = `2119 — spec-driven test enforcement for coding agents
+
+usage: 2119 <command>
+
+  init      Scaffold specs/, .2119.yml, and agent integration for this repo
+  lint      Validate spec files against the RFC 2119 document format
+  cover     Verify every enforced requirement has a covering test annotation
+  review    Generate judgment-review instruction files for stale/missing verdicts
+            (--dispatch also emits a ready-to-paste parallel-subagent prompt)
+  pass      Record a passing review verdict:  2119 pass <review-id> --summary "..."
+  fail      Record a failing review verdict:  2119 fail <review-id> --summary "..."
+  check     lint + cover + review-verdict freshness; non-zero exit on any failure
+  prune     Delete verdicts whose review ID matches no current requirement content
+  hook      Agent hook entry point: 2119 hook <after-edit|stop|session-start> --platform <p>
+`;
+
+// A --help flag is a question, not a command: answer before dispatch so no
+// command ever executes (or writes files) under a help request (REQ-007.1).
+if (
+  !command ||
+  command === "help" ||
+  command === "--help" ||
+  command === "-h" ||
+  args.includes("--help") ||
+  args.includes("-h")
+) {
+  console.log(USAGE);
+  process.exit(0);
+}
+
 switch (command) {
   case "lint": {
     const ctx = buildContext(root);
@@ -186,21 +216,9 @@ switch (command) {
   }
 
   default: {
-    console.log(`2119 — spec-driven test enforcement for coding agents
-
-usage: 2119 <command>
-
-  init      Scaffold specs/, .2119.yml, and agent integration for this repo
-  lint      Validate spec files against the RFC 2119 document format
-  cover     Verify every enforced requirement has a covering test annotation
-  review    Generate judgment-review instruction files for stale/missing verdicts
-            (--dispatch also emits a ready-to-paste parallel-subagent prompt)
-  pass      Record a passing review verdict:  2119 pass <review-id> --summary "..."
-  fail      Record a failing review verdict:  2119 fail <review-id> --summary "..."
-  check     lint + cover + review-verdict freshness; non-zero exit on any failure
-  prune     Delete verdicts whose review ID matches no current requirement content
-  hook      Agent hook entry point: 2119 hook <after-edit|stop|session-start> --platform <p>
-`);
-    process.exit(command ? 2 : 0);
+    // Unrecognized command: usage on a non-zero exit, so typos are
+    // distinguishable from successful help requests (REQ-007.1.3).
+    console.log(USAGE);
+    process.exit(2);
   }
 }

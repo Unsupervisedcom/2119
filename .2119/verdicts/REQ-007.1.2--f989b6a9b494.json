@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-007.1.2--f989b6a9b494",
+  "requirementId": "REQ-007.1.2",
+  "hash": "f989b6a9b494",
+  "verdict": "pass",
+  "summary": "Test invokes 'init --help' plus check/pass/review with --help/-h in a temp dir, asserting exit 0, usage text, and readdirSync(dir) stays empty — genuinely proving no command executed and no files were scaffolded under a help flag.",
+  "timestamp": "2026-07-10T17:12:11.704Z"
+}

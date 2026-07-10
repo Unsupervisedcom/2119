@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.3.3--93f01164284b",
+  "requirementId": "REQ-001.3.3",
+  "hash": "93f01164284b",
+  "verdict": "pass",
+  "summary": "REQ-002.3.4 is the exact tombstone text 'REQUIREMENT REMOVED' with its number retained; REQ-002.3.3 and REQ-003.3.2 explicitly keep such tombstones referenceable so tests/verdicts never dangle.",
+  "timestamp": "2026-07-10T17:11:59.509Z"
+}

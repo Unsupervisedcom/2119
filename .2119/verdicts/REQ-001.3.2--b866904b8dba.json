@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-001.3.2--b866904b8dba",
+  "requirementId": "REQ-001.3.2",
+  "hash": "b866904b8dba",
+  "verdict": "pass",
+  "summary": "Numbering is sequential with no gaps across all seven specs; git shows REQ-002.3.4 was appended at its section end (then tombstoned), never inserted mid-section, so new requirements take the next number.",
+  "timestamp": "2026-07-10T17:11:59.404Z"
+}

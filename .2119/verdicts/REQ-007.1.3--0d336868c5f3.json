@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-007.1.3--0d336868c5f3",
+  "requirementId": "REQ-007.1.3",
+  "hash": "0d336868c5f3",
+  "verdict": "pass",
+  "summary": "Test runs the typo 'lnit' against the real CLI and asserts status 2 (non-zero) plus usage text, matching cli.ts default case; distinguishes typos from exit-0 help and would fail if an unknown command exited 0 or omitted usage.",
+  "timestamp": "2026-07-10T17:12:11.806Z"
+}
