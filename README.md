@@ -154,3 +154,12 @@ Nothing here needs to be copied into your project — `init` generates everythin
 | `.2119/verdicts/` | Real committed verdicts from the fresh-context reviews that gated this code |
 | `.2119.yml` · `AGENTS.md` · `.claude/agents/` | This repo dogfooding its own `init` output |
 | `docs/rfc-conformance.md` | Clause-by-clause accounting against RFC 2119 and RFC 8174 |
+
+## Cost and scale
+
+Rough numbers, so you can budget before adopting:
+
+- **The deterministic gate is free.** Lint, coverage, and hash checks are parsing — ~0.2s on this repo, plausibly ~1–2s at 1M LOC. No tokens involved.
+- **Judgment reviews are the only real cost, and steady state tracks your change rate, not your repo size.** A verdict re-runs only when its requirement or its evidence blocks change, so a typical PR touching a handful of annotated tests costs on the order of **$0.25–$1** in reviewer tokens (measured here: ~$0.05 per review on an Opus-class model). Block-level hashing is what keeps this bounded — editing one test doesn't re-review its neighbors.
+- **The dominant cost of adopting on an established codebase isn't reviews — it's authoring.** Retroactively speccing 1M LOC means writing thousands of requirements and honestly-falsifiable tests. Don't. Adopt incrementally: run `init`, spec new features and the subsystems you're actively changing, and let coverage grow along the change frontier. A full retroactive review pass, if you ever want one, is only ~$0.05–0.10 per requirement dispatched in parallel.
+- **Very large monorepos (tens of thousands of test files):** the repo walk becomes `check`'s bottleneck (~10s+ at 10M LOC), which you'd feel in write-time hooks. The planned fix — `git ls-files` enumeration plus a content-keyed annotation cache — preserves whole-repo semantics; see the note in [`specs/REQ-002-deterministic-checks.md`](specs/REQ-002-deterministic-checks.md) for why a `--changed` flag is deliberately *not* the answer.
