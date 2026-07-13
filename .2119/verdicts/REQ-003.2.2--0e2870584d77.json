@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.2--0e2870584d77",
+  "requirementId": "REQ-003.2.2",
+  "hash": "0e2870584d77",
+  "verdict": "pass",
+  "summary": "writeVerdict emits plain JSON to .2119/verdicts/; init gitignores only .2119/reviews/, leaving verdicts committed (verified: verdict .json files are git-tracked, dir absent from .gitignore)",
+  "timestamp": "2026-07-13T16:01:22.723Z"
+}

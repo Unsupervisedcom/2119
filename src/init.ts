@@ -10,7 +10,7 @@ import {
   type AgentName,
 } from "./adapters.js";
 
-const CONFIG_TEMPLATE = `# 2119 configuration — https://github.com/tylerwillis/2119
+const CONFIG_TEMPLATE = `# 2119 configuration — https://github.com/Unsupervisedcom/2119
 # All fields optional; these are the defaults unless noted.
 #
 # specs:

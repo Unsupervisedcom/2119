@@ -1,15 +1,15 @@
 {
   "name": "rfc2119",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Spec-driven test enforcement for coding agents: RFC 2119 requirements docs, requirement-to-test traceability, and judgment reviews that are hard to cheat.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tylerwillis/2119.git"
+    "url": "git+https://github.com/Unsupervisedcom/2119.git"
   },
-  "homepage": "https://github.com/tylerwillis/2119#readme",
+  "homepage": "https://github.com/Unsupervisedcom/2119#readme",
   "bugs": {
-    "url": "https://github.com/tylerwillis/2119/issues"
+    "url": "https://github.com/Unsupervisedcom/2119/issues"
   },
   "keywords": [
     "rfc2119",
