@@ -80,7 +80,7 @@ What this subsystem is and why.
 The design splits enforcement by what each layer can actually guarantee:
 
 - **Deterministic checks keep agents in compliance.** Lint and coverage are exact parsing. They run identically from an agent hook, your shell, and CI.
-- **Judgment reviews makes tests more accurate.** Review IDs embed a SHA-256 content hash of the requirement text plus the exact evidence blocks that cover it: each annotated test through the next annotation, plus the file's prelude (imports and mocks stay under the hash). Edit a covered test — or the requirement — and the old verdict silently stops counting; edit an *unrelated* test in the same file and it doesn't. `2119 pass` refuses IDs whose hash doesn't match current content, so verdicts can't be pre-computed or replayed.
+- **Judgment reviews make tests more accurate.** Review IDs embed a SHA-256 content hash of the requirement text plus the exact evidence blocks that cover it: each annotated test through the next annotation, plus the file's prelude (imports and mocks stay under the hash). Edit a covered test — or the requirement — and the old verdict silently stops counting; edit an *unrelated* test in the same file and it doesn't. `2119 pass` refuses IDs whose hash doesn't match current content, so verdicts can't be pre-computed or replayed.
 - **Verdicts are committed and schema-validated.** `.2119/verdicts/*.json` files carry the verdict, summary, and timestamp, so every review decision shows up in the PR diff for humans to audit. The gate counts a verdict only as a fully well-formed record; a malformed file (mangled merge, missing field, wrong filename) is a loud check violation, never a silent pass.
 
 ### Risks
@@ -105,7 +105,7 @@ The enforcement itself is agent-agnostic by construction — lint, coverage, rev
 
 - **AGENTS.md section** (always written): teaches any agent that reads it — Pi, opencode, Cursor, Hermes, whatever ships next — to spec first, annotate tests, dispatch reviews, and run `npx rfc2119 check` before finishing.
 - **Git pre-commit hook** (`--git-hook`): blocks commits while `check` fails, regardless of which agent (or human) is committing.
-- **CI** (`--ci`): creates a GitHub Actions workflow that re-runs `check` on every pull request. 
+- **CI** (`--ci`): creates a GitHub Actions workflow that re-runs `check` on every pull request.
 
 Same command, same verdicts, same gate everywhere; platforms with hooks just find out sooner.
 
@@ -113,16 +113,16 @@ Same command, same verdicts, same gate everywhere; platforms with hooks just fin
 
 Judgment reviews are scoped, single-question tasks, so we recommend **a capable but cost-effective model** — In July 2026, we primarily use Opus 4.8. Set it once via `review_model` in `.2119.yml` (the first interactive `2119 review` will ask; agents and CI never get prompted). The value is advisory text passed to whatever agent dispatches the reviews, so use your platform's own model names. Two things to calibrate:
 
-- Don't go too small: we've seen 2119 catch subtle issues that weak models tend to rubber-stamp. On Claude Code, an Opus-class model is a solid choice.
-- `[review]`-tagged requirements are meant to be used when requirements resist deterministic checks (e.g. "This feature MUST generate human-readable, helpful descriptions"; their instruction files deliberately recommend the dispatching agent's own (typically stronger) model instead of the pinned one.
+- Don't go too small: when 2119 reviewed its own code, a stronger model caught things weaker ones wave through — a test whose assertion was masked so it couldn't fail, and a parser that violated its own spec. On Claude Code, an Opus-class model is a solid choice.
+- `[review]`-tagged requirements are the ones that resist a deterministic test (e.g. "This feature MUST generate human-readable, helpful descriptions"). Their instruction files deliberately recommend the dispatching agent's own (typically stronger) model instead of the pinned one.
 - **Diversify, then audit.** A single model family shares blind spots — `review_model` accepts a list (every listed model reviews; all must pass), and `2119 review --audit` generates *adversarial* instructions that challenge passing verdicts ("construct a mutant that violates the requirement while the tests stay green"). Run an audit sweep periodically with a model from a different provider, and audit your particularly challenging or high-consequence requirements individually.
 
 ## Choosing test vs. review vs. verify vs. manual
 
-Deterministic facts get tests. Judgment calls get `[review]`. Things only a human can do get `[manual]`. 
+Deterministic facts get tests. Judgment calls get `[review]`. Things only a human can do get `[manual]`.
 
 Here are some anti-patterns to avoid:
-- **A keyword-grep test standing in for a judgment call** (e.g. assert "fix" in error_message for "errors MUST tell the user how to fix the problem") — the substring "fix" appearing proves nothing about whether the message actually explains the fix; "could not fix" passes it. The test can't fail honestly. Use [review] instead.
+- **A keyword-grep test standing in for a judgment call** (e.g. `assert "fix" in error_message` for "errors MUST tell the user how to fix the problem") — the substring "fix" appearing proves nothing about whether the message actually explains the fix; "could not fix" passes it. The test can't fail honestly. Use `[review]` instead.
 - **A review used on a machine-checkable fact** (e.g. using a reviewer to "check the version field equals 2") — that's judgment spent where a test is stronger.
 
 ## Commands
