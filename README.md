@@ -1,21 +1,25 @@
 # 2119
 
-**Spec-driven test enforcement for coding agents.** Named for [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119), the RFC that gave MUST and SHOULD their teeth.
+**Spec-driven test enforcement for coding agents.** Named for [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
 
 2119 makes the planning → building → testing loop hard to cheat:
 
 1. **Plans become requirements.** Features start as specs in `specs/` — RFC 2119 documents where every requirement is a numbered, individually addressable statement with exactly one normative keyword. `2119 lint` enforces the format.
 2. **Requirements become tests.** Every MUST-level requirement needs at least one test annotated with its ID (`// 2119: REQ-001.2.3` — a comment, so it works in any language). `2119 cover` fails on any gap, in either direction.
-3. **Tests get judged.** A coverage check can't tell a real test from a tautology. `2119 review` generates one instruction file per requirement asking a *fresh-context* reviewer a single question: **would these tests fail if this requirement were violated?** Verdicts are recorded with `2119 pass` / `2119 fail`.
+3. **Tests get judged.** `2119 review` generates one instruction file per requirement asking a *fresh-context* reviewer a single question: **would these tests fail if this requirement were violated?** Verdicts are recorded with `2119 pass` / `2119 fail`.
 4. **One gate.** `2119 check` = lint + coverage + verdict freshness. Exit code 0 or it isn't done. Hooks, git, and CI all call the same command.
 
 This repo practices what it enforces: 2119's own requirements live in [`specs/`](specs/), every MUST has an annotated test, and `.2119/verdicts/` holds the committed review verdicts.
 
-**What 2119 is not:** it is **not a test runner** (`check` never executes your suite — run `npm test && npx rfc2119 check`, both, always), **not a CI replacement** (it's one exit code your CI calls), and **not a security boundary** (a deliberate cheater is made *conspicuous*, not impossible). These boundaries are deliberate and [enforced as reviewed requirements](specs/REQ-008-honest-boundaries.md) — the reasoning lives in [docs/design.md](docs/design.md), and [docs/scaling.md](docs/scaling.md) covers hardening for larger or more formal projects.
+**What 2119 is not:**
+1. **not a test runner** (`check` never executes your suite — run `npm test && npx rfc2119 check`, both, always)
+2. **not a CI replacement** (it's one exit code your CI calls)
+3. **not a security boundary** (a deliberate cheater is made *conspicuous*, not impossible).
+These boundaries are deliberate and [enforced as reviewed requirements](specs/REQ-008-honest-boundaries.md) — the reasoning lives in [docs/design.md](docs/design.md), and [docs/scaling.md](docs/scaling.md) covers hardening for larger or more formal projects.
 
 ## Use it in your repo
 
-You don't clone this repo — npm delivers the tool. From your project root:
+From your project root:
 
 ```bash
 npx rfc2119 init                 # the core: specs/, .2119.yml, AGENTS.md section
@@ -35,7 +39,7 @@ What `init` creates in your repo:
 | `.claude/settings.json` + `.claude/agents/2119-reviewer.md` | Claude Code hooks + a fresh-context reviewer subagent (`--agent claude`) | Yes |
 | `.github/workflows/2119.yml` | The CI backstop (`--ci`) | Yes |
 
-Then the loop:
+### To use 2119:
 
 1. Have your agent plan each feature **as a spec** in `specs/` — `2119 lint` keeps the format honest.
 2. Build. Every MUST-level requirement needs a test annotated with its ID (`// 2119: REQ-001.2.3`).
@@ -75,11 +79,11 @@ What this subsystem is and why.
 
 The design splits enforcement by what each layer can actually guarantee:
 
-- **Deterministic checks carry the weight.** Lint and coverage are exact parsing, not vibes. They run identically from an agent hook, your shell, and CI — an agent can't talk its way past an exit code in CI.
-- **Judgment reviews close the tautology gap.** Review IDs embed a SHA-256 content hash of the requirement text plus the exact evidence blocks that cover it: each annotated test through the next annotation, plus the file's prelude (imports and mocks — the classic test-neutering vector — stay under the hash). Edit a covered test — or the requirement — and the old verdict silently stops counting; edit an *unrelated* test in the same file and it doesn't. `2119 pass` refuses IDs whose hash doesn't match current content, so verdicts can't be pre-computed or replayed.
-- **Verdicts are committed, not hidden — and schema-validated.** `.2119/verdicts/*.json` files carry the verdict, summary, and timestamp, so every review decision shows up in the PR diff for humans to audit. The gate counts a verdict only as a fully well-formed record; a malformed file (mangled merge, missing field, wrong filename) is a loud check violation, never a silent pass.
+- **Deterministic checks keep agents in compliance.** Lint and coverage are exact parsing. They run identically from an agent hook, your shell, and CI.
+- **Judgment reviews makes tests more accurate.** Review IDs embed a SHA-256 content hash of the requirement text plus the exact evidence blocks that cover it: each annotated test through the next annotation, plus the file's prelude (imports and mocks stay under the hash). Edit a covered test — or the requirement — and the old verdict silently stops counting; edit an *unrelated* test in the same file and it doesn't. `2119 pass` refuses IDs whose hash doesn't match current content, so verdicts can't be pre-computed or replayed.
+- **Verdicts are committed and schema-validated.** `.2119/verdicts/*.json` files carry the verdict, summary, and timestamp, so every review decision shows up in the PR diff for humans to audit. The gate counts a verdict only as a fully well-formed record; a malformed file (mangled merge, missing field, wrong filename) is a loud check violation, never a silent pass.
 
-### Residual risk, stated plainly
+### Risks
 
 Nothing physically prevents the implementing agent from running `2119 pass` on its own work — no local tool can, since the agent controls the shell. The mitigations are layered: verdicts are **committed and auditable** (a self-pass with a hand-wavy summary is visible in review), **hash invalidation** means a verdict only ever vouches for exact content (no stale reuse), instruction files **direct dispatch to a fresh-context subagent**, and **CI re-runs the same check** so nothing merges without the full gate passing. If you need a hard guarantee, have CI or a bot re-dispatch the judgment reviews with an agent the author doesn't control.
 
@@ -97,28 +101,29 @@ Codex and Gemini deliberately cloned Claude Code's hook contract (JSON on stdin;
 
 ### The universal layer (any agent, no integration required)
 
-The enforcement itself is agent-agnostic by construction — lint, coverage, review hashing, and verdicts are a plain CLI with an exit code. Hooks only change *when* an agent hears about a failure, never *whether* the gate holds. Every `init` includes the universal layer:
+The enforcement itself is agent-agnostic by construction — lint, coverage, review hashing, and verdicts are a plain CLI with an exit code. Hooks only change *when* an agent hears about a failure. Every `init` includes the universal layer:
 
 - **AGENTS.md section** (always written): teaches any agent that reads it — Pi, opencode, Cursor, Hermes, whatever ships next — to spec first, annotate tests, dispatch reviews, and run `npx rfc2119 check` before finishing.
 - **Git pre-commit hook** (`--git-hook`): blocks commits while `check` fails, regardless of which agent (or human) is committing.
-- **CI** (`--ci`): re-runs the same `check` on every pull request — the backstop no agent can route around, integrated or not.
+- **CI** (`--ci`): creates a GitHub Actions workflow that re-runs `check` on every pull request. 
 
 Same command, same verdicts, same gate everywhere; platforms with hooks just find out sooner.
 
 ## Choosing a reviewer model
 
-Judgment reviews are scoped, single-question tasks, so we recommend **a capable but cost-effective model** — set it once via `review_model` in `.2119.yml` (the first interactive `2119 review` will ask; agents and CI never get prompted). The value is advisory text passed to whatever agent dispatches the reviews, so use your platform's own model names. Two things to calibrate:
+Judgment reviews are scoped, single-question tasks, so we recommend **a capable but cost-effective model** — In July 2026, we primarily use Opus 4.8. Set it once via `review_model` in `.2119.yml` (the first interactive `2119 review` will ask; agents and CI never get prompted). The value is advisory text passed to whatever agent dispatches the reviews, so use your platform's own model names. Two things to calibrate:
 
-- Don't go too small: round one of this repo's own reviews surfaced findings like masked assertions and a parser violating its own spec — subtle calls that weak models tend to rubber-stamp. On Claude Code, an Opus-class model is a solid choice.
-- `[review]`-tagged requirements are the judgment-heavy ones; their instruction files deliberately recommend the dispatching agent's own (typically stronger) model instead of the pinned one.
-- **Diversify, then audit.** A single model family shares blind spots — `review_model` accepts a list (every listed model reviews; all must pass), and `2119 review --audit` generates *adversarial* instructions that challenge passing verdicts ("construct a mutant that violates the requirement while the tests stay green"). Run an audit sweep periodically with a model from a different provider, and audit your particularly challenging or high-consequence requirements individually — that's where rubber-stamps hide.
+- Don't go too small: we've seen 2119 catch subtle issues that weak models tend to rubber-stamp. On Claude Code, an Opus-class model is a solid choice.
+- `[review]`-tagged requirements are meant to be used when requirements resist deterministic checks (e.g. "This feature MUST generate human-readable, helpful descriptions"; their instruction files deliberately recommend the dispatching agent's own (typically stronger) model instead of the pinned one.
+- **Diversify, then audit.** A single model family shares blind spots — `review_model` accepts a list (every listed model reviews; all must pass), and `2119 review --audit` generates *adversarial* instructions that challenge passing verdicts ("construct a mutant that violates the requirement while the tests stay green"). Run an audit sweep periodically with a model from a different provider, and audit your particularly challenging or high-consequence requirements individually.
 
 ## Choosing test vs. review vs. verify vs. manual
 
-Deterministic facts get tests. Judgment calls get `[review]`. Things only a human can do get `[manual]`. The anti-patterns to avoid (borrowed from [DeepWork](https://github.com/Unsupervisedcom/deepwork)'s requirements-validation doctrine, which inspired this tool):
+Deterministic facts get tests. Judgment calls get `[review]`. Things only a human can do get `[manual]`. 
 
-- **A keyword-grep test pretending to verify judgment** (`assert "parallel" in text` for "MUST run in parallel") — that's a test that can't fail honestly. Use `[review]`.
-- **A review wasted on a machine-checkable fact** ("check the version field equals 2") — that's judgment spent where a test is stronger. Write the test.
+Here are some anti-patterns to avoid:
+- **A keyword-grep test standing in for a judgment call** (e.g. assert "fix" in error_message for "errors MUST tell the user how to fix the problem") — the substring "fix" appearing proves nothing about whether the message actually explains the fix; "could not fix" passes it. The test can't fail honestly. Use [review] instead.
+- **A review used on a machine-checkable fact** (e.g. using a reviewer to "check the version field equals 2") — that's judgment spent where a test is stronger.
 
 ## Commands
 
@@ -153,7 +158,7 @@ audit: "off"           # "always" generates adversarial audits of passing
 
 ## What's in this repo
 
-Nothing here needs to be copied into your project — `init` generates everything an adopter needs. The layout, for the curious and for contributors:
+Nothing here needs to be copied into your project — `init` generates everything an adopter needs. The scaffolding it builds is:
 
 | Path | Role |
 |------|------|
@@ -169,7 +174,7 @@ Nothing here needs to be copied into your project — `init` generates everythin
 
 Rough numbers, so you can budget before adopting:
 
-- **The deterministic gate is free.** Lint, coverage, and hash checks are parsing — ~0.2s on this repo, plausibly ~1–2s at 1M LOC. No tokens involved.
+- **The deterministic gate is free.** Lint, coverage, and hash checks are parsing — ~0.2s on a tested 300k LOC project.
 - **Judgment reviews are the only real cost, and steady state tracks your change rate, not your repo size.** A verdict re-runs only when its requirement or its evidence blocks change, so a typical PR touching a handful of annotated tests costs on the order of **$0.25–$1** in reviewer tokens (measured here: ~$0.05 per review on an Opus-class model). Block-level hashing is what keeps this bounded — editing one test doesn't re-review its neighbors.
-- **The dominant cost of adopting on an established codebase isn't reviews — it's authoring.** Retroactively speccing 1M LOC means writing thousands of requirements and honestly-falsifiable tests. Don't. Adopt incrementally: run `init`, spec new features and the subsystems you're actively changing, and let coverage grow along the change frontier. A full retroactive review pass, if you ever want one, is only ~$0.05–0.10 per requirement dispatched in parallel.
+- **The dominant cost of adopting on an established codebase isn't reviews — it's authoring.** Retroactively speccing a large repository means writing thousands of requirements and honestly-falsifiable tests. It's usually better to adopt incrementally: run `init`, spec new features and the subsystems you're actively changing, and let coverage grow along the change frontier. A full retroactive review pass, if you ever want one, is only ~$0.05–0.10 per requirement dispatched in parallel.
 - **Very large monorepos (tens of thousands of test files):** the repo walk becomes `check`'s bottleneck (~10s+ at 10M LOC), which you'd feel in write-time hooks. The planned fix — `git ls-files` enumeration plus a content-keyed annotation cache — preserves whole-repo semantics; see the note in [`specs/REQ-002-deterministic-checks.md`](specs/REQ-002-deterministic-checks.md) for why a `--changed` flag is deliberately *not* the answer.
