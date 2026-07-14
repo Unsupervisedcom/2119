@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-008.2.2--9fc0285cb0f3",
+  "requirementId": "REQ-008.2.2",
+  "hash": "9fc0285cb0f3",
+  "verdict": "pass",
+  "summary": "Both files advise periodic cross-provider review --audit sweeps as QA (README line 118 'Run an audit sweep periodically with a model from a different provider'; scaling.md lines 93-104 heading 'Periodic adversarial audits (cross-provider)' + 'monthly, dispatched to a model from a different provider') AND targeted audits for challenging/high-consequence reqs (README 'audit your particularly challenging or high-consequence requirements individually'; scaling.md 'Between sweeps, audit individually the requirements that are particularly challenging or high-consequence'). Both clauses present in both files.",
+  "timestamp": "2026-07-14T06:45:34.132Z"
+}
