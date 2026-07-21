@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-009.1.1--425359da4a3d",
+  "requirementId": "REQ-009.1.1",
+  "hash": "425359da4a3d",
+  "verdict": "pass",
+  "summary": "Real-CLI test creates an audit with its sole judgment already passed and directly asserts generated evidence plus exit 0.",
+  "timestamp": "2026-07-21T23:39:48.163Z"
+}
