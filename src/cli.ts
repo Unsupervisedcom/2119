@@ -126,7 +126,7 @@ switch (command) {
     }
     if (tasks.length === 0) {
       console.log("review: no pending reviews; dispatch the audits above to fresh-context reviewers.");
-      process.exit(1);
+      break;
     }
     console.log(
       `${tasks.length} judgment review(s) pending. Dispatch each to a FRESH-CONTEXT reviewer\n` +
