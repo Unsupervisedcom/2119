@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.2--204eb12e5588",
+  "requirementId": "REQ-003.2.2",
+  "hash": "204eb12e5588",
+  "verdict": "pass",
+  "summary": "writeVerdict emits readable JSON under .2119/verdicts; init ignores only .2119/reviews, and Git confirms verdict JSON is tracked and not ignored for PR audit",
+  "timestamp": "2026-07-21T23:53:11.020Z"
+}
