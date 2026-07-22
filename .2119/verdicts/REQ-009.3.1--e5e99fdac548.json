@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-009.3.1--e5e99fdac548",
+  "requirementId": "REQ-009.3.1",
+  "hash": "e5e99fdac548",
+  "verdict": "pass",
+  "summary": "Every report category has a positive and a pre-existing negative: changed-spec lint vs untouched keyword-less spec, dangling annotations in changed vs unchanged test files across all four change states, coverage loss scoped to deleted evidence, and a failing [verify] command reported only for the edited requirement",
+  "timestamp": "2026-07-21T23:52:37.435Z"
+}

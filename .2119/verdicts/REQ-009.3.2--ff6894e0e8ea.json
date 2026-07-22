@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-009.3.2--ff6894e0e8ea",
+  "requirementId": "REQ-009.3.2",
+  "hash": "ff6894e0e8ea",
+  "verdict": "pass",
+  "summary": "Deleting one requirement from a retained spec surfaces the untouched annotation as an invalid-annotation violation while a pre-existing dangling annotation in an unchanged test file stays unreported, proving the deletion trigger rather than a full-repo scan",
+  "timestamp": "2026-07-21T23:52:43.763Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-009.2.1--6464ff888fa1",
+  "requirementId": "REQ-009.2.1",
+  "hash": "6464ff888fa1",
+  "verdict": "pass",
+  "summary": "Each contract field (statement, keyword, manual mode, verify command, review evidence path, review-instructions path) is mutated in isolation and must yield requirementCount 1 with the untouched sibling excluded; the baseline-absent conjunct is covered by the added-requirement case.",
+  "timestamp": "2026-07-21T23:53:15.484Z"
+}
