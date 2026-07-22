@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.1.2--251ba2832873",
+  "requirementId": "REQ-010.1.2",
+  "hash": "251ba2832873",
+  "verdict": "pass",
+  "summary": "All three required sizing smells checked with toContain that fail on removal: ~10 threshold, internal steps restatement, and quoted MUST cover/MUST test forms; string matching is appropriate for documentation-presence requirement",
+  "timestamp": "2026-07-22T18:31:17.129Z"
+}

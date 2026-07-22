@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.1.2--251c3b25ce21",
+  "requirementId": "REQ-010.1.2",
+  "hash": "251c3b25ce21",
+  "verdict": "fail",
+  "summary": "Test omits the 'MUST cover'/'MUST test' smell: removing that clause from AGENTS_MD_SECTION would pass all three assertions while violating the requirement's third explicitly-named conjunct",
+  "timestamp": "2026-07-22T18:28:25.353Z"
+}

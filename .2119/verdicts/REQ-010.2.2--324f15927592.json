@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.2--324f15927592",
+  "requirementId": "REQ-010.2.2",
+  "hash": "324f15927592",
+  "verdict": "pass",
+  "summary": "Both violations covered: missing section fails toContain, notes before Requirements fails index ordering; SPEC_TEMPLATE is real (not mocked); ## heading level prevents sub-heading bypass",
+  "timestamp": "2026-07-22T18:28:24.372Z"
+}

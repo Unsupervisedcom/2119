@@ -3,22 +3,34 @@ import { AGENTS_MD_SECTION, SPEC_TEMPLATE } from "../src/init.js";
 
 describe("requirement granularity guidance", () => {
   // 2119: REQ-010.1.1
-  it("AGENTS.md section includes granularity guidance with 3–8 recommendation", () => {
+  it("AGENTS.md section includes granularity guidance with 3–8 recommendation and implementation-step contrast", () => {
     expect(AGENTS_MD_SECTION).toContain("3–8");
     expect(AGENTS_MD_SECTION).toContain("workflow-level");
+    // The rationale must name implementation-step requirements as what to avoid.
+    expect(AGENTS_MD_SECTION).toContain("implementation-step");
   });
 
   // 2119: REQ-010.1.2
-  it("AGENTS.md section includes spec sizing smells", () => {
+  it("AGENTS.md section includes all required spec sizing smells", () => {
     expect(AGENTS_MD_SECTION).toContain("sizing smells");
     expect(AGENTS_MD_SECTION).toContain("~10");
     expect(AGENTS_MD_SECTION).toContain("internal steps");
+    // The third smell: requirements that say "MUST cover" or "MUST test".
+    expect(AGENTS_MD_SECTION).toContain('"MUST cover"');
+    expect(AGENTS_MD_SECTION).toContain('"MUST test"');
   });
 
   // 2119: REQ-010.2.1
-  it("spec template includes core workflows and manual acceptance criteria sections", () => {
+  it("spec template includes core workflows section with MUST requirement and manual acceptance criteria", () => {
+    // The "Core workflows" section heading must be present.
     expect(SPEC_TEMPLATE).toContain("Core workflows");
-    expect(SPEC_TEMPLATE).toContain("Safety and compatibility invariants");
+    // The section must contain at least one MUST requirement (not just the heading).
+    const coreIdx = SPEC_TEMPLATE.indexOf("Core workflows");
+    const nextSectionIdx = SPEC_TEMPLATE.indexOf("###", coreIdx + 1);
+    const coreSection = SPEC_TEMPLATE.slice(coreIdx, nextSectionIdx > -1 ? nextSectionIdx : undefined);
+    expect(coreSection).toContain("MUST");
+    // Manual acceptance criteria section must also be present.
+    expect(SPEC_TEMPLATE).toContain("Manual acceptance criteria");
     expect(SPEC_TEMPLATE).toContain("[manual]");
   });
 
