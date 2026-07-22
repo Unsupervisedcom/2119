@@ -21,11 +21,13 @@ export function runVerifyCommands(
   config: Config,
   specs: SpecFile[],
   timeoutMs: number = VERIFY_TIMEOUT_MS,
+  requirementIds?: Set<string>,
 ): Violation[] {
   const out: Violation[] = [];
   for (const spec of specs) {
     for (const section of spec.sections) {
       for (const req of section.items) {
+        if (requirementIds && !requirementIds.has(req.id)) continue;
         if (req.removed || req.coverage.kind !== "verify" || !req.coverage.command) continue;
         if (req.keywords.length !== 1 || !config.enforce.includes(req.keywords[0])) continue;
         try {

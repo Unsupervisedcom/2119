@@ -9,20 +9,26 @@ import { computeReviewTargets, verdictViolations, type ReviewTask } from "./revi
 import { scanVerdicts } from "./verdict.js";
 import { runVerifyCommands } from "./verify.js";
 import { allRequirements } from "./spec.js";
-import type { SpecFile, Verdict, Violation } from "./model.js";
+import type { Annotation, SpecFile, Verdict, Violation } from "./model.js";
 
 export interface CheckContext {
   config: Config;
   repoFiles: string[];
   specs: SpecFile[];
   coverage: CoverageResult;
+  annotations: Annotation[];
+  /** Review hashes computed even when reviews are disabled, for incremental dependency comparison. */
+  allReviewTargets: Omit<ReviewTask, "instructionPath">[];
   reviewTargets: Omit<ReviewTask, "instructionPath">[];
   verdicts: Map<string, Verdict>;
   lintViolations: Violation[];
   coverViolations: Violation[];
   reviewViolations: Violation[];
+  malformedVerdictViolations: Violation[];
   verifyViolations: Violation[];
   notInitialized: boolean;
+  /** Present for `check --changed`; limits report counts and manual output to affected requirements. */
+  scopedRequirementIds?: Set<string>;
 }
 
 export interface BuildOptions {
@@ -63,7 +69,8 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
   const annotations = scanAnnotations(root, testFiles, config.prefix, config.commentLeaders);
   const coverage = computeCoverage(specs, annotations, config.enforce);
 
-  const reviewTargets = config.reviews ? computeReviewTargets(config, specs, coverage, repoFiles, annotations) : [];
+  const allReviewTargets = computeReviewTargets(config, specs, coverage, repoFiles, annotations);
+  const reviewTargets = config.reviews ? allReviewTargets : [];
   // Malformed verdict files are loud violations, not silent passes or skips (REQ-003.7.2).
   const { verdicts, violations: malformedVerdicts } = scanVerdicts(root);
   const reviewViolations = [...malformedVerdicts, ...verdictViolations(reviewTargets, verdicts)];
@@ -101,11 +108,14 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
     repoFiles,
     specs,
     coverage,
+    annotations,
+    allReviewTargets,
     reviewTargets,
     verdicts,
     lintViolations,
     coverViolations: coverage.violations,
     reviewViolations,
+    malformedVerdictViolations: malformedVerdicts,
     verifyViolations,
     notInitialized,
   };
@@ -125,7 +135,7 @@ export function buildReport(ctx: CheckContext): CheckReport {
   const violations = [...ctx.lintViolations, ...ctx.coverViolations, ...ctx.reviewViolations, ...ctx.verifyViolations];
   const enforcedTestReqs = ctx.specs
     .flatMap((s) => s.sections.flatMap((sec) => sec.items))
-    .filter((r) => !r.removed);
+    .filter((r) => !r.removed && (!ctx.scopedRequirementIds || ctx.scopedRequirementIds.has(r.id)));
   return {
     ok: violations.length === 0,
     violations,
