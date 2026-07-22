@@ -178,6 +178,35 @@ describe("deterministic rigor (0.6)", () => {
     expect(existsSync(join(root, `.2119/reviews/${id}.audit.md`))).toBe(true);
   });
 
+  // 2119: REQ-009.1.1
+  it("exits zero when an audit-only review run generates instructions", () => {
+    const root = fixture();
+    const id = run(root, ["review"]).stdout.match(/FIX-001\.1\.1--[0-9a-f]{12}/)![0];
+    expect(run(root, ["pass", id, "--summary", "asserts spin behavior"]).status).toBe(0);
+
+    const result = run(root, ["review", "--audit"]);
+    expect(existsSync(join(root, `.2119/reviews/${id}.audit.md`))).toBe(true);
+    expect(result.stdout).toContain("adversarial audit(s) generated");
+    expect(result.status).toBe(0);
+  });
+
+  // 2119: REQ-009.1.2
+  it("retains a non-zero exit when audits and pending reviews coexist", () => {
+    const root = fixture(`${SPEC}2. The widget MUST stop.\n`);
+    writeFileSync(
+      join(root, "tests/widget.test.js"),
+      "// 2119: FIX-001.1.1\ntest('spins', () => {})\n// 2119: FIX-001.1.2\ntest('stops', () => {})\n",
+    );
+    const initial = run(root, ["review"]).stdout;
+    const passingId = initial.match(/FIX-001\.1\.1--[0-9a-f]{12}/)![0];
+    expect(run(root, ["pass", passingId, "--summary", "asserts spin behavior"]).status).toBe(0);
+
+    const result = run(root, ["review", "--audit"]);
+    expect(existsSync(join(root, `.2119/reviews/${passingId}.audit.md`))).toBe(true);
+    expect(result.stdout).toContain("judgment review(s) pending");
+    expect(result.status).toBe(1);
+  });
+
   // 2119: REQ-004.1.10
   it("session-start injects an upgrade notice from a cached probe", async () => {
     const root = fixture();
