@@ -1,10 +1,14 @@
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
 import { buildContext, type CheckContext } from "./check.js";
+import { CONFIG_FILENAME } from "./config.js";
+import { evidenceBlockParts } from "./annotations.js";
+import { matchGlobs } from "./files.js";
 import { allRequirements } from "./spec.js";
-import { splitReviewId } from "./hash.js";
+import { fileParts, splitReviewId } from "./hash.js";
+import { VERDICTS_DIR } from "./verdict.js";
 import { runVerifyCommands, VERIFY_TIMEOUT_MS } from "./verify.js";
 import type { Requirement, Violation } from "./model.js";
 
@@ -37,6 +41,12 @@ export function buildChangedContext(
     let current: CheckContext;
     try {
       baseline = buildContext(baselineRoot, { runVerify: false });
+      const structural = baseline.lintViolations.filter(
+        (violation) => violation.rule.startsWith("REQ-001.1.") || violation.rule === "REQ-001.2.3",
+      );
+      if (structural.length > 0) {
+        throw new Error(`${structural.length} structural baseline specification violation(s)`);
+      }
     } catch (err) {
       throw new IncrementalCheckError(`Cannot parse baseline configuration or content: ${(err as Error).message}`);
     }
@@ -58,22 +68,35 @@ function readChangeSet(root: string, baseRef: string): ChangeSet {
     ["rev-parse", "--verify", "--end-of-options", `${baseRef}^{commit}`],
     `resolve base ref "${baseRef}"`,
   ).trim();
-  const mergeBase = gitText(root, ["merge-base", resolved, "HEAD"], `find a merge-base for "${baseRef}" and HEAD`).trim();
-  if (!mergeBase) {
-    throw new IncrementalCheckError(`Cannot find a merge-base for "${baseRef}" and HEAD; the histories may be unrelated.`);
-  }
-  const tracked = gitNulPaths(
+  const mergeBase = gitText(
     root,
-    ["diff", "--name-only", "-z", "--no-renames", mergeBase, "--"],
-    "read tracked changes from the merge-base",
+    ["merge-base", resolved, "HEAD"],
+    `find a merge-base for "${baseRef}" and HEAD (the histories may be unrelated)`,
+  ).trim();
+  const committed = gitNulPaths(
+    root,
+    ["diff", "--name-only", "-z", "--no-renames", mergeBase, "HEAD", "--"],
+    "read committed changes from the merge-base",
+  );
+  const staged = gitNulPaths(
+    root,
+    ["diff", "--cached", "--name-only", "-z", "--no-renames", "HEAD", "--"],
+    "read staged changes",
+  );
+  const unstaged = gitNulPaths(
+    root,
+    ["diff", "--name-only", "-z", "--no-renames", "--"],
+    "read unstaged changes",
   );
   const untracked = gitNulPaths(
     root,
     ["ls-files", "--others", "--exclude-standard", "-z"],
     "read untracked non-ignored files",
   );
-  return { mergeBase, paths: new Set([...tracked, ...untracked]) };
+  return { mergeBase, paths: new Set([...committed, ...staged, ...unstaged, ...untracked]) };
 }
+
+const NO_NETWORK_ENV = { ...process.env, GIT_NO_LAZY_FETCH: "1" };
 
 function gitText(root: string, args: string[], action: string): string {
   const result = spawnSync("git", args, {
@@ -81,6 +104,7 @@ function gitText(root: string, args: string[], action: string): string {
     encoding: "utf8",
     maxBuffer: 64 * 1024 * 1024,
     stdio: ["ignore", "pipe", "pipe"],
+    env: NO_NETWORK_ENV,
   });
   const warning = result.stderr?.trim();
   if (result.error || result.status !== 0 || warning) {
@@ -105,6 +129,7 @@ function materializeBaseline(root: string, commit: string): string {
         cwd: root,
         maxBuffer: 64 * 1024 * 1024,
         stdio: ["ignore", "pipe", "pipe"],
+        env: NO_NETWORK_ENV,
       });
     } catch (err) {
       const e = err as { stderr?: Buffer; message?: string };
@@ -122,8 +147,6 @@ function materializeBaseline(root: string, commit: string): string {
         throw new IncrementalCheckError(`Cannot read baseline content for submodule path "${path}" without a checkout.`);
       }
       if (type !== "blob") continue;
-      // Match the repository walker: symbolic links are not scanned as files.
-      if (mode === "120000") continue;
       const destination = resolve(target, path);
       if (isAbsolute(path) || path.split("/").includes("..") || !destination.startsWith(`${target}${sep}`)) {
         throw new IncrementalCheckError(`Unsafe path in baseline tree: "${path}"`);
@@ -134,6 +157,7 @@ function materializeBaseline(root: string, commit: string): string {
           cwd: root,
           maxBuffer: 256 * 1024 * 1024,
           stdio: ["ignore", "pipe", "pipe"],
+          env: NO_NETWORK_ENV,
         });
       } catch (err) {
         const e = err as { stderr?: Buffer; message?: string };
@@ -142,7 +166,16 @@ function materializeBaseline(root: string, commit: string): string {
         );
       }
       mkdirSync(dirname(destination), { recursive: true });
-      writeFileSync(destination, content);
+      if (mode === "120000") {
+        const linkTarget = content.toString("utf8");
+        const resolvedTarget = resolve(dirname(destination), linkTarget);
+        if (isAbsolute(linkTarget) || !resolvedTarget.startsWith(`${target}${sep}`)) {
+          throw new IncrementalCheckError(`Unsafe symbolic link in baseline tree: "${path}" -> "${linkTarget}"`);
+        }
+        symlinkSync(linkTarget, destination);
+      } else {
+        writeFileSync(destination, content);
+      }
     }
     return target;
   } catch (err) {
@@ -161,9 +194,18 @@ function scopeContext(
 ): CheckContext {
   const currentRequirements = new Map(allRequirements(current.specs).filter((r) => !r.removed).map((r) => [r.id, r]));
   const baselineRequirements = new Map(allRequirements(baseline.specs).filter((r) => !r.removed).map((r) => [r.id, r]));
+  const currentKnownIds = new Set([
+    ...currentRequirements.keys(),
+    ...current.specs.flatMap((spec) => spec.sections.map((section) => section.id)),
+  ]);
+  const baselineKnownIds = new Set([
+    ...baselineRequirements.keys(),
+    ...baseline.specs.flatMap((spec) => spec.sections.map((section) => section.id)),
+  ]);
   const affected = new Set<string>();
+  const configChanged = changedPaths.has(CONFIG_FILENAME);
 
-  if (changedPaths.has(".2119.yml")) {
+  if (configChanged) {
     for (const id of currentRequirements.keys()) affected.add(id);
   } else {
     for (const [id, requirement] of currentRequirements) {
@@ -171,26 +213,33 @@ function scopeContext(
       if (!prior || contractKey(requirement) !== contractKey(prior)) affected.add(id);
     }
 
-    const currentEvidence = new Map(current.allReviewTargets.map((t) => [t.requirement.id, t.reviewId]));
-    const baselineEvidence = new Map(baseline.allReviewTargets.map((t) => [t.requirement.id, t.reviewId]));
     for (const id of currentRequirements.keys()) {
-      if (currentEvidence.get(id) !== baselineEvidence.get(id)) affected.add(id);
+      if (evidenceKey(current, id) !== evidenceKey(baseline, id)) affected.add(id);
     }
   }
 
+  const currentReviewIds = new Map(current.allReviewTargets.map((target) => [target.requirement.id, target.reviewId]));
+  const baselineReviewIds = new Map(baseline.allReviewTargets.map((target) => [target.requirement.id, target.reviewId]));
   for (const path of changedPaths) {
-    if (!path.startsWith(".2119/verdicts/") || !path.endsWith(".json")) continue;
-    const requirementId = verdictRequirementId(path);
-    if (requirementId && currentRequirements.has(requirementId)) affected.add(requirementId);
+    if (!path.startsWith(`${VERDICTS_DIR}/`) || !path.endsWith(".json")) continue;
+    const parsed = verdictReview(path);
+    if (
+      parsed &&
+      currentRequirements.has(parsed.requirementId) &&
+      (currentReviewIds.get(parsed.requirementId) === parsed.reviewId ||
+        baselineReviewIds.get(parsed.requirementId) === parsed.reviewId)
+    ) {
+      affected.add(parsed.requirementId);
+    }
   }
 
   const lintViolations = current.lintViolations.filter((v) => changedPaths.has(relativePath(root, v.file)));
   const coverViolations = current.coverViolations.filter((v) => {
     if (v.rule === "REQ-002.2.4") return affected.has(messageRequirementId(v, currentRequirements) ?? "");
     if (v.rule === "REQ-002.2.3") {
-      if (changedPaths.has(relativePath(root, v.file))) return true;
+      if (configChanged || changedPaths.has(relativePath(root, v.file))) return true;
       const referenced = quotedRequirementId(v.message);
-      return Boolean(referenced && baselineRequirements.has(referenced) && !currentRequirements.has(referenced));
+      return Boolean(referenced && baselineKnownIds.has(referenced) && !currentKnownIds.has(referenced));
     }
     return affected.has(messageRequirementId(v, currentRequirements) ?? "");
   });
@@ -199,10 +248,14 @@ function scopeContext(
   const reviewViolations = current.reviewViolations.filter((v) => {
     if (!malformed.has(v)) return affected.has(messageRequirementId(v, currentRequirements) ?? "");
     const path = relativePath(root, v.file);
-    const requirementId = verdictRequirementId(path);
-    return requirementId && currentRequirements.has(requirementId)
-      ? affected.has(requirementId)
-      : changedPaths.has(path);
+    const parsed = verdictReview(path);
+    const assigned = Boolean(
+      parsed &&
+        currentRequirements.has(parsed.requirementId) &&
+        (currentReviewIds.get(parsed.requirementId) === parsed.reviewId ||
+          baselineReviewIds.get(parsed.requirementId) === parsed.reviewId),
+    );
+    return assigned ? affected.has(parsed!.requirementId) : changedPaths.has(path);
   });
 
   const covered = new Map([...current.coverage.covered].filter(([id]) => affected.has(id)));
@@ -227,6 +280,21 @@ function scopeContext(
     verifyViolations,
     scopedRequirementIds: affected,
   };
+}
+
+function evidenceKey(ctx: CheckContext, requirementId: string): string | undefined {
+  const requirement = allRequirements(ctx.specs).find((candidate) => !candidate.removed && candidate.id === requirementId);
+  if (!requirement) return undefined;
+  const covering = ctx.coverage.covered.get(requirementId) ?? [];
+  const parts = evidenceBlockParts(ctx.config.root, covering, ctx.annotations);
+  if (requirement.coverage.kind === "test") {
+    parts.push(...fileParts(ctx.config.root, matchGlobs(ctx.repoFiles, ctx.config.sharedEvidence)));
+  } else if (requirement.coverage.kind === "review") {
+    const evidence = requirement.coverage.globs ? matchGlobs(ctx.repoFiles, requirement.coverage.globs) : [];
+    const selected = requirement.coverage.instructions ? [requirement.coverage.instructions, ...evidence] : evidence;
+    parts.push(...fileParts(ctx.config.root, selected));
+  }
+  return JSON.stringify(parts);
 }
 
 function contractKey(requirement: Requirement): string {
@@ -256,7 +324,8 @@ function quotedRequirementId(message: string): string | undefined {
   return message.match(/requirement ID "([^"]+)"/)?.[1];
 }
 
-function verdictRequirementId(path: string): string | undefined {
+function verdictReview(path: string): { reviewId: string; requirementId: string } | undefined {
   const name = basename(path).replace(/\.json$/, "");
-  return splitReviewId(name)?.requirementId;
+  const parsed = splitReviewId(name);
+  return parsed ? { reviewId: name, requirementId: parsed.requirementId } : undefined;
 }

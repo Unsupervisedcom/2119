@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.3--a070770701c2",
+  "requirementId": "REQ-010.2.3",
+  "hash": "a070770701c2",
+  "verdict": "pass",
+  "summary": "Real CLI tests reject target-block and shared-prelude changes, exclude same-file neighboring-block edits, and detect a boundary inserted between baseline and current views.",
+  "timestamp": "2026-07-22T14:15:44.562Z"
+}

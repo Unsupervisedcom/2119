@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-010.3.2--6cd573498e47",
-  "requirementId": "REQ-010.3.2",
-  "hash": "6cd573498e47",
-  "verdict": "pass",
-  "summary": "Test deletes req 1 from a retained spec and asserts the unchanged annotation is reported (verified live: rule REQ-002.2.3 on unchanged tests/widget.test.js), with FIX-999.1.1 as a scoping control proving pre-existing dangling refs outside changed specs stay unreported",
-  "timestamp": "2026-07-22T04:53:24.680Z"
-}

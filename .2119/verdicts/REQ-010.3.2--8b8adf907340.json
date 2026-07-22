@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.3.2--8b8adf907340",
+  "requirementId": "REQ-010.3.2",
+  "hash": "8b8adf907340",
+  "verdict": "pass",
+  "summary": "CLI integration tests keep annotations unchanged while deleting their requirement or section from a changed spec, assert REQ-002.2.3 plus nonzero exit, and exclude an unrelated unchanged dangling annotation.",
+  "timestamp": "2026-07-22T14:17:46.363Z"
+}

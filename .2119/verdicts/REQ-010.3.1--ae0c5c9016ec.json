@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.3.1--ae0c5c9016ec",
+  "requirementId": "REQ-010.3.1",
+  "hash": "ae0c5c9016ec",
+  "verdict": "pass",
+  "summary": "End-to-end Git fixtures report changed invalid annotations, affected coverage and stale/malformed verdicts, changed-spec lint, and affected verification while excluding unchanged, sibling, and historical violations.",
+  "timestamp": "2026-07-22T14:19:19.677Z"
+}

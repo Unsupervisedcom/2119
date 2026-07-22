@@ -5,6 +5,67 @@ import { splitReviewId } from "./hash.js";
 
 export const VERDICTS_DIR = ".2119/verdicts";
 
+const GITIGNORE_SECTION = `# 2119:gitignore-begin
+# Review packets are scratch; verdicts are committed audit history.
+!.2119/
+.2119/reviews/
+!.2119/verdicts/
+!.2119/verdicts/**
+# 2119:gitignore-end
+`;
+
+const NESTED_GITIGNORE_SECTION = `# 2119:storage-begin
+reviews/
+!verdicts/
+!verdicts/**
+# 2119:storage-end
+`;
+
+const VERDICTS_GITIGNORE_SECTION = `# 2119:verdicts-begin
+!.gitignore
+!*.json
+# 2119:verdicts-end
+`;
+
+function putLast(path: string, section: string, pattern: RegExp): boolean {
+  const existing = readFileSync(path, "utf8");
+  const withoutSection = existing.replace(pattern, "").trimEnd();
+  const updated = `${withoutSection}${withoutSection ? "\n" : ""}${section}`;
+  if (updated === existing) return false;
+  writeFileSync(path, updated);
+  return true;
+}
+
+/** Keep scratch review packets ignored while verdict audit records remain trackable. */
+export function ensureReviewStorageRules(root: string): boolean {
+  const path = join(root, ".gitignore");
+  const existing = existsSync(path) ? readFileSync(path, "utf8") : "";
+  const without2119 = existing
+    .replace(/# 2119:gitignore-begin\n[\s\S]*?# 2119:gitignore-end\n?/g, "")
+    .replace(
+      /# 2119: review packets are scratch; verdicts are committed audit history\n!\.2119\/\n\.2119\/reviews\/\n!\.2119\/verdicts\/\n!\.2119\/verdicts\/\*\*\n?/g,
+      "",
+    )
+    .trimEnd();
+  const updated = `${without2119}${without2119 ? "\n" : ""}${GITIGNORE_SECTION}`;
+  let changed = false;
+  if (updated !== existing) {
+    writeFileSync(path, updated);
+    changed = true;
+  }
+  const nested = join(root, ".2119/.gitignore");
+  if (existsSync(nested)) {
+    changed = putLast(nested, NESTED_GITIGNORE_SECTION, /# 2119:storage-begin\n[\s\S]*?# 2119:storage-end\n?/g) || changed;
+  }
+  const verdicts = join(root, `${VERDICTS_DIR}/.gitignore`);
+  if (existsSync(verdicts)) {
+    changed =
+      putLast(verdicts, VERDICTS_GITIGNORE_SECTION, /# 2119:verdicts-begin\n[\s\S]*?# 2119:verdicts-end\n?/g) ||
+      changed;
+  }
+  return changed;
+}
+
 const SAFE_ID = /^[A-Za-z0-9.-]+--[0-9a-f]{12}$/;
 
 function verdictPath(root: string, reviewId: string): string {
@@ -119,6 +180,7 @@ export function writeVerdict(
   verdict: VerdictKind,
   summary: string,
 ): Verdict {
+  ensureReviewStorageRules(root);
   const record: Verdict = {
     reviewId,
     requirementId,

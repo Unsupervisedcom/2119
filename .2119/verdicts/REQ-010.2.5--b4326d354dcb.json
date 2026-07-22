@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-010.2.5--b4326d354dcb",
-  "requirementId": "REQ-010.2.5",
-  "hash": "b4326d354dcb",
-  "verdict": "pass",
-  "summary": "Removed, added, replaced (pass->fail), and corrupted verdicts each surface for FIX-001.1.1 with the sibling scoped out, and an unassignable broken verdicts JSON file is still reported as a violation rather than silently dropped",
-  "timestamp": "2026-07-22T04:54:04.897Z"
-}

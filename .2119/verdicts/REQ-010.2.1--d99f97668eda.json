@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.1--d99f97668eda",
+  "requirementId": "REQ-010.2.1",
+  "hash": "d99f97668eda",
+  "verdict": "pass",
+  "summary": "Pass: isolated cases reject an added requirement and changes to statement, keyword, coverage mode, verify command, evidence globs, and review-instruction path, while an identical sibling remains unaffected.",
+  "timestamp": "2026-07-22T05:49:14.818Z"
+}

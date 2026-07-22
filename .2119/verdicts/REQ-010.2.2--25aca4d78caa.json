@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-010.2.2--25aca4d78caa",
-  "requirementId": "REQ-010.2.2",
-  "hash": "25aca4d78caa",
-  "verdict": "pass",
-  "summary": "Block-content edit marks only the edited annotation's requirement stale (same-file and other-file controls stay clean); add/remove annotation loop shows the requirement enters scope with coverage flipping 1/0 while the untouched sibling stays out",
-  "timestamp": "2026-07-22T04:53:53.204Z"
-}

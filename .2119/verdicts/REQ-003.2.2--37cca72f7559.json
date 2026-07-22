@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.2.2--37cca72f7559",
-  "requirementId": "REQ-003.2.2",
-  "hash": "37cca72f7559",
-  "verdict": "pass",
-  "summary": "writeVerdict emits parseable JSON under .2119/verdicts; init ignores only .2119/reviews, Git confirms verdicts are unignored, and all 128 present verdict JSON files are tracked for PR diffs.",
-  "timestamp": "2026-07-22T05:28:25.050Z"
-}

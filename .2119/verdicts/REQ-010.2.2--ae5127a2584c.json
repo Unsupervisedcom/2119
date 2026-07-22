@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.2--ae5127a2584c",
+  "requirementId": "REQ-010.2.2",
+  "hash": "ae5127a2584c",
+  "verdict": "pass",
+  "summary": "Tests independently reject missed annotation addition/removal and missed evidence-block hash changes, including sibling exclusions and a one-of-multiple-blocks case.",
+  "timestamp": "2026-07-22T14:15:48.181Z"
+}

@@ -1,5 +1,15 @@
 import { execFileSync } from "node:child_process";
-import { chmodSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+  symlinkSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -87,7 +97,7 @@ const TWO_REQUIREMENTS = spec(`1. The widget MUST spin.
 
 describe("check --changed (REQ-010)", () => {
   // 2119: REQ-010.1.1
-  it("requires one local base ref, uses its merge-base, and never invokes network Git commands", () => {
+  it("requires one local commit-ish, uses its merge-base, and performs no network access", () => {
     const { root, base } = initRepo({
       ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
       "specs/FIX-001-widgets.md": spec("1. The widget MUST spin.\n"),
@@ -96,18 +106,35 @@ describe("check --changed (REQ-010)", () => {
     for (const args of [
       ["check", "--changed"],
       ["check", "--changed", base, "extra-ref"],
-      ["check", "--changed", "not-a-local-ref"],
+      ["check", "--changed", base, "--changed", base],
     ]) {
       const result = run(root, args);
       expect(result.status).not.toBe(0);
-      expect(`${result.stdout}\n${result.stderr}`).toMatch(/changed|base.ref|commit|usage/i);
+      expect(result.stderr).toContain("usage: 2119 check --changed <base-ref>");
     }
+
+    const unresolved = run(root, ["check", "--changed", "not-a-local-ref"]);
+    expect(unresolved.status).not.toBe(0);
+    expect(unresolved.stderr).toContain('Cannot resolve base ref "not-a-local-ref"');
+
+    for (const object of [
+      git(root, "rev-parse", `${base}:specs/FIX-001-widgets.md`),
+      git(root, "rev-parse", `${base}:specs`),
+    ]) {
+      const result = run(root, ["check", "--changed", object]);
+      expect(result.status).not.toBe(0);
+      expect(result.stderr).toContain("Cannot resolve base ref");
+      expect(result.stderr).toMatch(/expected commit type|commit-ish/i);
+    }
+
+    git(root, "tag", "local-base", base);
+    expect(run(root, ["check", "--changed", "local-base"]).status).toBe(0);
 
     git(root, "branch", "ambiguous", base);
     git(root, "tag", "ambiguous", base);
     const ambiguous = run(root, ["check", "--changed", "ambiguous"]);
     expect(ambiguous.status).not.toBe(0);
-    expect(`${ambiguous.stdout}\n${ambiguous.stderr}`).toMatch(/ambiguous|base.ref|commit/i);
+    expect(ambiguous.stderr).toContain("ambiguous");
 
     git(root, "checkout", "-b", "base-side", base);
     write(root, "specs/FIX-001-widgets.md", spec("1. The widget MUST spin. [manual]\n"));
@@ -127,21 +154,45 @@ describe("check --changed (REQ-010)", () => {
     git(root, "checkout", "main");
     const noMergeBase = run(root, ["check", "--changed", unrelated]);
     expect(noMergeBase.status).not.toBe(0);
-    expect(`${noMergeBase.stdout}\n${noMergeBase.stderr}`).toMatch(/merge.base|history|ancestor/i);
+    expect(noMergeBase.stderr).toContain("Cannot find a merge-base");
+    expect(noMergeBase.stderr).toContain("histories may be unrelated");
 
     const realGit = execFileSync("which", ["git"], { encoding: "utf8" }).trim();
     const bin = join(root, "fake-bin");
     const log = join(root, "git-calls.log");
+    const networkBlocker = join(root, "network-blocker.cjs");
+    write(
+      root,
+      "network-blocker.cjs",
+      `const blocked = () => { throw new Error('network access attempted') };
+for (const name of ['node:net', 'node:http', 'node:https']) {
+  const module = require(name);
+  for (const method of ['connect', 'createConnection', 'request', 'get']) {
+    if (typeof module[method] === 'function') module[method] = blocked;
+  }
+}
+globalThis.fetch = blocked;
+`,
+    );
     write(
       root,
       "fake-bin/git",
-      `#!/bin/sh\nprintf '%s\\n' "$1" >> "$GIT_CALL_LOG"\ncase "$1" in fetch|pull|ls-remote) exit 97;; esac\nexec ${realGit} "$@"\n`,
+      `#!/bin/sh\nprintf '%s|%s\\n' "$GIT_NO_LAZY_FETCH" "$*" >> "$GIT_CALL_LOG"\ntest "$GIT_NO_LAZY_FETCH" = 1 || exit 98\ncase "$1" in fetch|pull|ls-remote) exit 97;; esac\nexec ${realGit} "$@"\n`,
     );
     chmodSync(join(bin, "git"), 0o755);
     expect(
-      run(root, ["check", "--changed", base], { PATH: `${bin}:${process.env.PATH}`, GIT_CALL_LOG: log }).status,
+      run(root, ["check", "--changed", base], {
+        PATH: `${bin}:${process.env.PATH}`,
+        GIT_CALL_LOG: log,
+        NODE_OPTIONS: `--require=${networkBlocker}`,
+      }).status,
     ).toBe(0);
-    expect(readFileSync(log, "utf8")).not.toMatch(/^(fetch|pull|ls-remote)$/m);
+    const calls = readFileSync(log, "utf8");
+    expect(calls.split("\n").filter(Boolean).every((line) => line.startsWith("1|"))).toBe(true);
+    expect(calls).not.toMatch(/\|(fetch|pull|ls-remote)( |$)/m);
+    expect(calls).toMatch(/\|diff .*HEAD --/);
+    expect(calls).toMatch(/\|diff --cached .*HEAD --/);
+    expect(calls).toMatch(/\|diff --name-only .*--$/m);
   });
 
   // 2119: REQ-010.1.2, REQ-010.3.1
@@ -163,15 +214,19 @@ describe("check --changed (REQ-010)", () => {
       expect(report.violations.some((v) => v.message.includes("FIX-800.1.1"))).toBe(false);
     }
 
-    const { root, base } = initRepo({
-      ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
-      "specs/FIX-001-widgets.md": TWO_REQUIREMENTS,
-      "tests/widget.test.js": "// 2119: FIX-001.1.1\ntest('spin', () => {})\n",
-    });
-    unlinkSync(join(root, "tests/widget.test.js"));
-    const report = json(run(root, ["check", "--changed", base, "--json"]));
-    expect(report.uncoveredRequirements).toContain("FIX-001.1.1");
-    expect(report.uncoveredRequirements).not.toContain("FIX-001.1.2");
+    for (const mode of ["committed", "staged", "unstaged"] as const) {
+      const { root, base } = initRepo({
+        ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
+        "specs/FIX-001-widgets.md": TWO_REQUIREMENTS,
+        "tests/widget.test.js": "// 2119: FIX-001.1.1\ntest('spin', () => {})\n",
+      });
+      unlinkSync(join(root, "tests/widget.test.js"));
+      if (mode === "staged" || mode === "committed") git(root, "add", "-u");
+      if (mode === "committed") git(root, "commit", "-m", "delete test evidence");
+      const report = json(run(root, ["check", "--changed", base, "--json"]));
+      expect(report.uncoveredRequirements).toContain("FIX-001.1.1");
+      expect(report.uncoveredRequirements).not.toContain("FIX-001.1.2");
+    }
   });
 
   // 2119: REQ-010.1.3
@@ -194,17 +249,42 @@ describe("check --changed (REQ-010)", () => {
     expect(result.status).not.toBe(0);
     expect(`${result.stdout}\n${result.stderr}`).toMatch(/baseline|config|yaml|parse/i);
 
-    const corruptBlob = initRepo({
+    const malformedSpec = initRepo({
+      ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
+      "specs/FIX-001-widgets.md": spec("1. The widget MUST spin. [manual]\n").replace(
+        "### FIX-001.1: Behavior",
+        "### malformed section",
+      ),
+    });
+    write(malformedSpec.root, "specs/FIX-001-widgets.md", spec("1. The widget MUST spin. [manual]\n"));
+    const malformedSpecResult = run(malformedSpec.root, ["check", "--changed", malformedSpec.base]);
+    expect(malformedSpecResult.status).not.toBe(0);
+    expect(`${malformedSpecResult.stdout}\n${malformedSpecResult.stderr}`).toMatch(/baseline|specification|lint|content/i);
+
+    for (const path of [".2119.yml", "specs/FIX-001-widgets.md"]) {
+      const corruptBlob = initRepo({
+        ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
+        "specs/FIX-001-widgets.md": spec("1. The widget MUST spin. [manual]\n"),
+      });
+      const blob = git(corruptBlob.root, "rev-parse", `${corruptBlob.base}:${path}`);
+      const objectPath = join(corruptBlob.root, ".git/objects", blob.slice(0, 2), blob.slice(2));
+      chmodSync(objectPath, 0o644);
+      writeFileSync(objectPath, "corrupt object\n");
+      const unreadable = run(corruptBlob.root, ["check", "--changed", corruptBlob.base]);
+      expect(unreadable.status).not.toBe(0);
+      expect(`${unreadable.stdout}\n${unreadable.stderr}`).toMatch(/baseline|object|content|read|git/i);
+    }
+
+    const symlinkConfig = initRepo({
       ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
       "specs/FIX-001-widgets.md": spec("1. The widget MUST spin. [manual]\n"),
     });
-    const blob = git(corruptBlob.root, "rev-parse", `${corruptBlob.base}:specs/FIX-001-widgets.md`);
-    const objectPath = join(corruptBlob.root, ".git/objects", blob.slice(0, 2), blob.slice(2));
-    chmodSync(objectPath, 0o644);
-    writeFileSync(objectPath, "corrupt object\n");
-    const unreadable = run(corruptBlob.root, ["check", "--changed", corruptBlob.base]);
-    expect(unreadable.status).not.toBe(0);
-    expect(`${unreadable.stdout}\n${unreadable.stderr}`).toMatch(/baseline|object|content|read|git/i);
+    write(symlinkConfig.root, "config/2119.yml", 'prefix: "FIX"\nreviews: false\n');
+    unlinkSync(join(symlinkConfig.root, ".2119.yml"));
+    symlinkSync("config/2119.yml", join(symlinkConfig.root, ".2119.yml"));
+    const symlinkBase = commitCurrent(symlinkConfig.root, "use tracked config symlink");
+    const symlinkReport = json(run(symlinkConfig.root, ["check", "--changed", symlinkBase, "--json"]));
+    expect(symlinkReport.requirementCount).toBe(0);
   });
 
   // 2119: REQ-010.2.1
@@ -300,6 +380,47 @@ test('stop', () => expect(widget.stop()).toBe(true))
       expect(report.uncoveredRequirements).toEqual(mode === "removed" ? ["FIX-001.1.1"] : []);
       expect(report.uncoveredRequirements).not.toContain("FIX-001.1.2");
     }
+
+    const nonEnforced = initRepo({
+      ".2119.yml": 'prefix: "FIX"\nreviews: false\nenforce: ["MUST"]\n',
+      "specs/FIX-001-widgets.md": spec("1. The widget SHOULD spin.\n"),
+      "tests/widget.test.js": "// 2119: FIX-001.1.1\ntest('spin', () => {})\n",
+    });
+    write(nonEnforced.root, "tests/widget.test.js", "// annotation removed\n");
+    const nonEnforcedReport = json(run(nonEnforced.root, ["check", "--changed", nonEnforced.base, "--json"]));
+    expect(nonEnforcedReport.requirementCount).toBe(1);
+    expect(nonEnforcedReport.coveredCount).toBe(0);
+
+    const boundaryInsertion = initRepo({
+      ".2119.yml": 'prefix: "FIX"\n',
+      "specs/FIX-001-widgets.md": TWO_REQUIREMENTS,
+      "tests/widget.test.js": "// 2119: FIX-001.1.1\ntest('spin', () => {})\ntest('stop', () => {})\n",
+    });
+    passReviews(boundaryInsertion.root, ["FIX-001.1.1"]);
+    const boundaryBase = commitCurrent(boundaryInsertion.root, "record one-block baseline");
+    write(
+      boundaryInsertion.root,
+      "tests/widget.test.js",
+      "// 2119: FIX-001.1.1\ntest('spin', () => {})\n// 2119: FIX-001.1.2\ntest('stop', () => {})\n",
+    );
+    const boundaryReport = json(run(boundaryInsertion.root, ["check", "--changed", boundaryBase, "--json"]));
+    expect(boundaryReport.staleReviews.join("\n")).toContain("FIX-001.1.1");
+
+    const multipleBlocks = initRepo({
+      ".2119.yml": 'prefix: "FIX"\n',
+      "specs/FIX-001-widgets.md": spec("1. The widget MUST spin.\n"),
+      "tests/widget-a.test.js": "// 2119: FIX-001.1.1\ntest('spin a', () => expect(true).toBe(true))\n",
+      "tests/widget-b.test.js": "// 2119: FIX-001.1.1\ntest('spin b', () => expect(true).toBe(true))\n",
+    });
+    passReviews(multipleBlocks.root, ["FIX-001.1.1"]);
+    const multipleBase = commitCurrent(multipleBlocks.root, "record two-block baseline");
+    write(
+      multipleBlocks.root,
+      "tests/widget-a.test.js",
+      "// 2119: FIX-001.1.1\ntest('spin a', () => expect(false).toBe(false))\n",
+    );
+    const multipleReport = json(run(multipleBlocks.root, ["check", "--changed", multipleBase, "--json"]));
+    expect(multipleReport.staleReviews.join("\n")).toContain("FIX-001.1.1");
   });
 
   // 2119: REQ-010.2.4
@@ -351,7 +472,7 @@ test('stop', () => expect(widget.stop()).toBe(true))
     expect(instructionsReport.staleReviews.join("\n")).not.toContain("FIX-001.1.2");
   });
 
-  // 2119: REQ-010.2.5
+  // 2119: REQ-010.2.5, REQ-010.3.1
   it("scopes changed and malformed verdict records without hiding unassigned corruption", () => {
     const files = {
       ".2119.yml": 'prefix: "FIX"\n',
@@ -380,6 +501,7 @@ test('stop', () => expect(widget.stop()).toBe(true))
     write(assignedMalformed.root, assignedPath, "{ broken json");
     const assignedReport = json(run(assignedMalformed.root, ["check", "--changed", assignedMalformedBase, "--json"]));
     expect(assignedReport.violations.some((v) => v.file.includes(assignedPath))).toBe(true);
+    expect(assignedReport.requirementCount).toBe(1);
     expect(assignedReport.staleReviews.join("\n")).not.toContain("FIX-001.1.2");
 
     const added = initRepo(files);
@@ -397,6 +519,33 @@ test('stop', () => expect(widget.stop()).toBe(true))
     const replacedReport = json(run(replaced.root, ["check", "--changed", replacedBase, "--json"]));
     expect(replacedReport.staleReviews.join("\n")).toContain("FIX-001.1.1");
     expect(replacedReport.staleReviews.join("\n")).not.toContain("FIX-001.1.2");
+
+    const historical = initRepo(files);
+    passReviews(historical.root, ["FIX-001.1.1"]);
+    write(
+      historical.root,
+      ".2119/verdicts/FIX-001.1.1--aaaaaaaaaaaa.json",
+      `${JSON.stringify({
+        reviewId: "FIX-001.1.1--aaaaaaaaaaaa",
+        requirementId: "FIX-001.1.1",
+        hash: "aaaaaaaaaaaa",
+        verdict: "pass",
+        summary: "historical verdict",
+        timestamp: "2026-01-01T00:00:00.000Z",
+      })}\n`,
+    );
+    const historicalBase = commitCurrent(historical.root, "record historical verdict");
+    write(
+      historical.root,
+      ".2119/verdicts/FIX-001.1.1--aaaaaaaaaaaa.json",
+      readFileSync(join(historical.root, ".2119/verdicts/FIX-001.1.1--aaaaaaaaaaaa.json"), "utf8").replace(
+        "historical verdict",
+        "edited historical verdict",
+      ),
+    );
+    const historicalReport = json(run(historical.root, ["check", "--changed", historicalBase, "--json"]));
+    expect(historicalReport.requirementCount).toBe(0);
+    expect(historicalReport.violations).toEqual([]);
   });
 
   // 2119: REQ-010.2.6
@@ -410,6 +559,19 @@ test('stop', () => expect(widget.stop()).toBe(true))
       "FIX-001.1.1",
       "FIX-001.1.2",
     ]);
+
+    const discovery = initRepo({
+      ".2119.yml": 'prefix: "FIX"\nreviews: false\ntests: ["tests/**"]\n',
+      "specs/FIX-001-widgets.md": spec("1. The widget MUST spin. [manual]\n"),
+      "fixtures/new.test.js": "// 2119: FIX-999.1.1\n",
+    });
+    write(
+      discovery.root,
+      ".2119.yml",
+      'prefix: "FIX"\nreviews: false\ntests: ["tests/**", "fixtures/**"]\n',
+    );
+    const discoveryReport = json(run(discovery.root, ["check", "--changed", discovery.base, "--json"]));
+    expect(discoveryReport.violations.some((v) => v.message.includes("FIX-999.1.1"))).toBe(true);
   });
 
   // 2119: REQ-010.3.1
@@ -451,9 +613,24 @@ test('stop', () => expect(widget.stop()).toBe(true))
       "tests/old.test.js": "// 2119: FIX-999.1.1\n",
     });
     write(root, "specs/FIX-001-widgets.md", spec("2. The widget MUST stop. [manual]\n"));
-    const report = json(run(root, ["check", "--changed", base, "--json"]));
-    expect(report.violations.some((v) => v.message.includes("FIX-001.1.1"))).toBe(true);
+    const result = run(root, ["check", "--changed", base, "--json"]);
+    const report = json(result);
+    expect(result.status).not.toBe(0);
+    expect(report.violations.some((v) => v.rule === "REQ-002.2.3" && v.message.includes("FIX-001.1.1"))).toBe(true);
     expect(report.violations.some((v) => v.message.includes("FIX-999.1.1"))).toBe(false);
+
+    const section = initRepo({
+      ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
+      "specs/FIX-001-widgets.md": `${spec("1. The widget MUST spin. [manual]\n")}\n### FIX-001.2: Legacy\n\n1. Legacy mode MUST work.\n`,
+      "tests/legacy.test.js": "// 2119: FIX-001.2\ntest('legacy', () => {})\n",
+    });
+    write(section.root, "specs/FIX-001-widgets.md", spec("1. The widget MUST spin. [manual]\n"));
+    const sectionResult = run(section.root, ["check", "--changed", section.base, "--json"]);
+    const sectionReport = json(sectionResult);
+    expect(sectionResult.status).not.toBe(0);
+    expect(sectionReport.violations.some((v) => v.rule === "REQ-002.2.3" && v.message.includes("FIX-001.2"))).toBe(
+      true,
+    );
   });
 
   // 2119: REQ-010.3.3
@@ -461,13 +638,27 @@ test('stop', () => expect(widget.stop()).toBe(true))
     const counts = initRepo({
       ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
       "specs/FIX-001-widgets.md": TWO_REQUIREMENTS,
-      "tests/widget.test.js": "// 2119: FIX-001.1.1\ntest('spin', () => {})\n",
+      "tests/widget.test.js":
+        "// 2119: FIX-001.1.1\ntest('spin', () => {})\n// 2119: FIX-001.1.2\ntest('stop', () => {})\n",
     });
     write(counts.root, "specs/FIX-001-widgets.md", TWO_REQUIREMENTS.replace("MUST spin", "MUST rotate"));
     const countReport = json(run(counts.root, ["check", "--changed", counts.base, "--json"]));
     expect(countReport.requirementCount).toBe(1);
     expect(countReport.coveredCount).toBe(1);
     expect(countReport.uncoveredRequirements).toEqual([]);
+
+    const stale = initRepo({
+      ".2119.yml": 'prefix: "FIX"\n',
+      "specs/FIX-001-widgets.md": TWO_REQUIREMENTS,
+      "tests/widget.test.js":
+        "// 2119: FIX-001.1.1\ntest('spin', () => {})\n// 2119: FIX-001.1.2\ntest('stop', () => {})\n",
+    });
+    passReviews(stale.root, ["FIX-001.1.1", "FIX-001.1.2"]);
+    const staleBase = commitCurrent(stale.root, "record reviewed baseline");
+    write(stale.root, "specs/FIX-001-widgets.md", TWO_REQUIREMENTS.replace("MUST spin", "MUST rotate"));
+    const staleReport = json(run(stale.root, ["check", "--changed", staleBase, "--json"]));
+    expect(staleReport.staleReviews.join("\n")).toContain("FIX-001.1.1");
+    expect(staleReport.staleReviews.join("\n")).not.toContain("FIX-001.1.2");
 
     const skipped = initRepo({
       ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
@@ -487,7 +678,12 @@ test('stop', () => expect(widget.stop()).toBe(true))
     const result = run(skipped.root, ["check", "--changed", skipped.base, "--no-verify", "--json"]);
     expect(result.status).toBe(0);
     const skippedReport = json(result);
-    expect(skippedReport.manualRequirements.map((r) => r.id)).toEqual(["FIX-001.1.1"]);
+    expect(skippedReport.manualRequirements).toEqual([
+      {
+        id: "FIX-001.1.1",
+        text: "The newly changed command MUST pass. [verify skipped: --no-verify]",
+      },
+    ]);
     expect(skippedReport.uncoveredRequirements).toEqual([]);
   });
 });

@@ -206,8 +206,8 @@ switch (command) {
         ? buildChangedContext(root, baseRef, { runVerify: !noVerify })
         : buildContext(root, { runVerify: !noVerify });
     } catch (err) {
-      if (changedIndex !== -1 && (err instanceof IncrementalCheckError || err instanceof Error)) {
-        console.error(`check --changed: ${(err as Error).message}`);
+      if (changedIndex !== -1 && err instanceof IncrementalCheckError) {
+        console.error(`check --changed: ${err.message}`);
         process.exit(2);
       }
       throw err;

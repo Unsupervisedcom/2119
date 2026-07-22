@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.1.2--27708b83e5de",
+  "requirementId": "REQ-010.1.2",
+  "hash": "27708b83e5de",
+  "verdict": "pass",
+  "summary": "Real-repository tests reject omission of baseline-to-HEAD, staged, unstaged, and non-ignored untracked paths; committed, staged, and unstaged deletion cases plus an unchanged-file control verify deletion retention and scoped selection.",
+  "timestamp": "2026-07-22T14:11:49.545Z"
+}

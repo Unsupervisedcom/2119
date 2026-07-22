@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.5--0fe7b5cfe913",
+  "requirementId": "REQ-010.2.5",
+  "hash": "0fe7b5cfe913",
+  "verdict": "pass",
+  "summary": "Covers added, removed, replaced, and current-path malformed verdicts; excludes a changed historical verdict and preserves changed unassignable malformed JSON as a scoped violation.",
+  "timestamp": "2026-07-22T14:16:33.917Z"
+}

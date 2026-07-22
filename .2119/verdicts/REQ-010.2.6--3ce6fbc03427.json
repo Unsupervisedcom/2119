@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.6--3ce6fbc03427",
+  "requirementId": "REQ-010.2.6",
+  "hash": "3ce6fbc03427",
+  "verdict": "pass",
+  "summary": "A comment-only config diff scopes both current requirements, and a changed test-discovery glob exposes newly selected invalid evidence via the real CLI.",
+  "timestamp": "2026-07-22T05:52:23.598Z"
+}

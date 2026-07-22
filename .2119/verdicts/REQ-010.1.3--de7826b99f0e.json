@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.1.3--de7826b99f0e",
+  "requirementId": "REQ-010.1.3",
+  "hash": "de7826b99f0e",
+  "verdict": "pass",
+  "summary": "Missing Git metadata, malformed baseline config/specs, and corrupt baseline blobs each require a non-zero exit plus a relevant diagnostic, rejecting silent full or incomplete fallback behavior.",
+  "timestamp": "2026-07-22T14:13:42.226Z"
+}

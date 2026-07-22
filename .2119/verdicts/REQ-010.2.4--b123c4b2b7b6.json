@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.4--b123c4b2b7b6",
+  "requirementId": "REQ-010.2.4",
+  "hash": "b123c4b2b7b6",
+  "verdict": "pass",
+  "summary": "Byte changes at the same selected path make the exact current requirement stale for explicit evidence, review instructions, and shared evidence, while unchanged sibling selections remain unaffected",
+  "timestamp": "2026-07-22T05:51:17.933Z"
+}
