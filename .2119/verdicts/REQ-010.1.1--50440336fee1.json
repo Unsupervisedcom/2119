@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-010.1.1--50440336fee1",
-  "requirementId": "REQ-010.1.1",
-  "hash": "50440336fee1",
-  "verdict": "pass",
-  "summary": "Covers zero/multiple refs, non-commit and unresolved or ambiguous refs, true merge-base selection, unrelated histories, and blocks observable Git/Node network access with clear failure diagnostics.",
-  "timestamp": "2026-07-22T14:09:35.409Z"
-}

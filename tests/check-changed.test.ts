@@ -164,12 +164,23 @@ describe("check --changed (REQ-010)", () => {
     write(
       root,
       "network-blocker.cjs",
-      `const blocked = () => { throw new Error('network access attempted') };
-for (const name of ['node:net', 'node:http', 'node:https']) {
+      `const blocked = () => {
+  require('node:fs').appendFileSync(process.env.GIT_CALL_LOG, 'NETWORK|attempt\\n');
+  throw new Error('network access attempted');
+};
+for (const name of ['node:net', 'node:http', 'node:https', 'node:dns', 'node:dgram']) {
   const module = require(name);
-  for (const method of ['connect', 'createConnection', 'request', 'get']) {
+  for (const method of ['connect', 'createConnection', 'request', 'get', 'lookup', 'resolve', 'resolve4', 'resolve6', 'createSocket']) {
     if (typeof module[method] === 'function') module[method] = blocked;
   }
+}
+const childProcess = require('node:child_process');
+for (const method of ['spawn', 'spawnSync', 'exec', 'execSync', 'execFile', 'execFileSync']) {
+  const original = childProcess[method];
+  childProcess[method] = function(command, ...args) {
+    if (command !== 'git') blocked();
+    return original.call(this, command, ...args);
+  };
 }
 globalThis.fetch = blocked;
 `,
@@ -177,7 +188,7 @@ globalThis.fetch = blocked;
     write(
       root,
       "fake-bin/git",
-      `#!/bin/sh\nprintf '%s|%s\\n' "$GIT_NO_LAZY_FETCH" "$*" >> "$GIT_CALL_LOG"\ntest "$GIT_NO_LAZY_FETCH" = 1 || exit 98\ncase "$1" in fetch|pull|ls-remote) exit 97;; esac\nexec ${realGit} "$@"\n`,
+      `#!/bin/sh\nprintf '%s|%s\\n' "$GIT_NO_LAZY_FETCH" "$*" >> "$GIT_CALL_LOG"\ntest "$GIT_NO_LAZY_FETCH" = 1 || exit 98\ncase "$1" in rev-parse|merge-base|diff|ls-files|ls-tree|cat-file) ;; *) exit 97;; esac\nexec ${realGit} "$@"\n`,
     );
     chmodSync(join(bin, "git"), 0o755);
     expect(
@@ -187,12 +198,29 @@ globalThis.fetch = blocked;
         NODE_OPTIONS: `--require=${networkBlocker}`,
       }).status,
     ).toBe(0);
+    const missingLocal = run(root, ["check", "--changed", "not-a-local-ref"], {
+      PATH: `${bin}:${process.env.PATH}`,
+      GIT_CALL_LOG: log,
+      NODE_OPTIONS: `--require=${networkBlocker}`,
+    });
+    expect(missingLocal.status).not.toBe(0);
+    expect(missingLocal.stderr).toContain('Cannot resolve base ref "not-a-local-ref"');
     const calls = readFileSync(log, "utf8");
     expect(calls.split("\n").filter(Boolean).every((line) => line.startsWith("1|"))).toBe(true);
+    expect(calls.split("\n").filter(Boolean).every((line) => /^1\|(rev-parse|merge-base|diff|ls-files|ls-tree|cat-file)( |$)/.test(line))).toBe(true);
     expect(calls).not.toMatch(/\|(fetch|pull|ls-remote)( |$)/m);
     expect(calls).toMatch(/\|diff .*HEAD --/);
     expect(calls).toMatch(/\|diff --cached .*HEAD --/);
     expect(calls).toMatch(/\|diff --name-only .*--$/m);
+
+    const warningRepo = initRepo({
+      ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
+      "specs/FIX-001-widgets.md": spec("1. The widget MUST spin. [manual]\n"),
+      "data.txt": "baseline\n",
+    });
+    git(warningRepo.root, "config", "core.autocrlf", "input");
+    writeFileSync(join(warningRepo.root, "data.txt"), "changed\r\nwith crlf\r\n");
+    expect(run(warningRepo.root, ["check", "--changed", warningRepo.base]).status).toBe(0);
   });
 
   // 2119: REQ-010.1.2, REQ-010.3.1
@@ -285,6 +313,17 @@ globalThis.fetch = blocked;
     const symlinkBase = commitCurrent(symlinkConfig.root, "use tracked config symlink");
     const symlinkReport = json(run(symlinkConfig.root, ["check", "--changed", symlinkBase, "--json"]));
     expect(symlinkReport.requirementCount).toBe(0);
+
+    const ignoredEvidence = initRepo({
+      ".2119.yml": 'prefix: "FIX"\nreviews: false\nshared_evidence: ["tests/helpers/**"]\n',
+      ".gitignore": "tests/helpers/cache.js\n",
+      "specs/FIX-001-widgets.md": spec("1. The widget MUST spin. [manual]\n"),
+    });
+    write(ignoredEvidence.root, "tests/helpers/cache.js", "ignored cache\n");
+    const ignoredResult = run(ignoredEvidence.root, ["check", "--changed", ignoredEvidence.base]);
+    expect(ignoredResult.status).not.toBe(0);
+    expect(ignoredResult.stderr).toContain("Cannot compare ignored requirement dependency");
+    expect(ignoredResult.stderr).toContain("tests/helpers/cache.js");
   });
 
   // 2119: REQ-010.2.1
@@ -479,14 +518,18 @@ test('stop', () => expect(widget.stop()).toBe(true))
       "specs/FIX-001-widgets.md": TWO_REQUIREMENTS,
       "tests/widget.test.js": "// 2119: FIX-001.1.1\ntest('spin', () => {})\n// 2119: FIX-001.1.2\ntest('stop', () => {})\n",
     };
-    const removed = initRepo(files);
-    passReviews(removed.root, ["FIX-001.1.1"]);
-    const removedBase = commitCurrent(removed.root);
-    const verdict = git(removed.root, "ls-files", ".2119/verdicts/FIX-001.1.1*.json");
-    unlinkSync(join(removed.root, verdict));
-    const removedReport = json(run(removed.root, ["check", "--changed", removedBase, "--json"]));
-    expect(removedReport.staleReviews.join("\n")).toContain("FIX-001.1.1");
-    expect(removedReport.staleReviews.join("\n")).not.toContain("FIX-001.1.2");
+    for (const mode of ["committed", "staged", "unstaged"] as const) {
+      const removed = initRepo(files);
+      passReviews(removed.root, ["FIX-001.1.1"]);
+      const removedBase = commitCurrent(removed.root);
+      const verdict = git(removed.root, "ls-files", ".2119/verdicts/FIX-001.1.1*.json");
+      unlinkSync(join(removed.root, verdict));
+      if (mode === "staged" || mode === "committed") git(removed.root, "add", "-u");
+      if (mode === "committed") git(removed.root, "commit", "-m", "remove verdict");
+      const removedReport = json(run(removed.root, ["check", "--changed", removedBase, "--json"]));
+      expect(removedReport.staleReviews.join("\n")).toContain("FIX-001.1.1");
+      expect(removedReport.staleReviews.join("\n")).not.toContain("FIX-001.1.2");
+    }
 
     const malformed = initRepo(files);
     const malformedBase = malformed.base;
@@ -586,6 +629,20 @@ test('stop', () => expect(widget.stop()).toBe(true))
     expect(lintReport.violations.some((v) => v.file.includes("FIX-002-new.md"))).toBe(true);
     expect(lintReport.violations.some((v) => v.file.includes("FIX-001-old.md"))).toBe(false);
 
+    const duplicate = initRepo({
+      ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
+      "specs/FIX-001-z.md": spec("1. Existing behavior MUST remain. [manual]\n"),
+    });
+    write(
+      duplicate.root,
+      "specs/FIX-001-a.md",
+      spec("1. Added duplicate behavior MUST remain. [manual]\n", "FIX-001", "Duplicate"),
+    );
+    const duplicateResult = run(duplicate.root, ["check", "--changed", duplicate.base, "--json"]);
+    const duplicateReport = json(duplicateResult);
+    expect(duplicateResult.status).not.toBe(0);
+    expect(duplicateReport.violations.some((violation) => violation.rule === "REQ-001.1.7")).toBe(true);
+
     const verifyCase = initRepo({
       ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
       "specs/FIX-001-widgets.md": spec(`1. First check MUST pass. [verify: false]
@@ -629,6 +686,18 @@ test('stop', () => expect(widget.stop()).toBe(true))
     const sectionReport = json(sectionResult);
     expect(sectionResult.status).not.toBe(0);
     expect(sectionReport.violations.some((v) => v.rule === "REQ-002.2.3" && v.message.includes("FIX-001.2"))).toBe(
+      true,
+    );
+
+    const onlySpec = initRepo({
+      "specs/REQ-001-only.md": spec("1. The widget MUST spin.\n", "REQ-001", "Only"),
+      "tests/widget.test.js": "// 2119: REQ-001.1.1\ntest('spin', () => {})\n",
+    });
+    unlinkSync(join(onlySpec.root, "specs/REQ-001-only.md"));
+    const onlySpecResult = run(onlySpec.root, ["check", "--changed", onlySpec.base, "--json"]);
+    const onlySpecReport = json(onlySpecResult);
+    expect(onlySpecResult.status).not.toBe(0);
+    expect(onlySpecReport.violations.some((v) => v.rule === "REQ-002.2.3" && v.message.includes("REQ-001.1.1"))).toBe(
       true,
     );
   });

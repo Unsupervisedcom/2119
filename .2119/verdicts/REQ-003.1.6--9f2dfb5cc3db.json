@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.1.6--9f2dfb5cc3db",
-  "requirementId": "REQ-003.1.6",
-  "hash": "9f2dfb5cc3db",
-  "verdict": "pass",
-  "summary": "Real CLI test rejects review output outside .2119/reviews and verifies init's rule actually makes a pending instruction file Git-ignored.",
-  "timestamp": "2026-07-22T14:24:15.213Z"
-}

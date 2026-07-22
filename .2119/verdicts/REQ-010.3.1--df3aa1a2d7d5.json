@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.3.1--df3aa1a2d7d5",
+  "requirementId": "REQ-010.3.1",
+  "hash": "df3aa1a2d7d5",
+  "verdict": "pass",
+  "summary": "Behavioral fixtures reject each scoped boundary: changed versus unchanged lint, affected versus sibling coverage/freshness/verification, and changed versus pre-existing invalid annotations.",
+  "timestamp": "2026-07-22T14:48:09.013Z"
+}

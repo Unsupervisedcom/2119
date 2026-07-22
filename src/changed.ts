@@ -56,6 +56,7 @@ export function buildChangedContext(
     } catch (err) {
       throw new IncrementalCheckError(`Cannot parse current configuration or content: ${(err as Error).message}`);
     }
+    assertNoIgnoredDependencies(root, current);
     return scopeContext(root, current, baseline, changes.paths, options.runVerify !== false);
   } finally {
     rmSync(baselineRoot, { recursive: true, force: true });
@@ -67,6 +68,7 @@ function readChangeSet(root: string, baseRef: string): ChangeSet {
     root,
     ["rev-parse", "--verify", "--end-of-options", `${baseRef}^{commit}`],
     `resolve base ref "${baseRef}"`,
+    true,
   ).trim();
   const mergeBase = gitText(
     root,
@@ -98,7 +100,7 @@ function readChangeSet(root: string, baseRef: string): ChangeSet {
 
 const NO_NETWORK_ENV = { ...process.env, GIT_NO_LAZY_FETCH: "1" };
 
-function gitText(root: string, args: string[], action: string): string {
+function gitText(root: string, args: string[], action: string, rejectStderr = false): string {
   const result = spawnSync("git", args, {
     cwd: root,
     encoding: "utf8",
@@ -107,11 +109,44 @@ function gitText(root: string, args: string[], action: string): string {
     env: NO_NETWORK_ENV,
   });
   const warning = result.stderr?.trim();
-  if (result.error || result.status !== 0 || warning) {
+  if (result.error || result.status !== 0 || (rejectStderr && warning)) {
     const detail = warning || result.error?.message || `Git exited ${result.status ?? "without a status"}`;
     throw new IncrementalCheckError(`Cannot ${action}: ${detail}`);
   }
   return result.stdout;
+}
+
+function assertNoIgnoredDependencies(root: string, current: CheckContext): void {
+  const ignored = new Set(
+    gitNulPaths(
+      root,
+      ["ls-files", "--others", "--ignored", "--exclude-standard", "-z"],
+      "identify ignored files that cannot be compared with the baseline",
+    ),
+  );
+  if (ignored.size === 0) return;
+
+  const selected = new Set<string>();
+  for (const globs of [current.config.specs, current.config.tests, current.config.sharedEvidence]) {
+    for (const path of matchGlobs(current.repoFiles, globs)) selected.add(path);
+  }
+  for (const requirement of allRequirements(current.specs)) {
+    if (requirement.coverage.instructions) selected.add(requirement.coverage.instructions);
+    if (requirement.coverage.globs) {
+      for (const path of matchGlobs(current.repoFiles, requirement.coverage.globs)) selected.add(path);
+    }
+  }
+  selected.add(CONFIG_FILENAME);
+  for (const path of ignored) {
+    if (path.startsWith(`${VERDICTS_DIR}/`) && path.endsWith(".json")) selected.add(path);
+  }
+
+  const ambiguous = [...selected].filter((path) => ignored.has(path)).sort();
+  if (ambiguous.length > 0) {
+    throw new IncrementalCheckError(
+      `Cannot compare ignored requirement dependency "${ambiguous[0]}" with the Git baseline; track it or exclude it from 2119 discovery/evidence globs.`,
+    );
+  }
 }
 
 function gitNulPaths(root: string, args: string[], action: string): string[] {
@@ -278,6 +313,7 @@ function scopeContext(
     coverViolations,
     reviewViolations,
     verifyViolations,
+    notInitialized: current.notInitialized && baseline.notInitialized,
     scopedRequirementIds: affected,
   };
 }

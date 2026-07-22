@@ -53,11 +53,18 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
     if (!s.docId) continue;
     const prior = byDocId.get(s.docId);
     if (prior) {
+      const message = `Document ID ${s.docId} is also declared by ${prior}`;
       lintViolations.push({
         file: s.path,
         line: 1,
         rule: "REQ-001.1.7",
-        message: `Document ID ${s.docId} is also declared by ${prior}`,
+        message,
+      });
+      lintViolations.push({
+        file: prior,
+        line: 1,
+        rule: "REQ-001.1.7",
+        message: `Document ID ${s.docId} is also declared by ${s.path}`,
       });
     } else {
       byDocId.set(s.docId, s.path);

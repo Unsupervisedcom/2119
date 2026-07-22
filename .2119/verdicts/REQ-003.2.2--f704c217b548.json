@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.2.2--f704c217b548",
-  "requirementId": "REQ-003.2.2",
-  "hash": "f704c217b548",
-  "verdict": "pass",
-  "summary": "init and pass/fail move managed exceptions after conflicting root, .2119, and verdict-directory ignore rules; pass/fail then write direct, pretty-printed JSON verdict files under .2119/verdicts",
-  "timestamp": "2026-07-22T14:25:00.591Z"
-}
