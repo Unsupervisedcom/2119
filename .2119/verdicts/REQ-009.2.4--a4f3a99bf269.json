@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-009.2.4--a4f3a99bf269",
-  "requirementId": "REQ-009.2.4",
-  "hash": "a4f3a99bf269",
-  "verdict": "pass",
-  "summary": "Each evidence kind (explicit [review:] file, [review: instructions:] file, shared_evidence glob member) is edited in a real repo and the target requirement goes stale while a sibling with a fresh verdict stays clean; assertions run against --changed JSON output, no mocks",
-  "timestamp": "2026-07-21T23:52:23.981Z"
-}

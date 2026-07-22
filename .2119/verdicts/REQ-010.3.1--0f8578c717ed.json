@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.3.1--0f8578c717ed",
+  "requirementId": "REQ-010.3.1",
+  "hash": "0f8578c717ed",
+  "verdict": "pass",
+  "summary": "All four categories tested with pre-existing out-of-scope controls: changed-spec lint reported while an untouched lint-violating spec is ignored, verify failure only for the changed requirement, invalid annotations only from changed test files, and freshness/coverage scoping covered by the annotated 010.1.2/010.2.2 tests",
+  "timestamp": "2026-07-22T04:54:13.504Z"
+}

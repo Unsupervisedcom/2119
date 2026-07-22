@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.3--38fc49d4bc18",
+  "requirementId": "REQ-010.2.3",
+  "hash": "38fc49d4bc18",
+  "verdict": "pass",
+  "summary": "The exact counterexample is tested: an edit confined to a neighboring block in the same file leaves FIX-001.1.1 unaffected, while a shared-prelude (import) edit marks both same-file requirements stale and leaves the other file's requirement untouched",
+  "timestamp": "2026-07-22T04:53:57.146Z"
+}

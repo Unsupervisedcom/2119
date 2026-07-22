@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.3.3--8e02d7f7aa9b",
+  "requirementId": "REQ-010.3.3",
+  "hash": "8e02d7f7aa9b",
+  "verdict": "pass",
+  "summary": "JSON counts verified incremental (requirementCount 1 of 2, unaffected uncovered req excluded from lists); --no-verify skipping is behavioral since the affected [verify: false] command would fail the run, and manualRequirements asserts exactly the affected verification req in the existing {id,text} form",
+  "timestamp": "2026-07-22T04:53:28.714Z"
+}

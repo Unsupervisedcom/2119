@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.1.2--f4dce0d350ab",
+  "requirementId": "REQ-010.1.2",
+  "hash": "f4dce0d350ab",
+  "verdict": "pass",
+  "summary": "Each state (committed/staged/unstaged/untracked) exercised in a real repo with a scoped-out unchanged control (FIX-800 not reported); unstaged deletion of a covering test surfaces the uncovered requirement, proving deletions stay in the changed set",
+  "timestamp": "2026-07-22T04:53:38.563Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-009.1.1--9e58f09dcddc",
-  "requirementId": "REQ-009.1.1",
-  "hash": "9e58f09dcddc",
-  "verdict": "pass",
-  "summary": "Arity, unresolvable, ambiguous, and no-merge-base args all exit non-zero with diagnostics; a diverged-branch fixture passes only under merge-base (not ref-tip) semantics; PATH git shim logs subcommands and hard-fails fetch/pull/ls-remote to prove offline operation.",
-  "timestamp": "2026-07-21T23:53:09.075Z"
-}

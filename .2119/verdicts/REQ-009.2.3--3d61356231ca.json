@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-009.2.3--3d61356231ca",
-  "requirementId": "REQ-009.2.3",
-  "hash": "3d61356231ca",
-  "verdict": "pass",
-  "summary": "An edit confined to a sibling annotation block stales only that requirement while the same-file neighbor and other-file block stay fresh, and a prelude-only edit stales both same-file requirements — pinning REQ-003.1.7 boundaries in both directions.",
-  "timestamp": "2026-07-21T23:53:16.071Z"
-}

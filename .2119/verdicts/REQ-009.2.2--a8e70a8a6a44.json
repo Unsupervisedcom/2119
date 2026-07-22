@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-009.2.2--a8e70a8a6a44",
-  "requirementId": "REQ-009.2.2",
-  "hash": "a8e70a8a6a44",
-  "verdict": "pass",
-  "summary": "Annotation add/remove flips coverage for exactly the target requirement, and an in-block edit stales only that block's verdict — whole-file hashing or a missed rehash would each break a named negative assertion.",
-  "timestamp": "2026-07-21T23:53:15.773Z"
-}

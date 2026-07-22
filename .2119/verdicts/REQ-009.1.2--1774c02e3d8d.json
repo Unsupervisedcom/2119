@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-009.1.2--1774c02e3d8d",
-  "requirementId": "REQ-009.1.2",
-  "hash": "1774c02e3d8d",
-  "verdict": "pass",
-  "summary": "Committed, staged, unstaged, and untracked changes each independently surface a violation from the changed file while an identical pre-existing violation stays suppressed; deleting a covering test must uncover exactly its requirement, so dropped deletions would fail.",
-  "timestamp": "2026-07-21T23:53:09.309Z"
-}

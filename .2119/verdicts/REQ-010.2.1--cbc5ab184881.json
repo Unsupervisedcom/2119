@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.1--cbc5ab184881",
+  "requirementId": "REQ-010.2.1",
+  "hash": "cbc5ab184881",
+  "verdict": "pass",
+  "summary": "Six field-isolated variants (statement, keyword, manual mode, verify value, review evidence path, review-instructions path) each yield requirementCount 1 with the unchanged sibling excluded; new-requirement case proves absent-from-baseline is affected and uncovered",
+  "timestamp": "2026-07-22T04:53:47.808Z"
+}

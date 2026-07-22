@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.6--e0dbb7708490",
+  "requirementId": "REQ-010.2.6",
+  "hash": "e0dbb7708490",
+  "verdict": "pass",
+  "summary": "A comment-only .2119.yml edit with no other changes makes both otherwise-untouched requirements uncovered in the incremental report; without config-triggered universal affectedness the scoped run would have reported nothing",
+  "timestamp": "2026-07-22T04:54:09.177Z"
+}

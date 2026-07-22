@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-009.3.3--8ab901cda03f",
-  "requirementId": "REQ-009.3.3",
-  "hash": "8ab901cda03f",
-  "verdict": "pass",
-  "summary": "Exact-equality assertions: --changed --json counts describe only 1 of 2 requirements, and --changed --no-verify --json exits 0 (the [verify: false] command would fail if actually run) with manualRequirements equal to exactly the affected verify requirement",
-  "timestamp": "2026-07-21T23:52:48.026Z"
-}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.4--eb50a492aca6",
+  "requirementId": "REQ-010.2.4",
+  "hash": "eb50a492aca6",
+  "verdict": "pass",
+  "summary": "Explicit review evidence, review-instructions, and shared-evidence file edits each mark exactly the selecting requirement stale, with unedited sibling evidence files as negative controls proving per-file (not per-repo) granularity",
+  "timestamp": "2026-07-22T04:54:01.090Z"
+}

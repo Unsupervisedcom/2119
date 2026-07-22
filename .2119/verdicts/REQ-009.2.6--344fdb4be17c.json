@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-009.2.6--344fdb4be17c",
-  "requirementId": "REQ-009.2.6",
-  "hash": "344fdb4be17c",
-  "verdict": "pass",
-  "summary": "A comment-only .2119.yml diff with an untouched spec must yield uncoveredRequirements exactly equal to the full requirement set, rejecting both ignored-config and partial-affectedness implementations; 'differs' boundary probed by a semantic no-op edit",
-  "timestamp": "2026-07-21T23:52:33.340Z"
-}

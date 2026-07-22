@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.1.1--0479b51cdaab",
+  "requirementId": "REQ-010.1.1",
+  "hash": "0479b51cdaab",
+  "verdict": "pass",
+  "summary": "E2E git-repo tests reject absent/extra/unresolvable/ambiguous refs and orphan no-merge-base with diagnostics; diverged-branch fixture proves merge-base (not tip diff) is the baseline; PATH-shimmed git log proves no fetch/pull/ls-remote",
+  "timestamp": "2026-07-22T04:53:34.884Z"
+}

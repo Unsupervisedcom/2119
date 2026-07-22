@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-009.1.3--b5aebcf0370e",
-  "requirementId": "REQ-009.1.3",
-  "hash": "b5aebcf0370e",
-  "verdict": "pass",
-  "summary": "Each failure source (deleted .git, unparseable committed baseline config, corrupted baseline blob) is tested against a fixture that would pass under any silent full-repo or incomplete substitute, so the non-zero-exit assertions genuinely discriminate fail-closed behavior; real git + subprocess, no mocks.",
-  "timestamp": "2026-07-22T04:43:56.541Z"
-}

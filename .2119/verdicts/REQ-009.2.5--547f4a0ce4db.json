@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-009.2.5--547f4a0ce4db",
-  "requirementId": "REQ-009.2.5",
-  "hash": "547f4a0ce4db",
-  "verdict": "pass",
-  "summary": "Added, removed, replaced (pass-to-fail on same review ID), and malformed verdicts each drive affectedness with an unaffected-sibling control, and an unassignable corrupt verdicts file (not-a-verdict.json) still surfaces as a scoped violation",
-  "timestamp": "2026-07-21T23:52:29.392Z"
-}

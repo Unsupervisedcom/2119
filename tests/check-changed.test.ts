@@ -85,8 +85,8 @@ const TWO_REQUIREMENTS = spec(`1. The widget MUST spin.
 2. The widget MUST stop.
 `);
 
-describe("check --changed (REQ-009)", () => {
-  // 2119: REQ-009.1.1
+describe("check --changed (REQ-010)", () => {
+  // 2119: REQ-010.1.1
   it("requires one local base ref, uses its merge-base, and never invokes network Git commands", () => {
     const { root, base } = initRepo({
       ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
@@ -144,7 +144,7 @@ describe("check --changed (REQ-009)", () => {
     expect(readFileSync(log, "utf8")).not.toMatch(/^(fetch|pull|ls-remote)$/m);
   });
 
-  // 2119: REQ-009.1.2, REQ-009.3.1
+  // 2119: REQ-010.1.2, REQ-010.3.1
   it("includes committed, staged, unstaged, untracked, and deleted paths since the merge-base", () => {
     for (const mode of ["committed", "staged", "unstaged", "untracked"] as const) {
       const { root, base } = initRepo({
@@ -174,7 +174,7 @@ describe("check --changed (REQ-009)", () => {
     expect(report.uncoveredRequirements).not.toContain("FIX-001.1.2");
   });
 
-  // 2119: REQ-009.1.3
+  // 2119: REQ-010.1.3
   it("fails closed when Git metadata or the baseline configuration cannot be read", () => {
     const noGit = initRepo({
       ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
@@ -207,7 +207,7 @@ describe("check --changed (REQ-009)", () => {
     expect(`${unreadable.stdout}\n${unreadable.stderr}`).toMatch(/baseline|object|content|read|git/i);
   });
 
-  // 2119: REQ-009.2.1
+  // 2119: REQ-010.2.1
   it("detects each requirement-contract field independently without affecting its sibling", () => {
     const variants = [
       ["1. The widget MUST spin.\n", "1. The widget MUST rotate.\n"],
@@ -245,7 +245,7 @@ describe("check --changed (REQ-009)", () => {
     expect(addedReport.uncoveredRequirements).toEqual(["FIX-001.1.2"]);
   });
 
-  // 2119: REQ-009.2.2, REQ-009.2.3, REQ-009.3.1
+  // 2119: REQ-010.2.2, REQ-010.2.3, REQ-010.3.1
   it("uses annotation blocks and their shared prelude when selecting affected requirements", () => {
     const files = {
       ".2119.yml": 'prefix: "FIX"\n',
@@ -302,7 +302,7 @@ test('stop', () => expect(widget.stop()).toBe(true))
     }
   });
 
-  // 2119: REQ-009.2.4
+  // 2119: REQ-010.2.4
   it("uses whole-file comparison for explicit review and shared evidence", () => {
     const files = {
       ".2119.yml": 'prefix: "FIX"\nshared_evidence: ["tests/shared/**"]\n',
@@ -351,7 +351,7 @@ test('stop', () => expect(widget.stop()).toBe(true))
     expect(instructionsReport.staleReviews.join("\n")).not.toContain("FIX-001.1.2");
   });
 
-  // 2119: REQ-009.2.5
+  // 2119: REQ-010.2.5
   it("scopes changed and malformed verdict records without hiding unassigned corruption", () => {
     const files = {
       ".2119.yml": 'prefix: "FIX"\n',
@@ -399,7 +399,7 @@ test('stop', () => expect(widget.stop()).toBe(true))
     expect(replacedReport.staleReviews.join("\n")).not.toContain("FIX-001.1.2");
   });
 
-  // 2119: REQ-009.2.6
+  // 2119: REQ-010.2.6
   it("treats every current requirement as affected when configuration changes", () => {
     const { root, base } = initRepo({
       ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
@@ -412,7 +412,7 @@ test('stop', () => expect(widget.stop()).toBe(true))
     ]);
   });
 
-  // 2119: REQ-009.3.1
+  // 2119: REQ-010.3.1
   it("reports only changed lint and affected verification failures", () => {
     const lintCase = initRepo({
       ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
@@ -442,7 +442,7 @@ test('stop', () => expect(widget.stop()).toBe(true))
     expect(verifyReport.violations.some((v) => v.message.includes("FIX-001.1.2"))).toBe(false);
   });
 
-  // 2119: REQ-009.3.2
+  // 2119: REQ-010.3.2
   it("reports an unchanged annotation when its requirement is removed from a retained spec file", () => {
     const { root, base } = initRepo({
       ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
@@ -456,7 +456,7 @@ test('stop', () => expect(widget.stop()).toBe(true))
     expect(report.violations.some((v) => v.message.includes("FIX-999.1.1"))).toBe(false);
   });
 
-  // 2119: REQ-009.3.3
+  // 2119: REQ-010.3.3
   it("composes with JSON and no-verify using incremental counts and manual output", () => {
     const counts = initRepo({
       ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
