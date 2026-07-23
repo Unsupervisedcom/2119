@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.3.2--36dd5545b843",
+  "requirementId": "REQ-010.3.2",
+  "hash": "36dd5545b843",
+  "verdict": "pass",
+  "summary": "Covers unchanged annotations newly dangling after requirement, section, or whole-spec deletion, rejects with REQ-002.2.3, and excludes an unrelated pre-existing dangling annotation.",
+  "timestamp": "2026-07-22T14:48:10.023Z"
+}

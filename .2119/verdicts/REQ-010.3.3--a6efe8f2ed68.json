@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.3.3--a6efe8f2ed68",
+  "requirementId": "REQ-010.3.3",
+  "hash": "a6efe8f2ed68",
+  "verdict": "pass",
+  "summary": "Real-CLI fixtures reject full-scope counts/stale/uncovered/manual lists and require --no-verify to emit only the affected skipped verification in exact manualRequirements JSON form.",
+  "timestamp": "2026-07-22T14:18:20.653Z"
+}

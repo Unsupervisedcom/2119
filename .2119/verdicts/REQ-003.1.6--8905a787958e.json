@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.1.6--8905a787958e",
-  "requirementId": "REQ-003.1.6",
-  "hash": "8905a787958e",
-  "verdict": "pass",
-  "summary": "Runs init end-to-end and asserts .gitignore contains .2119/reviews/ and does not contain .2119/verdicts, verifying the scratch-vs-audit distinction the requirement mandates.",
-  "timestamp": "2026-07-09T23:07:21.190Z"
-}

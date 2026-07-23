@@ -35,7 +35,7 @@ their findings (not empty markers), and they live in version control.
 ### REQ-003.2: Verdict recording
 
 1. `2119 pass <review-id> --summary <text>` MUST write a verdict file to `.2119/verdicts/` containing the review ID, requirement ID, content hash, a findings summary, and an ISO 8601 timestamp.
-2. Verdict files MUST be plain committed JSON — never gitignored — so verdicts appear in PR diffs for human audit. [review: src/**]
+2. `2119 pass`, `2119 fail`, and `2119 init` MUST leave verdicts as plain JSON under an unignored `.2119/verdicts/` path, so users can commit them and audit them in PR diffs. [review: src/**]
 3. `2119 pass` MUST refuse to record a verdict whose hash component does not match the current content hash for that requirement, preventing pre-computed or replayed passes.
 4. `2119 fail <review-id> --summary <text>` MUST record a failing verdict the same way, causing `2119 check` to fail until it is superseded by a passing verdict.
 

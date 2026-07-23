@@ -191,13 +191,86 @@ describe("cli end-to-end", () => {
     expect(result.stdout).toContain(".codex/hooks.json");
   });
 
-  // 2119: REQ-003.1.6
+  // 2119: REQ-003.1.6, REQ-003.2.2
   it("init gitignores .2119/reviews/ but never .2119/verdicts/", () => {
     const root = mkdtempSync(join(tmpdir(), "2119-ign-"));
+    execFileSync("git", ["init"], { cwd: root });
     run(root, ["init"]);
-    const ignore = readFileSync(join(root, ".gitignore"), "utf8");
-    expect(ignore).toContain(".2119/reviews/");
-    expect(ignore).not.toContain(".2119/verdicts");
+    expect(readFileSync(join(root, ".gitignore"), "utf8")).toContain(".2119/reviews/");
+    mkdirSync(join(root, ".2119/reviews"), { recursive: true });
+    mkdirSync(join(root, ".2119/verdicts"), { recursive: true });
+    writeFileSync(join(root, ".2119/reviews/pending.md"), "scratch\n");
+    writeFileSync(join(root, ".2119/verdicts/REQ-001.1.1--aaaaaaaaaaaa.json"), "{}\n");
+    expect(() => execFileSync("git", ["check-ignore", "-q", ".2119/reviews/pending.md"], { cwd: root })).not.toThrow();
+    expect(() =>
+      execFileSync("git", ["check-ignore", "-q", ".2119/verdicts/REQ-001.1.1--aaaaaaaaaaaa.json"], {
+        cwd: root,
+      }),
+    ).toThrow();
+
+    writeFileSync(join(root, ".gitignore"), `${readFileSync(join(root, ".gitignore"), "utf8")}.2119/\n`);
+    run(root, ["init"]);
+    expect(() =>
+      execFileSync("git", ["check-ignore", "-q", ".2119/verdicts/REQ-001.1.1--aaaaaaaaaaaa.json"], {
+        cwd: root,
+      }),
+    ).toThrow();
+
+    const parentIgnored = mkdtempSync(join(tmpdir(), "2119-ign-parent-"));
+    execFileSync("git", ["init"], { cwd: parentIgnored });
+    writeFileSync(join(parentIgnored, ".gitignore"), ".2119/\n");
+    mkdirSync(join(parentIgnored, ".2119"), { recursive: true });
+    writeFileSync(join(parentIgnored, ".2119/.gitignore"), "verdicts/\n");
+    mkdirSync(join(parentIgnored, ".2119/verdicts"), { recursive: true });
+    const preservedVerdict = join(parentIgnored, ".2119/verdicts/REQ-999.1.1--aaaaaaaaaaaa.json");
+    writeFileSync(preservedVerdict, '{"existing":"verdict"}\n');
+    run(parentIgnored, ["init"]);
+    expect(readFileSync(preservedVerdict, "utf8")).toBe('{"existing":"verdict"}\n');
+    mkdirSync(join(parentIgnored, ".2119/verdicts"), { recursive: true });
+    writeFileSync(join(parentIgnored, ".2119/verdicts/REQ-001.1.1--aaaaaaaaaaaa.json"), "{}\n");
+    expect(() =>
+      execFileSync("git", ["check-ignore", "-q", ".2119/verdicts/REQ-001.1.1--aaaaaaaaaaaa.json"], {
+        cwd: parentIgnored,
+      }),
+    ).toThrow();
+
+    const dispatchRoot = fixture();
+    run(dispatchRoot, ["init"]);
+    const pending = run(dispatchRoot, ["review"]);
+    expect(pending.status).toBe(1);
+    const reviewId = pending.stdout.match(/FIX-001\.1\.1--[0-9a-f]{12}/)?.[0];
+    expect(reviewId).toBeTruthy();
+    expect(readdirSync(join(dispatchRoot, ".2119/reviews"))).toEqual([`${reviewId}.md`]);
+
+    for (const command of ["pass", "fail"]) {
+      const verdictRoot = fixture();
+      execFileSync("git", ["init"], { cwd: verdictRoot });
+      run(verdictRoot, ["init"]);
+      const verdictPending = run(verdictRoot, ["review"]);
+      const verdictId = verdictPending.stdout.match(/FIX-001\.1\.1--[0-9a-f]{12}/)?.[0];
+      expect(verdictId).toBeTruthy();
+      writeFileSync(
+        join(verdictRoot, ".gitignore"),
+        `${readFileSync(join(verdictRoot, ".gitignore"), "utf8")}.2119/\n`,
+      );
+      writeFileSync(join(verdictRoot, ".2119/.gitignore"), "verdicts/\n");
+      mkdirSync(join(verdictRoot, ".2119/verdicts"), { recursive: true });
+      writeFileSync(join(verdictRoot, ".2119/verdicts/.gitignore"), "*.json\n");
+      expect(run(verdictRoot, [command, verdictId!, "--summary", `${command} remains trackable`]).status).toBe(0);
+      const verdictPath = join(verdictRoot, `.2119/verdicts/${verdictId}.json`);
+      const record = JSON.parse(readFileSync(verdictPath, "utf8"));
+      expect(record).toMatchObject({
+        reviewId: verdictId,
+        requirementId: "FIX-001.1.1",
+        verdict: command,
+        summary: `${command} remains trackable`,
+      });
+      expect(record.hash).toBe(verdictId!.slice(-12));
+      expect(Number.isNaN(Date.parse(record.timestamp))).toBe(false);
+      expect(() =>
+        execFileSync("git", ["check-ignore", "-q", `.2119/verdicts/${verdictId}.json`], { cwd: verdictRoot }),
+      ).toThrow();
+    }
   });
 
   // 2119: REQ-004.1.1, REQ-004.1.2

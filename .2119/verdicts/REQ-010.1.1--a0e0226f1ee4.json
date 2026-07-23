@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.1.1--a0e0226f1ee4",
+  "requirementId": "REQ-010.1.1",
+  "hash": "a0e0226f1ee4",
+  "verdict": "pass",
+  "summary": "Covers exact arity, local commit-ish success and rejection, ambiguity, true merge-base behavior, unrelated histories, and blocks/logs network attempts for both resolved and unresolved local refs.",
+  "timestamp": "2026-07-22T14:50:36.997Z"
+}

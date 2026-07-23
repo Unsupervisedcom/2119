@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.5--35d4b4549f82",
+  "requirementId": "REQ-010.2.5",
+  "hash": "35d4b4549f82",
+  "verdict": "pass",
+  "summary": "Covers added, removed, replaced, assigned-malformed, and unassigned-malformed current verdicts, while rejecting historical verdict edits as outside current scope.",
+  "timestamp": "2026-07-22T14:45:42.554Z"
+}

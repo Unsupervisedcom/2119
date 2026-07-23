@@ -9,6 +9,7 @@ import {
   refreshPinnedArtifacts,
   type AgentName,
 } from "./adapters.js";
+import { ensureReviewStorageRules } from "./verdict.js";
 
 const CONFIG_TEMPLATE = `# 2119 configuration — https://github.com/Unsupervisedcom/2119
 # All fields optional; these are the defaults unless noted.
@@ -159,12 +160,8 @@ export function runInit(root: string, args: string[]): void {
 
   // .2119/reviews is scratch (gitignored); .2119/verdicts is committed audit
   // history and must never be ignored (REQ-003.1.6, REQ-003.2.2).
-  const gitignorePath = join(root, ".gitignore");
-  const ignoreEntry = ".2119/reviews/";
-  const existing = existsSync(gitignorePath) ? readFileSync(gitignorePath, "utf8") : "";
-  if (!existing.includes(ignoreEntry)) {
-    appendFileSync(gitignorePath, `${existing.endsWith("\n") || existing === "" ? "" : "\n"}${ignoreEntry}\n`);
-    created.push(".gitignore (+ .2119/reviews/)");
+  if (ensureReviewStorageRules(root)) {
+    created.push(".gitignore (2119 review/verdict rules)");
   }
 
   const agentsResult = upsertSection(join(root, "AGENTS.md"), refresh);

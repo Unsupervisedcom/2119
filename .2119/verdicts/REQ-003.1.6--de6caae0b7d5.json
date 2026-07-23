@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.6--de6caae0b7d5",
+  "requirementId": "REQ-003.1.6",
+  "hash": "de6caae0b7d5",
+  "verdict": "pass",
+  "summary": "Review must create the identified instruction packet directly in .2119/reviews, and init is verified to add an effective .gitignore rule for files there; missing or adjacent-directory outputs fail.",
+  "timestamp": "2026-07-22T14:42:10.024Z"
+}

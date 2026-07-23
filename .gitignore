@@ -9,3 +9,10 @@ docs/explainer.html
 .claude/settings.json
 .DS_Store
 docs/calibration-ratchet.html
+# 2119:gitignore-begin
+# Review packets are scratch; verdicts are committed audit history.
+!.2119/
+.2119/reviews/
+!.2119/verdicts/
+!.2119/verdicts/**
+# 2119:gitignore-end

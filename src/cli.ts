@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { buildContext, buildReport } from "./check.js";
+import { buildChangedContext, IncrementalCheckError } from "./changed.js";
 import { generateAuditInstructions, generateInstructions, renderDispatchPrompt } from "./review.js";
 import { pruneVerdicts, writeVerdict } from "./verdict.js";
 import { splitReviewId } from "./hash.js";
@@ -51,7 +52,8 @@ usage: 2119 <command>
   pass      Record a passing review verdict:  2119 pass <review-id> --summary "..."
   fail      Record a failing review verdict:  2119 fail <review-id> --summary "..."
   check     lint + cover + review-verdict freshness; non-zero exit on any failure
-            (--json machine output; --no-verify skips [verify] shell commands)
+            (--changed <base-ref> scopes to affected requirements; --json machine
+            output; --no-verify skips [verify] shell commands)
   prune     Delete verdicts whose review ID matches no current requirement content
   hook      Agent hook entry point: 2119 hook <after-edit|stop|session-start> --platform <p>
 `;
@@ -184,12 +186,41 @@ switch (command) {
     // spec-supplied shell; the requirements surface like [manual] instead of
     // silently dropping (REQ-002.3.5).
     const noVerify = args.includes("--no-verify");
-    const ctx = buildContext(root, { runVerify: !noVerify });
+    const changedFlags = args.filter((arg) => arg === "--changed");
+    if (changedFlags.length > 1) {
+      console.error("usage: 2119 check --changed <base-ref> [--json] [--no-verify]");
+      process.exit(2);
+    }
+    const changedIndex = args.indexOf("--changed");
+    const baseRef = changedIndex === -1 ? undefined : args[changedIndex + 1];
+    if (changedIndex !== -1) {
+      const extraValues = args.filter((arg, index) => !arg.startsWith("--") && index !== changedIndex + 1);
+      if (!baseRef || baseRef.startsWith("--") || extraValues.length > 0) {
+        console.error("usage: 2119 check --changed <base-ref> [--json] [--no-verify]");
+        process.exit(2);
+      }
+    }
+    let ctx: ReturnType<typeof buildContext>;
+    try {
+      ctx = baseRef
+        ? buildChangedContext(root, baseRef, { runVerify: !noVerify })
+        : buildContext(root, { runVerify: !noVerify });
+    } catch (err) {
+      if (changedIndex !== -1 && err instanceof IncrementalCheckError) {
+        console.error(`check --changed: ${err.message}`);
+        process.exit(2);
+      }
+      throw err;
+    }
     requireInitialized(ctx);
     const report = buildReport(ctx);
     if (noVerify) {
       for (const req of allRequirements(ctx.specs)) {
-        if (!req.removed && req.coverage.kind === "verify") {
+        if (
+          !req.removed &&
+          req.coverage.kind === "verify" &&
+          (!ctx.scopedRequirementIds || ctx.scopedRequirementIds.has(req.id))
+        ) {
           report.manualRequirements.push({ id: req.id, text: `${req.text} [verify skipped: --no-verify]` });
         }
       }
