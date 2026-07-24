@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.1.1--0ffef5bf595d",
+  "requirementId": "REQ-010.1.1",
+  "hash": "0ffef5bf595d",
+  "verdict": "pass",
+  "summary": "All three requirement conjuncts checked: '3–8', 'workflow-level', and 'implementation-step'; removing any one fails the test; no tautology or over-mocking",
+  "timestamp": "2026-07-22T18:31:02.798Z"
+}

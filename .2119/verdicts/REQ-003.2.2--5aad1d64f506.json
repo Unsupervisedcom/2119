@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.2--5aad1d64f506",
+  "requirementId": "REQ-003.2.2",
+  "hash": "5aad1d64f506",
+  "verdict": "pass",
+  "summary": "init.ts gitignores only .2119/reviews/, verdict.ts writes plain JSON to .2119/verdicts/, and git ls-files confirms verdict files are committed and tracked",
+  "timestamp": "2026-07-22T18:27:54.589Z"
+}

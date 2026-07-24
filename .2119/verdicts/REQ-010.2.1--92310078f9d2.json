@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.1--92310078f9d2",
+  "requirementId": "REQ-010.2.1",
+  "hash": "92310078f9d2",
+  "verdict": "fail",
+  "summary": "Test checks string presence of 'Core workflows' but never asserts that the section contains MUST requirements — the requirement's core obligation — so a Core workflows section with no MUST items would pass undetected (keyword theater)",
+  "timestamp": "2026-07-22T18:28:08.946Z"
+}

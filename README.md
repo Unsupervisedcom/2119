@@ -125,6 +125,78 @@ Here are some anti-patterns to avoid:
 - **A keyword-grep test standing in for a judgment call** (e.g. `assert "fix" in error_message` for "errors MUST tell the user how to fix the problem") — the substring "fix" appearing proves nothing about whether the message actually explains the fix; "could not fix" passes it. The test can't fail honestly. Use `[review]` instead.
 - **A review used on a machine-checkable fact** (e.g. using a reviewer to "check the version field equals 2") — that's judgment spent where a test is stronger.
 
+## Requirement granularity
+
+When drafting requirements for a feature, prefer a small number of user-meaningful,
+workflow-level requirements over many implementation-step requirements.
+
+A first-pass feature spec should usually contain **around 3–8 enforced `MUST`
+requirements**. More granular requirements are appropriate only when each one
+represents a distinct user promise, safety invariant, compatibility guarantee, or
+independently valuable behavior.
+
+Avoid turning every implementation detail into a separate `MUST`. Instead:
+
+- Use `[manual]` for behavior that is primarily verified through UI or manual inspection.
+- Use `SHOULD` for polish, edge cases, and preferred behavior that should not block the first enforcement pass.
+- Use explanatory notes or acceptance-checklist bullets (in the spec's notes section) for implementation details.
+- Split requirements only when each resulting requirement has a clear independent test or review value.
+
+**Good:**
+
+> A user MUST be able to paste an image into the composer, see it appear as an
+> attachment chip, and send it as an image attachment.
+
+**Less good as separate first-pass requirements:**
+
+> The paste handler MUST read from the pasteboard.  
+> The classifier MUST create an image attachment.  
+> The chip area MUST become visible.  
+> The chip MUST show a thumbnail.  
+> The RPC payload MUST contain an image object.  
+> The transcript MUST show the image.
+
+Those details may be useful, but they are often better expressed as notes,
+manual criteria, or later hardening requirements unless each one needs independent
+enforcement.
+
+### Spec sizing smells
+
+Reconsider the spec if:
+
+- One feature produces more than ~10 enforced `MUST`s before tests exist.
+- Most requirements are restating internal implementation steps.
+- A reviewer would need to approve many requirements using the same single test.
+- The requirement says "MUST cover" or "MUST test" instead of describing product behavior.
+- Many requirements differ only by small UI details.
+
+### Starter spec structure
+
+The template that `2119 init` creates nudges toward this shape:
+
+```markdown
+### REQ-001.1: Core workflows
+
+List 3–5 user workflows as `MUST`s.
+
+### REQ-001.2: Safety and compatibility invariants
+
+List only critical invariants as `MUST`s.
+
+### REQ-001.3: Manual acceptance criteria
+
+Use `[manual]` for visual/UI workflows that are not automated yet.
+
+## Notes and non-goals
+
+Put implementation details and deferred polish here instead of making them
+enforced requirements.
+```
+
+This keeps 2119 adoption lightweight. Teams can start with a manageable enforced
+surface, then split or harden requirements later when individual behaviors prove
+important enough to test or review independently.
+
 ## Commands
 
 | Command | Does |

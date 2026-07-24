@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.1--85413e6bde7b",
+  "requirementId": "REQ-010.2.1",
+  "hash": "85413e6bde7b",
+  "verdict": "pass",
+  "summary": "Core counterexamples pass: renamed section and SHOULD-only section both cause test failure; minor unrelated assertions (manual criteria checks) do not undermine REQ-010.2.1 coverage",
+  "timestamp": "2026-07-22T18:32:07.372Z"
+}

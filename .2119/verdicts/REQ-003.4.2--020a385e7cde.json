@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.4.2--020a385e7cde",
+  "requirementId": "REQ-003.4.2",
+  "hash": "020a385e7cde",
+  "verdict": "pass",
+  "summary": "README Risks section explicitly names all four required elements: agent can self-pass, committed+auditable verdicts, hash invalidation prevents stale reuse, and CI re-verification",
+  "timestamp": "2026-07-22T18:27:58.258Z"
+}

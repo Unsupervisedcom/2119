@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.1.1--321048fefa44",
+  "requirementId": "REQ-010.1.1",
+  "hash": "321048fefa44",
+  "verdict": "fail",
+  "summary": "Keyword theater: test checks toContain('workflow-level') but not 'implementation-step' or the preference framing; a rewrite dropping 'over implementation-step requirements' keeps both checked strings and passes while violating the stated rationale",
+  "timestamp": "2026-07-22T18:28:37.891Z"
+}
