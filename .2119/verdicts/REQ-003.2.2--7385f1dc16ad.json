@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.2--7385f1dc16ad",
+  "requirementId": "REQ-003.2.2",
+  "hash": "7385f1dc16ad",
+  "verdict": "pass",
+  "summary": "pass/fail persist plain JSON verdict files in .2119/verdicts and init enforces unignored verdict path rules",
+  "timestamp": "2026-07-29T20:52:25.975Z"
+}

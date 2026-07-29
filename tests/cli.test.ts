@@ -139,6 +139,19 @@ describe("cli end-to-end", () => {
     expect(run(root, ["check"]).status).toBe(1);
   });
 
+  // 2119: REQ-003.2.4
+  it("check summary counts failing reviews separately from stale reviews", () => {
+    const root = fixture();
+    const review = run(root, ["review"]);
+    const reviewId = review.stdout.match(/FIX-001\.1\.1--[0-9a-f]{12}/)?.[0];
+    expect(reviewId).toBeTruthy();
+    expect(run(root, ["fail", reviewId!, "--summary", "test misses a boundary case"]).status).toBe(0);
+
+    const result = run(root, ["check"]);
+    expect(result.status).toBe(1);
+    expect(result.stdout).toContain("1 failing review(s), 0 stale review(s)");
+  });
+
   // 2119: REQ-004.3.1
   it("init scaffolds a commented config and a template spec", () => {
     const root = mkdtempSync(join(tmpdir(), "2119-init-"));
