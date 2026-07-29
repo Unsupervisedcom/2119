@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.4--5e8824a0d3f3",
+  "requirementId": "REQ-003.2.4",
+  "hash": "5e8824a0d3f3",
+  "verdict": "pass",
+  "summary": "Fail verdict is recorded, check fails on it, and a later pass supersedes it.",
+  "timestamp": "2026-07-29T20:52:53.827Z"
+}

@@ -233,9 +233,12 @@ switch (command) {
         console.log(`\nManual requirements (not automatically checked):`);
         for (const m of report.manualRequirements) console.log(`  - ${m.id}: ${m.text}`);
       }
+      const failingReviewCount = report.violations.filter((v) => v.rule === "REQ-003.2.4").length;
+      const staleReviewCount = report.violations.filter((v) => v.rule === "REQ-003.3.1").length;
       console.log(
         `\ncheck: ${report.ok ? "PASS" : "FAIL"} — ${report.violations.length} violation(s), ` +
-          `${report.uncoveredRequirements.length} uncovered, ${report.staleReviews.length} stale review(s)`,
+          `${report.uncoveredRequirements.length} uncovered, ${failingReviewCount} failing review(s), ` +
+          `${staleReviewCount} stale review(s)`,
       );
     }
     process.exit(report.ok ? 0 : 1);
