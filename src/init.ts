@@ -44,7 +44,7 @@ const CONFIG_TEMPLATE = `# 2119 configuration — https://github.com/Unsupervise
 # audit: "always"
 `;
 
-export const SPEC_TEMPLATE = `# REQ-001: <Feature Name>
+const SPEC_TEMPLATE = `# REQ-001: <Feature Name>
 
 ## Overview
 
@@ -53,31 +53,12 @@ Use imperatives sparingly (RFC 2119 §6): constrain observable outcomes, not
 implementation methods. Elaborate security implications of security-relevant
 requirements (RFC 2119 §7).
 
-Aim for 3–8 enforced \`MUST\` requirements in a first-pass spec. Prefer
-workflow-level requirements (what the user observably can do) over
-implementation-step requirements (how the code achieves it). Use \`SHOULD\` for
-polish and edge cases, \`[manual]\` for UI-only behaviors, and notes or
-acceptance-checklist bullets in the Notes section for implementation details.
-
 ## Requirements
 
-### REQ-001.1: Core workflows
+### REQ-001.1: <Section Title>
 
-1. The user MUST be able to <describe the observable workflow and its outcome>.
-
-### REQ-001.2: Safety and compatibility invariants
-
-1. The system MUST NOT <describe what the system must never do>.
-
-### REQ-001.3: Manual acceptance criteria
-
-1. The user MUST be able to <describe visual or UI behavior that is verified by hand>. [manual]
-
-## Notes and non-goals
-
-Implementation details and deferred polish belong here as prose rather than
-enforced requirements. Acceptance-checklist items, out-of-scope behaviors, and
-internal implementation notes go here instead of as additional \`MUST\`s.
+1. The system MUST <concrete, evaluable criterion>.
+2. The system SHOULD <concrete, evaluable criterion>.
 `;
 
 export const AGENTS_MD_SECTION = `<!-- 2119:begin -->
