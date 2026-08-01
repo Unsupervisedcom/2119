@@ -204,7 +204,10 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
       });
     }
     const h2 = line.match(/^## (.+)$/);
-    const h3 = line.match(/^### (.+)$/);
+    // A tab is also a valid ATX separator (CommonMark) and is recognized as an attempted heading —
+    // captured separately so a near-miss like "###\t1: Title" is caught as a grammar violation
+    // (the bare grammar requires exactly a space) rather than silently ignored as prose.
+    const h3 = line.match(/^###([ \t])(.+)$/);
 
     if (h1 || h2 || h3) flushItem();
 
@@ -241,8 +244,13 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
 
     if (h3 && isFileScoped) {
       // Bare grammar (REQ-011.2.3): digit(s), a colon, exactly one space, then a non-empty title.
-      const content = h3[1];
-      const m = content.match(/^(\d+): (\S.*)$/);
+      // A tab where the "###" separator should be a space is a recognized-but-rejected near miss.
+      const content = h3[2];
+      const rawMatch = h3[1] === " " ? content.match(/^(\d+): (\S.*)$/) : null;
+      // A trailing ATX-style closing sequence (CommonMark's optional " ###" at the end of a
+      // heading) is a qualifier on the grammar, not free-form title text — reject it rather than
+      // silently folding it into the title.
+      const m = rawMatch && !/\s#+$/.test(rawMatch[2]) ? rawMatch : null;
       if (!m) {
         if (sawRequirementsHeading) {
           // A heading that bakes in the file's own stem gets its own, more specific rule
@@ -274,14 +282,15 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
     }
 
     if (h3) {
-      const m = h3[1].match(new RegExp(`^(${prefix}-\\d+)\\.(\\d+):\\s*(.*)$`));
+      const legacyContent = h3[2];
+      const m = h3[1] === " " ? legacyContent.match(new RegExp(`^(${prefix}-\\d+)\\.(\\d+):\\s*(.*)$`)) : null;
       if (!m) {
         if (sawRequirementsHeading) {
           violations.push({
             file: path,
             line: lineNo,
             rule: "REQ-001.1.3",
-            message: `Section heading must be "### ${expectedDocId ?? `${prefix}-NNN`}.M: Title", got "### ${h3[1]}"`,
+            message: `Section heading must be "### ${expectedDocId ?? `${prefix}-NNN`}.M: Title", got "### ${legacyContent}"`,
           });
         }
         current = null;

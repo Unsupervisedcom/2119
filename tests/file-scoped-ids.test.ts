@@ -119,6 +119,15 @@ describe("file-scoped spec filenames (REQ-011.1)", () => {
       SCROLLBACK_SPEC.replace("# Codex Session Scrollback", "# Widgets"),
     );
     expect(zeroDigits.docId).toBe("REQ-widgets");
+
+    // "One or more digits": a multi-digit legacy number is legacy too, not just a single digit.
+    const multiDigit = parseSpec(
+      "specs/REQ-12-widgets.md",
+      "REQ",
+      "# REQ-12: Widgets\n\n## Overview\n\nX.\n\n## Requirements\n\n### REQ-12.1: Basics\n\n1. It MUST work.\n",
+    );
+    expect(multiDigit.docId).toBe("REQ-12");
+    expect(multiDigit.violations).toEqual([]);
   });
 
   // 2119: REQ-011.1.2
@@ -164,6 +173,15 @@ describe("file-scoped spec filenames (REQ-011.1)", () => {
         (v) => v.rule === "REQ-011.1.2",
       ),
     ).toBe(false);
+
+    // Positive control: digits ARE part of the allowed charset — a stem must not be rejected just
+    // for containing one, only for containing something outside [a-z0-9-].
+    const digitBearing = parseSpec(
+      "specs/codex-2fa-scrollback.md",
+      "REQ",
+      SCROLLBACK_SPEC.replace("# Codex Session Scrollback", "# Codex 2FA Scrollback"),
+    );
+    expect(digitBearing.violations.some((v) => v.rule === "REQ-011.1.2")).toBe(false);
   });
 
   // 2119: REQ-011.1.3
@@ -247,11 +265,8 @@ describe("file-scoped document structure and canonical IDs (REQ-011.2)", () => {
       SCROLLBACK_SPEC.replace("### 1: Retention", "### 1:  Retention"), // two spaces after the colon
       SCROLLBACK_SPEC.replace("### 1: Retention", "###  1: Retention"), // two spaces between ### and N
       SCROLLBACK_SPEC.replace("### 1: Retention", "### 1:\tRetention"), // tab (not space) after the colon
-      // NOT tested here: a tab between "###" and "N" (e.g. "###\t1: Retention"). The outer
-      // `^### ` heading-token match (shared, unchanged, with legacy's own h3 detection) requires a
-      // literal space there — a tab means the line is never recognized as an attempted heading at
-      // all, the same silent-prose outcome legacy already has for any line outside its own `^### `
-      // token. That tokenization boundary is not owned by this requirement.
+      SCROLLBACK_SPEC.replace("### 1: Retention", "###\t1: Retention"), // tab (not space) between ### and N
+      SCROLLBACK_SPEC.replace("### 1: Retention", "### 1: Retention ###"), // trailing ATX closing marker
     ];
     for (const [i, variant] of variants.entries()) {
       expect(
@@ -273,15 +288,6 @@ describe("file-scoped document structure and canonical IDs (REQ-011.2)", () => {
     const selfQualifiedSpec = parseSpec("specs/codex-session-scrollback.md", "REQ", selfQualified);
     expect(selfQualifiedSpec.violations.length).toBeGreaterThan(0);
     expect(selfQualifiedSpec.sections).toEqual([]);
-
-    // A trailing ATX-style "###" closing marker is not stripped — it becomes part of the (accepted)
-    // title, mirroring the legacy heading's own equally permissive title capture. This is a
-    // deliberate leniency, not an unexamined gap: pin it so a future stricter parser is a conscious
-    // change, not an accidental regression.
-    const trailingMarker = SCROLLBACK_SPEC.replace("### 1: Retention", "### 1: Retention ###");
-    const trailingSpec = parseSpec("specs/codex-session-scrollback.md", "REQ", trailingMarker);
-    expect(trailingSpec.violations.filter((v) => v.rule === "REQ-011.2.3")).toEqual([]);
-    expect(trailingSpec.sections[0].title).toBe("Retention ###");
 
     // "Each subsection" (REQ-011.2.3 applies per-heading, not just to the first): a SECOND section
     // with a malformed heading must be flagged even when the first section is perfectly bare.
@@ -339,6 +345,23 @@ describe("file-scoped document structure and canonical IDs (REQ-011.2)", () => {
     const startsAtTwo = `# Codex Session Scrollback\n\n## Overview\n\nX.\n\n## Requirements\n\n### 1: A\n\n2. It MUST work.\n`;
     expect(
       parseSpec("specs/codex-session-scrollback.md", "REQ", startsAtTwo).violations.some((v) => v.rule === "REQ-001.2.3"),
+    ).toBe(true);
+
+    // Item numbering is validated per SECOND section too, not just the first: a well-formed
+    // section 1 followed by a section 2 whose items skip a number must still be flagged.
+    const secondSectionItemGap = `# Codex Session Scrollback\n\n## Overview\n\nX.\n\n## Requirements\n\n### 1: A\n\n1. It MUST work.\n\n### 2: B\n\n1. It MUST work.\n3. It MUST also work.\n`;
+    expect(
+      parseSpec("specs/codex-session-scrollback.md", "REQ", secondSectionItemGap).violations.some(
+        (v) => v.rule === "REQ-001.2.3",
+      ),
+    ).toBe(true);
+
+    // Duplicate item numbers in a SECOND section too.
+    const secondSectionDuplicateItem = `# Codex Session Scrollback\n\n## Overview\n\nX.\n\n## Requirements\n\n### 1: A\n\n1. It MUST work.\n\n### 2: B\n\n1. It MUST work.\n1. It MUST work twice.\n`;
+    expect(
+      parseSpec("specs/codex-session-scrollback.md", "REQ", secondSectionDuplicateItem).violations.some(
+        (v) => v.rule === "REQ-001.2.3",
+      ),
     ).toBe(true);
   });
 
@@ -426,6 +449,14 @@ describe("file-scoped document structure and canonical IDs (REQ-011.2)", () => {
     const legacyZeroKeywords = LEGACY_SPEC.replace("1. The widget MUST spin.", "1. The widget spins.");
     expect(
       parseSpec("specs/REQ-900-widgets.md", "REQ", legacyZeroKeywords).violations.some((v) => v.rule === "REQ-001.2.2"),
+    ).toBe(true);
+
+    const legacyTwoKeywords = LEGACY_SPEC.replace(
+      "1. The widget MUST spin.",
+      "1. The widget MUST spin and SHOULD glow.",
+    );
+    expect(
+      parseSpec("specs/REQ-900-widgets.md", "REQ", legacyTwoKeywords).violations.some((v) => v.rule === "REQ-001.2.2"),
     ).toBe(true);
 
     const legacyRemoved = LEGACY_SPEC.replace("1. The widget MUST spin.", "1. REQUIREMENT REMOVED");
@@ -611,9 +642,25 @@ describe("annotation import and bare-number sugar (REQ-011.4)", () => {
       "// 2119-spec: codex-session-scrollback\n// 2119: 1\n// 2119: other-spec.1.1\n// 2119: REQ-900.1.1\ntest('x', () => {})\n",
     );
     const withImport = buildContext(root);
+    // fsFixture() pre-covers other-spec.1.1 via its own baseline file, so a bare `.has()` check
+    // wouldn't prove THIS file's foreign full ID actually resolved — require the covering list to
+    // specifically include tests/scrollback.test.ts.
+    const coveringOtherFromImport = withImport.coverage.covered.get("other-spec.1.1") ?? [];
+    expect(coveringOtherFromImport.some((a) => a.file === "tests/scrollback.test.ts")).toBe(true);
     expect(withImport.coverage.covered.has("codex-session-scrollback.1.1")).toBe(true);
-    expect(withImport.coverage.covered.has("other-spec.1.1")).toBe(true);
     expect(withImport.coverage.covered.has("REQ-900.1.1")).toBe(true);
+
+    // A full canonical ID for the file's OWN marker's spec must resolve exactly, not get
+    // double-prefixed (e.g. "codex-session-scrollback.codex-session-scrollback.1.3") or rejected.
+    writeFileSync(
+      join(root, "tests/own-marker-full.test.ts"),
+      "// 2119-spec: codex-session-scrollback\n// 2119: codex-session-scrollback.1.3\ntest('own', () => {})\n",
+    );
+    const ownMarkerFull = buildContext(root);
+    expect(ownMarkerFull.coverage.covered.has("codex-session-scrollback.1.3")).toBe(true);
+    expect(
+      ownMarkerFull.lintViolations.some((v) => v.file === "tests/own-marker-full.test.ts"),
+    ).toBe(false);
 
     // With NO marker at all, full IDs resolve identically (bare would not, per REQ-011.4.4).
     writeFileSync(
@@ -621,8 +668,18 @@ describe("annotation import and bare-number sugar (REQ-011.4)", () => {
       "// 2119: other-spec.1.1\n// 2119: REQ-900.1.1\ntest('y', () => {})\n",
     );
     const noImport = buildContext(root);
-    expect(noImport.coverage.covered.has("other-spec.1.1")).toBe(true);
+    const coveringOtherFromNoImport = noImport.coverage.covered.get("other-spec.1.1") ?? [];
+    expect(coveringOtherFromNoImport.some((a) => a.file === "tests/widget.test.js")).toBe(true);
     expect(noImport.coverage.covered.has("REQ-900.1.1")).toBe(true);
+    // Bare, by contrast, is never resolved without a marker (REQ-011.4.4's rule holds here too,
+    // in this test's own fixture — not just in a different test elsewhere).
+    writeFileSync(join(root, "tests/no-marker-bare.test.ts"), "// 2119: 1\ntest('bare', () => {})\n");
+    const noMarkerBare = buildContext(root);
+    expect(
+      noMarkerBare.lintViolations.some((v) => v.file === "tests/no-marker-bare.test.ts" && /import|2119-spec/i.test(v.message)),
+    ).toBe(true);
+    const coveringFromBareFile = noMarkerBare.coverage.covered.get("codex-session-scrollback.1.1") ?? [];
+    expect(coveringFromBareFile.some((a) => a.file === "tests/no-marker-bare.test.ts")).toBe(false);
 
     // Exclusivity: a bare number under the scrollback marker resolves ONLY within that spec, even
     // though other-spec also happens to define an item "1.1" — bare is never a foreign reference.
@@ -743,7 +800,14 @@ describe("grammar coexistence (REQ-011.5)", () => {
     expect(run(root2, ["fail", legacyId2, "--summary", "not genuine"]).status).toBe(0);
     expect(run(root2, ["fail", fsId3, "--summary", "not genuine"]).status).toBe(0);
     const afterFail = JSON.parse(run(root2, ["check", "--json"]).stdout);
-    expect(afterFail.violations.filter((v: { rule: string }) => v.rule === "REQ-003.2.4")).toHaveLength(2);
+    const failing2119 = afterFail.violations.filter((v: { rule: string }) => v.rule === "REQ-003.2.4");
+    expect(failing2119).toHaveLength(2);
+    // Tied to the SPECIFIC ids, not just a count: a misclassification (e.g. both violations
+    // pointing at the same grammar) must not be able to pass this check.
+    expect(failing2119.some((v: { message: string }) => v.message.includes("REQ-900.1.2"))).toBe(true);
+    expect(failing2119.some((v: { message: string }) => v.message.includes("codex-session-scrollback.1.3"))).toBe(
+      true,
+    );
 
     // pass supersedes fail identically for either grammar.
     expect(run(root2, ["pass", legacyId1, "--summary", "genuine"]).status).toBe(0);
@@ -1011,6 +1075,18 @@ describe("rename invalidation (REQ-011.7)", () => {
       (v) => v.rule === "REQ-003.3.1" && (v.message.includes("scrollback-v2.1.1") || v.message.includes("scrollback-v2.1.3")),
     );
     expect(staleForRenamed).toHaveLength(2);
+
+    // The requirement itself is that `2119 check` — the actual CLI, not just internals — reports
+    // this: a build that computes the right internal state but never wires it into the real command
+    // must not pass.
+    const cliAfter = run(root, ["check", "--json"]);
+    expect(cliAfter.status).toBe(1);
+    const cliReport = JSON.parse(cliAfter.stdout);
+    const cliStaleForRenamed = cliReport.violations.filter(
+      (v: { rule: string; message: string }) =>
+        v.rule === "REQ-003.3.1" && (v.message.includes("scrollback-v2.1.1") || v.message.includes("scrollback-v2.1.3")),
+    );
+    expect(cliStaleForRenamed).toHaveLength(2);
   });
 });
 
