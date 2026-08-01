@@ -64,8 +64,44 @@ function parseCoverageTag(text: string): { text: string; coverage: Coverage } {
 }
 
 /**
+ * A spec filename that doesn't start with the configured prefix is parsed
+ * under the file-scoped grammar (REQ-011.1.1): the basename, minus `.md`,
+ * becomes its namespace stem, and canonical IDs are `<stem>.N.M` instead of
+ * `<prefix>-NNN.M.K`.
+ */
+function fileScopedStemViolations(stem: string, path: string): Violation[] {
+  const violations: Violation[] = [];
+  if (/[^a-z0-9-]/.test(stem)) {
+    violations.push({
+      file: path,
+      line: 1,
+      rule: "REQ-011.1.2",
+      message: `File-scoped spec stem "${stem}" must consist only of lowercase ASCII letters, digits, and hyphens`,
+    });
+  }
+  if (!/[a-z]/.test(stem)) {
+    violations.push({
+      file: path,
+      line: 1,
+      rule: "REQ-011.1.3",
+      message: `File-scoped spec stem "${stem}" must contain at least one lowercase letter`,
+    });
+  }
+  if (stem.startsWith("-") || stem.endsWith("-") || stem.includes("--")) {
+    violations.push({
+      file: path,
+      line: 1,
+      rule: "REQ-011.1.4",
+      message: `File-scoped spec stem "${stem}" must not start or end with a hyphen or contain two consecutive hyphens`,
+    });
+  }
+  return violations;
+}
+
+/**
  * Parse one spec file into its requirement model, collecting structural
- * violations against REQ-001.1 and REQ-001.2 along the way.
+ * violations against REQ-001.1 and REQ-001.2 (legacy grammar) or REQ-011.1
+ * and REQ-011.2 (file-scoped grammar) along the way.
  */
 export function parseSpec(path: string, prefix: string, content?: string): SpecFile {
   const raw = content ?? readFileSync(path, "utf8");
@@ -76,17 +112,14 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
   const fileBase = basename(path);
   const docIdMatch = fileBase.match(new RegExp(`^(${prefix}-\\d+)`));
   const expectedDocId = docIdMatch?.[1] ?? null;
-  if (!expectedDocId) {
-    violations.push({
-      file: path,
-      line: 1,
-      rule: "REQ-001.1.1",
-      message: `Spec filename must start with "${prefix}-NNN", got "${fileBase}"`,
-    });
+  const isFileScoped = !expectedDocId;
+  const stem = fileBase.endsWith(".md") ? fileBase.slice(0, -3) : fileBase;
+  if (isFileScoped) {
+    violations.push(...fileScopedStemViolations(stem, path));
   }
 
   let title: string | null = null;
-  let docId: string | null = null;
+  let docId: string | null = isFileScoped ? stem : null;
   let sawOverview = false;
   let sawRequirementsHeading = false;
   let overviewLine = 0;
@@ -158,14 +191,16 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
     if (inFence) continue;
 
     const h1 = line.match(/^# (.+)$/);
-    // The H1 title must be the file's first content (REQ-001.1.1).
+    // The H1 title must be the file's first content (REQ-001.1.1, REQ-011.2.1).
     if (title === null && !h1 && line.trim() !== "" && !sawContent) {
       sawContent = true;
       violations.push({
         file: path,
         line: lineNo,
-        rule: "REQ-001.1.1",
-        message: `Spec must begin with "# ${expectedDocId ?? `${prefix}-NNN`}: Title"; found content before it`,
+        rule: isFileScoped ? "REQ-011.2.1" : "REQ-001.1.1",
+        message: isFileScoped
+          ? `Spec must begin with "# Title"; found content before it`
+          : `Spec must begin with "# ${expectedDocId ?? `${prefix}-NNN`}: Title"; found content before it`,
       });
     }
     const h2 = line.match(/^## (.+)$/);
@@ -175,15 +210,19 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
 
     if (h1 && title === null) {
       title = h1[1];
-      const m = h1[1].match(new RegExp(`^(${prefix}-\\d+):\\s*\\S`));
-      docId = m?.[1] ?? null;
-      if (!docId || (expectedDocId && docId !== expectedDocId)) {
-        violations.push({
-          file: path,
-          line: lineNo,
-          rule: "REQ-001.1.1",
-          message: `Top-level heading must be "# ${expectedDocId ?? `${prefix}-NNN`}: Title", got "# ${h1[1]}"`,
-        });
+      // A file-scoped title carries no document-ID prefix to validate (REQ-011.2.1); docId is
+      // already the filename stem, set before parsing began.
+      if (!isFileScoped) {
+        const m = h1[1].match(new RegExp(`^(${prefix}-\\d+):\\s*\\S`));
+        docId = m?.[1] ?? null;
+        if (!docId || (expectedDocId && docId !== expectedDocId)) {
+          violations.push({
+            file: path,
+            line: lineNo,
+            rule: "REQ-001.1.1",
+            message: `Top-level heading must be "# ${expectedDocId ?? `${prefix}-NNN`}: Title", got "# ${h1[1]}"`,
+          });
+        }
       }
       continue;
     }
@@ -197,6 +236,40 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
         sawRequirementsHeading = true;
         requirementsLine = lineNo;
       }
+      continue;
+    }
+
+    if (h3 && isFileScoped) {
+      // Bare grammar (REQ-011.2.3): digit(s), a colon, exactly one space, then a non-empty title.
+      const content = h3[1];
+      const m = content.match(/^(\d+): (\S.*)$/);
+      if (!m) {
+        if (sawRequirementsHeading) {
+          // A heading that bakes in the file's own stem gets its own, more specific rule
+          // (REQ-011.2.4) — a file-scoped spec's own stem is never written inside itself.
+          if (content.startsWith(`${stem}.`)) {
+            violations.push({
+              file: path,
+              line: lineNo,
+              rule: "REQ-011.2.4",
+              message: `Section heading must not include the file's own stem "${stem}"; use the bare form "### N: Title", got "### ${content}"`,
+            });
+          } else {
+            violations.push({
+              file: path,
+              line: lineNo,
+              rule: "REQ-011.2.3",
+              message: `Section heading must be "### N: Title" (bare grammar), got "### ${content}"`,
+            });
+          }
+        }
+        current = null;
+        continue;
+      }
+      const [, secNumStr, secTitle] = m;
+      const num = Number(secNumStr);
+      current = { id: `${stem}.${num}`, num, title: secTitle, line: lineNo, items: [] };
+      sections.push(current);
       continue;
     }
 
@@ -292,7 +365,14 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
     });
   });
 
-  return { path, docId: docId ?? expectedDocId, title, sections, violations };
+  return {
+    path,
+    docId: docId ?? expectedDocId,
+    title,
+    sections,
+    violations,
+    grammar: isFileScoped ? "file-scoped" : "legacy",
+  };
 }
 
 export function allRequirements(specs: SpecFile[]): Requirement[] {
