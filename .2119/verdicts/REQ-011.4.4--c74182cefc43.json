@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.4.4--c74182cefc43",
+  "requirementId": "REQ-011.4.4",
+  "hash": "c74182cefc43",
+  "verdict": "pass",
+  "summary": "file-scoped-ids.test.ts:666 drives the real buildContext and asserts the violation lands in lintViolations (not coverViolations) with coverage.covered NOT gaining the target, for: no marker at all, a comma-separated bare list ('1, 3') where both IDs are unresolved, and a marker appearing only LATER in the file (with the in-scope annotation on line 4 still resolving, pinning that the violation is the earlier line). The new boundary case shows '1.1x', '1.2.', '1.3junk' under a valid marker grant no coverage. Mutation-tested: deleting the REQ-011.4.4 violations.push and removing the token's trailing negative lookahead each fail this test.",
+  "timestamp": "2026-08-01T06:31:35.042Z"
+}

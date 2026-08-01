@@ -219,15 +219,13 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
       });
     }
     const h2 = line.match(/^## (.+)$/);
-    // File-scoped and legacy use SEPARATE heading detection, not a shared regex: file-scoped's
-    // grammar cares about the exact "###" separator (a tab is a recognized-but-rejected near miss,
-    // REQ-011.2.3), but that detection must not change legacy's own, unrelated behavior, which
-    // keeps its original space-only match untouched.
-    const h3Legacy = !isFileScoped ? line.match(/^### (.+)$/) : null;
-    const h3FileScoped = isFileScoped ? line.match(/^###([ \t])(.+)$/) : null;
-    const h3 = h3Legacy ?? h3FileScoped;
+    // Any "###" is an H3 candidate — separator and content are optional so a bare "###", "### "
+    // (empty content), or "###\t" still matches instead of falling through as ordinary body text,
+    // which would otherwise leave a malformed heading undetected AND leave `current` pointing at
+    // the previous section, silently attaching later items to it.
+    const h3Match = line.match(/^###(?:([ \t])(.*))?$/);
 
-    if (h1 || h2 || h3) flushItem();
+    if (h1 || h2 || h3Match) flushItem();
 
     if (h1 && title === null) {
       title = h1[1];
@@ -266,62 +264,64 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
       continue;
     }
 
-    if (h3FileScoped) {
-      // Bare grammar (REQ-011.2.3): digit(s), a colon, exactly one space, then a non-empty title.
-      // A tab where the "###" separator should be a space is a recognized-but-rejected near miss.
-      const content = h3FileScoped[2];
-      const rawMatch = h3FileScoped[1] === " " ? content.match(/^(\d+): (\S.*)$/) : null;
-      // A trailing ATX-style closing sequence (CommonMark's optional " ###" at the end of a
-      // heading) is a qualifier on the grammar, not free-form title text — reject it rather than
-      // silently folding it into the title.
-      const m = rawMatch && !/\s#+$/.test(rawMatch[2]) ? rawMatch : null;
-      if (!m) {
-        if (insideRequirements) {
-          // A heading that bakes in the file's own stem gets its own, more specific rule
-          // (REQ-011.2.4) — a file-scoped spec's own stem is never written inside itself.
-          if (content.startsWith(`${stem}.`)) {
-            violations.push({
-              file: path,
-              line: lineNo,
-              rule: "REQ-011.2.4",
-              message: `Section heading must not include the file's own stem "${stem}"; use the bare form "### N: Title", got "### ${content}"`,
-            });
-          } else {
-            violations.push({
-              file: path,
-              line: lineNo,
-              rule: "REQ-011.2.3",
-              message: `Section heading must be "### N: Title" (bare grammar), got "### ${content}"`,
-            });
-          }
-        }
-        current = null;
-        continue;
-      }
-      // A well-formed section OUTSIDE `## Requirements` (e.g. under `## Overview`, or after a
-      // later `## Notes`) is not a real requirements section — it is silently ignored, exactly as
-      // a malformed one already is above, rather than smuggled into `sections` (REQ-011.2.2).
-      if (!insideRequirements) {
-        current = null;
-        continue;
-      }
-      const [, secNumStr, secTitle] = m;
-      const num = Number(secNumStr);
-      current = { id: `${stem}.${num}`, num, title: secTitle, line: lineNo, items: [] };
-      sections.push(current);
-      continue;
-    }
+    if (h3Match) {
+      // A separator other than a single space — missing entirely (bare "###"), or a tab — is a
+      // recognized-but-rejected near miss for EITHER grammar, not silently-ignored body text.
+      const separator = h3Match[1] ?? "";
+      const content = h3Match[2] ?? "";
 
-    if (h3Legacy) {
-      const legacyContent = h3Legacy[1];
-      const m = legacyContent.match(new RegExp(`^(${prefix}-\\d+)\\.(\\d+):\\s*(.*)$`));
+      if (isFileScoped) {
+        // Bare grammar (REQ-011.2.3): digit(s), a colon, exactly one space, then a non-empty title.
+        const rawMatch = separator === " " ? content.match(/^(\d+): (\S.*)$/) : null;
+        // A trailing ATX-style closing sequence (CommonMark's optional " ###" at the end of a
+        // heading) is a qualifier on the grammar, not free-form title text — reject it rather than
+        // silently folding it into the title.
+        const m = rawMatch && !/\s#+$/.test(rawMatch[2]) ? rawMatch : null;
+        if (!m) {
+          if (insideRequirements) {
+            // A heading that bakes in the file's own stem gets its own, more specific rule
+            // (REQ-011.2.4) — a file-scoped spec's own stem is never written inside itself.
+            if (content.startsWith(`${stem}.`)) {
+              violations.push({
+                file: path,
+                line: lineNo,
+                rule: "REQ-011.2.4",
+                message: `Section heading must not include the file's own stem "${stem}"; use the bare form "### N: Title", got "### ${content}"`,
+              });
+            } else {
+              violations.push({
+                file: path,
+                line: lineNo,
+                rule: "REQ-011.2.3",
+                message: `Section heading must be "### N: Title" (bare grammar), got "### ${content}"`,
+              });
+            }
+          }
+          current = null;
+          continue;
+        }
+        // A well-formed section OUTSIDE `## Requirements` (e.g. under `## Overview`, or after a
+        // later `## Notes`) is not a real requirements section — it is silently ignored, exactly as
+        // a malformed one already is above, rather than smuggled into `sections` (REQ-011.2.2).
+        if (!insideRequirements) {
+          current = null;
+          continue;
+        }
+        const [, secNumStr, secTitle] = m;
+        const num = Number(secNumStr);
+        current = { id: `${stem}.${num}`, num, title: secTitle, line: lineNo, items: [] };
+        sections.push(current);
+        continue;
+      }
+
+      const m = separator === " " ? content.match(new RegExp(`^(${prefix}-\\d+)\\.(\\d+):\\s*(.*)$`)) : null;
       if (!m) {
         if (insideRequirements) {
           violations.push({
             file: path,
             line: lineNo,
             rule: "REQ-001.1.3",
-            message: `Section heading must be "### ${expectedDocId ?? `${prefix}-NNN`}.M: Title", got "### ${legacyContent}"`,
+            message: `Section heading must be "### ${expectedDocId ?? `${prefix}-NNN`}.M: Title", got "### ${content}"`,
           });
         }
         current = null;

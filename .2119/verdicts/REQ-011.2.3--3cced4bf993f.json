@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.2.3--3cced4bf993f",
-  "requirementId": "REQ-011.2.3",
-  "hash": "3cced4bf993f",
-  "verdict": "pass",
-  "summary": "Twelve near-miss heading variants (no colon, non-numeric and non-integer N, empty title, foreign- and own-stem qualifiers, space before colon, zero/two spaces after it, doubled space or tab after ###, trailing ATX marker) are each parsed by the real parseSpec and asserted to raise rule REQ-011.2.3, plus a positive control that the exact form raises none and a second malformed section proving per-heading application; relaxing the heading regex in a scratch copy fails this test.",
-  "timestamp": "2026-08-01T05:48:48.944Z"
-}

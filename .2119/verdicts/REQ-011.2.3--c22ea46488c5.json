@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.3--c22ea46488c5",
+  "requirementId": "REQ-011.2.3",
+  "hash": "c22ea46488c5",
+  "verdict": "pass",
+  "summary": "file-scoped-ids.test.ts:279 rejects 15 near-miss headings under ## Requirements, each asserted as rule REQ-011.2.3: missing colon, non-numeric/non-integer N, empty title, foreign- and own-stem qualifiers, space before colon, zero/two spaces after it, two spaces or a tab between ### and N, tab after the colon, trailing ATX ' ###', and bare '###', '### ', '###\\t'. Positive control pins the exact form parsing to title 'Retention', and the empty-heading case also asserts the following item does NOT become a 4th item of section 1. Mutation-tested: reverting the H3 regex to /^###([ \\t])(.*)$/ fails variant 12, and dropping 'current = null' fails the item-count assertion.",
+  "timestamp": "2026-08-01T06:31:30.008Z"
+}

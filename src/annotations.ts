@@ -11,13 +11,15 @@ import { readOrMissing, type HashPart } from "./hash.js";
  * `2119-spec:` marker per REQ-011.4.5). The lookahead confines "contains a
  * letter" to the run of stem-charset characters before the first dot, so it
  * can't accidentally swallow ordinary prose ("fix the thing" matches none of
- * these — no dot-group follows "fix").
+ * these — no dot-group follows "fix"). A trailing negative lookahead bars a
+ * following ID-charset character, so a malformed token like `1.1x`, `1.1.`,
+ * or `foo.1.1junk` cannot be silently truncated into a valid-looking ID.
  */
 function idTokenPattern(prefix: string): string {
   const legacy = `${prefix}-\\d+(?:\\.\\d+)*`;
   const fileScopedFull = `(?=[a-z0-9-]*[a-z])[a-z0-9][a-z0-9-]*(?:\\.\\d+)+`;
   const bare = `\\d+(?:\\.\\d+)*`;
-  return `(?:${legacy}|${fileScopedFull}|${bare})`;
+  return `(?:(?:${legacy}|${fileScopedFull}|${bare})(?![A-Za-z0-9.-]))`;
 }
 
 /**
@@ -209,10 +211,12 @@ export function scanAnnotations(
     // Pass 2: resolve `2119:` annotations, prefixing bare IDs with the in-scope marker's stem.
     // Multiple `2119:` occurrences on the SAME line merge into one Annotation (matching a single
     // evidence block for that line, not one per occurrence — REQ-011.6.2's stability guarantee).
+    // Deduplicated per line: a repeated spelling of the same resolved ID on one line must not
+    // change the line's resolved ID SET, which REQ-011.6.1's hash normalization is keyed on.
     const idsByLine = new Map<number, string[]>();
     const addId = (line: number, id: string) => {
       const list = idsByLine.get(line) ?? [];
-      list.push(id);
+      if (!list.includes(id)) list.push(id);
       idsByLine.set(line, list);
     };
     lines.forEach((line, idx) => {

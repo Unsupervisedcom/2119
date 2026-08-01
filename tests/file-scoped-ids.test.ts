@@ -290,6 +290,9 @@ describe("file-scoped document structure and canonical IDs (REQ-011.2)", () => {
       SCROLLBACK_SPEC.replace("### 1: Retention", "### 1:\tRetention"), // tab (not space) after the colon
       SCROLLBACK_SPEC.replace("### 1: Retention", "###\t1: Retention"), // tab (not space) between ### and N
       SCROLLBACK_SPEC.replace("### 1: Retention", "### 1: Retention ###"), // trailing ATX closing marker
+      SCROLLBACK_SPEC.replace("### 1: Retention", "###"), // bare "###", no separator or content at all
+      SCROLLBACK_SPEC.replace("### 1: Retention", "### "), // "###" plus only a trailing space
+      SCROLLBACK_SPEC.replace("### 1: Retention", "###\t"), // "###" plus only a trailing tab
     ];
     for (const [i, variant] of variants.entries()) {
       expect(
@@ -321,6 +324,14 @@ describe("file-scoped document structure and canonical IDs (REQ-011.2)", () => {
     // The first, well-formed section is unaffected — it does not become collateral damage.
     expect(multiSpec.sections[0].id).toBe("codex-session-scrollback.1");
     expect(multiSpec.sections[0].items).toHaveLength(3);
+
+    // A bare, empty "###" heading must not silently fall through as ordinary body text: it must
+    // both raise REQ-011.2.3 AND clear the current section, so the item that follows it is not
+    // wrongly attached to the section above as a fourth item of section 1.
+    const emptyHeadingThenItem = SCROLLBACK_SPEC + "\n###\n\n1. A stray item MUST NOT join section 1.\n";
+    const emptyHeadingSpec = parseSpec("specs/codex-session-scrollback.md", "REQ", emptyHeadingThenItem);
+    expect(emptyHeadingSpec.violations.some((v) => v.rule === "REQ-011.2.3")).toBe(true);
+    expect(emptyHeadingSpec.sections[0].items).toHaveLength(3);
   });
 
   // 2119: REQ-011.2.4
@@ -683,6 +694,19 @@ describe("annotation import and bare-number sugar (REQ-011.4)", () => {
     ).toBe(true);
     // The later, in-scope bare annotation still resolves fine.
     expect(lateMarker.coverage.covered.has("codex-session-scrollback.1.2")).toBe(true);
+
+    // A token immediately followed by more ID-charset characters is not "digits and `.` only" —
+    // it must not be silently truncated into a valid-looking bare ID that then resolves to
+    // coverage the author never actually wrote. With a marker in scope, none of these malformed
+    // near misses may cover their nearest-looking valid target.
+    writeFileSync(
+      join(root, "tests/scrollback.test.ts"),
+      "// 2119-spec: codex-session-scrollback\n// 2119: 1.1x\n// 2119: 1.2.\n// 2119: 1.3junk\ntest('x', () => {})\n",
+    );
+    const malformedBoundary = buildContext(root);
+    expect(malformedBoundary.coverage.covered.has("codex-session-scrollback.1.1")).toBe(false);
+    expect(malformedBoundary.coverage.covered.has("codex-session-scrollback.1.2")).toBe(false);
+    expect(malformedBoundary.coverage.covered.has("codex-session-scrollback.1.3")).toBe(false);
   });
 
   // 2119: REQ-011.4.5
@@ -774,6 +798,18 @@ describe("annotation import and bare-number sugar (REQ-011.4)", () => {
     const exclusive = buildContext(root);
     const coveringOther = exclusive.coverage.covered.get("other-spec.1.1") ?? [];
     expect(coveringOther.some((a) => a.file === "tests/exclusive.test.ts")).toBe(false);
+
+    // A full canonical ID immediately followed by more ID-charset characters must not be
+    // truncated into a valid-looking prefix of itself, the same boundary requirement as bare IDs.
+    writeFileSync(
+      join(root, "tests/full-boundary.test.ts"),
+      "// 2119: codex-session-scrollback.1.1junk\n// 2119: REQ-900.1.1x\ntest('w', () => {})\n",
+    );
+    const fullBoundary = buildContext(root);
+    const coveringScrollbackFromBoundary = fullBoundary.coverage.covered.get("codex-session-scrollback.1.1") ?? [];
+    expect(coveringScrollbackFromBoundary.some((a) => a.file === "tests/full-boundary.test.ts")).toBe(false);
+    const coveringWidgetFromBoundary = fullBoundary.coverage.covered.get("REQ-900.1.1") ?? [];
+    expect(coveringWidgetFromBoundary.some((a) => a.file === "tests/full-boundary.test.ts")).toBe(false);
   });
 });
 
@@ -985,39 +1021,43 @@ describe("verdict-hash binding to canonical spelling (REQ-011.6)", () => {
     expect(fullTargets[0].reviewId).toBe(bareTargets[0].reviewId);
 
     // Reordering a multi-ID list that includes a file-scoped ID is also spelling, not substance.
+    // Built through the REAL scanner (not hand-supplied `ids`) so the two fixtures' annotations
+    // actually differ in source order — hand-crafting both with the same order would hide a
+    // broken (or missing) sort in evidenceBlockParts entirely.
     const rootAB = tmp("2119-hash-ab-");
     mkdirSync(join(rootAB, "tests"));
     writeFileSync(join(rootAB, "tests/s.test.ts"), "// 2119: codex-session-scrollback.1.1, other-spec.1.1\ntest(() => {});\n");
-    const abTargets = targetsWithFile(rootAB, otherSpecs, [
-      { file: "tests/s.test.ts", line: 1, ids: ["codex-session-scrollback.1.1", "other-spec.1.1"] },
-    ]);
+    const abScan = scanAnnotations(rootAB, ["tests/s.test.ts"], "REQ");
+    expect(abScan.annotations[0].ids).toEqual(["codex-session-scrollback.1.1", "other-spec.1.1"]);
+    const abTargets = targetsWithFile(rootAB, otherSpecs, abScan.annotations, abScan.markerLineByFile);
 
     const rootBA = tmp("2119-hash-ba-");
     mkdirSync(join(rootBA, "tests"));
     writeFileSync(join(rootBA, "tests/s.test.ts"), "// 2119: other-spec.1.1, codex-session-scrollback.1.1\ntest(() => {});\n");
-    const baTargets = targetsWithFile(rootBA, otherSpecs, [
-      { file: "tests/s.test.ts", line: 1, ids: ["codex-session-scrollback.1.1", "other-spec.1.1"] },
-    ]);
+    const baScan = scanAnnotations(rootBA, ["tests/s.test.ts"], "REQ");
+    expect(baScan.annotations[0].ids).toEqual(["other-spec.1.1", "codex-session-scrollback.1.1"]);
+    const baTargets = targetsWithFile(rootBA, otherSpecs, baScan.annotations, baScan.markerLineByFile);
 
     const abForScrollback = abTargets.find((t) => t.requirement.id === "codex-session-scrollback.1.1")!;
     const baForScrollback = baTargets.find((t) => t.requirement.id === "codex-session-scrollback.1.1")!;
     expect(abForScrollback.reviewId).toBe(baForScrollback.reviewId);
 
     // The "at least one file-scoped ID" trigger applies even when the SAME line also carries a
-    // legacy ID: reordering a legacy+file-scoped mix must still hash identically.
+    // legacy ID: reordering a legacy+file-scoped mix must still hash identically. Same real-scanner
+    // requirement as above.
     const mixedSpecs = [...otherSpecs, parseSpec("specs/REQ-900-widgets.md", "REQ", LEGACY_SPEC)];
     const rootMixAB = tmp("2119-hash-mixed-ab-");
     mkdirSync(join(rootMixAB, "tests"));
     writeFileSync(join(rootMixAB, "tests/s.test.ts"), "// 2119: REQ-900.1.1, codex-session-scrollback.1.1\ntest(() => {});\n");
-    const mixAB = targetsWithFile(rootMixAB, mixedSpecs, [
-      { file: "tests/s.test.ts", line: 1, ids: ["REQ-900.1.1", "codex-session-scrollback.1.1"] },
-    ]);
+    const mixABScan = scanAnnotations(rootMixAB, ["tests/s.test.ts"], "REQ");
+    expect(mixABScan.annotations[0].ids).toEqual(["REQ-900.1.1", "codex-session-scrollback.1.1"]);
+    const mixAB = targetsWithFile(rootMixAB, mixedSpecs, mixABScan.annotations, mixABScan.markerLineByFile);
     const rootMixBA = tmp("2119-hash-mixed-ba-");
     mkdirSync(join(rootMixBA, "tests"));
     writeFileSync(join(rootMixBA, "tests/s.test.ts"), "// 2119: codex-session-scrollback.1.1, REQ-900.1.1\ntest(() => {});\n");
-    const mixBA = targetsWithFile(rootMixBA, mixedSpecs, [
-      { file: "tests/s.test.ts", line: 1, ids: ["REQ-900.1.1", "codex-session-scrollback.1.1"] },
-    ]);
+    const mixBAScan = scanAnnotations(rootMixBA, ["tests/s.test.ts"], "REQ");
+    expect(mixBAScan.annotations[0].ids).toEqual(["codex-session-scrollback.1.1", "REQ-900.1.1"]);
+    const mixBA = targetsWithFile(rootMixBA, mixedSpecs, mixBAScan.annotations, mixBAScan.markerLineByFile);
     expect(mixAB.find((t) => t.requirement.id === "REQ-900.1.1")!.reviewId).toBe(
       mixBA.find((t) => t.requirement.id === "REQ-900.1.1")!.reviewId,
     );
@@ -1099,6 +1139,46 @@ describe("verdict-hash binding to canonical spelling (REQ-011.6)", () => {
     );
 
     expect(mockATargets[0].reviewId).not.toBe(mockBTargets[0].reviewId);
+
+    // A repeated spelling of the SAME resolved ID on one line, via the real scanner, must not
+    // change the line's resolved canonical ID SET — and therefore not the hash — even though the
+    // literal comma-separated list is longer.
+    const rootSingle = tmp("2119-hash-dupspell-single-");
+    mkdirSync(join(rootSingle, "tests"));
+    writeFileSync(join(rootSingle, "tests/s.test.ts"), "// 2119-spec: codex-session-scrollback\n// 2119: 1.1\ntest(() => {});\n");
+    const singleScan = scanAnnotations(rootSingle, ["tests/s.test.ts"], "REQ", [], new Set(["codex-session-scrollback"]));
+    expect(singleScan.annotations[0].ids).toEqual(["codex-session-scrollback.1.1"]);
+    const singleParts = evidenceBlockParts(
+      rootSingle,
+      singleScan.annotations,
+      singleScan.annotations,
+      "REQ",
+      singleScan.markerLineByFile,
+    );
+
+    const rootDupSpelling = tmp("2119-hash-dupspell-dup-");
+    mkdirSync(join(rootDupSpelling, "tests"));
+    writeFileSync(
+      join(rootDupSpelling, "tests/s.test.ts"),
+      "// 2119-spec: codex-session-scrollback\n// 2119: 1.1, codex-session-scrollback.1.1\ntest(() => {});\n",
+    );
+    const dupSpellingScan = scanAnnotations(
+      rootDupSpelling,
+      ["tests/s.test.ts"],
+      "REQ",
+      [],
+      new Set(["codex-session-scrollback"]),
+    );
+    // Deduplicated: two spellings of the same resolved ID collapse to one entry, not two.
+    expect(dupSpellingScan.annotations[0].ids).toEqual(["codex-session-scrollback.1.1"]);
+    const dupSpellingParts = evidenceBlockParts(
+      rootDupSpelling,
+      dupSpellingScan.annotations,
+      dupSpellingScan.annotations,
+      "REQ",
+      dupSpellingScan.markerLineByFile,
+    );
+    expect(dupSpellingParts).toEqual(singleParts);
   });
 
   // 2119: REQ-011.6.2

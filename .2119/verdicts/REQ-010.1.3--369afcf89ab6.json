@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.1.3--369afcf89ab6",
+  "requirementId": "REQ-010.1.3",
+  "hash": "369afcf89ab6",
+  "verdict": "pass",
+  "summary": "check-changed.test.ts:261 exercises all three conjuncts through the real CLI: missing .git (Git metadata), an unparseable baseline .2119.yml, corrupt baseline blobs for both the config and the spec, and malformed baseline specs in BOTH grammars — each asserting non-zero exit plus a diagnostic. Each fixture's current tree is clean and [manual]-covered, so a full-repo or incomplete substitute would exit 0; mutation-tested by narrowing the structural filter back to REQ-001.* only, which makes the file-scoped case at line 334 fail.",
+  "timestamp": "2026-08-01T06:31:24.012Z"
+}

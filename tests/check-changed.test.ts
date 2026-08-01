@@ -289,6 +289,53 @@ globalThis.fetch = blocked;
     expect(malformedSpecResult.status).not.toBe(0);
     expect(`${malformedSpecResult.stdout}\n${malformedSpecResult.stderr}`).toMatch(/baseline|specification|lint|content/i);
 
+    // Same fail-closed guard, file-scoped grammar: a baseline with a malformed bare-grammar
+    // section heading (REQ-011.2.3) must be just as disqualifying as a malformed legacy one.
+    const malformedFileScoped = initRepo({
+      ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
+      "specs/widgets.md": `# Widgets
+
+## Overview
+
+Fixture requirements.
+
+## Requirements
+
+### 1: Behavior
+
+1. The widget MUST spin. [manual]
+
+### malformed section
+
+1. The widget MUST also chime. [manual]
+`,
+    });
+    write(
+      malformedFileScoped.root,
+      "specs/widgets.md",
+      `# Widgets
+
+## Overview
+
+Fixture requirements.
+
+## Requirements
+
+### 1: Behavior
+
+1. The widget MUST spin. [manual]
+
+### 2: Also Chime
+
+1. The widget MUST also chime. [manual]
+`,
+    );
+    const malformedFileScopedResult = run(malformedFileScoped.root, ["check", "--changed", malformedFileScoped.base]);
+    expect(malformedFileScopedResult.status).not.toBe(0);
+    expect(`${malformedFileScopedResult.stdout}\n${malformedFileScopedResult.stderr}`).toMatch(
+      /baseline|specification|lint|content/i,
+    );
+
     for (const path of [".2119.yml", "specs/FIX-001-widgets.md"]) {
       const corruptBlob = initRepo({
         ".2119.yml": 'prefix: "FIX"\nreviews: false\n',
