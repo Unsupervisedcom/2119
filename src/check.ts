@@ -17,6 +17,8 @@ export interface CheckContext {
   specs: SpecFile[];
   coverage: CoverageResult;
   annotations: Annotation[];
+  /** Per file, the line of its single scanner-confirmed `2119-spec:` marker (REQ-011.6.1 hashing). */
+  markerLineByFile: Map<string, number>;
   /** Review hashes computed even when reviews are disabled, for incremental dependency comparison. */
   allReviewTargets: Omit<ReviewTask, "instructionPath">[];
   reviewTargets: Omit<ReviewTask, "instructionPath">[];
@@ -73,10 +75,19 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
 
   const specPathSet = new Set(specPaths.map((p) => join(root, p)));
   const testFiles = matchGlobs(repoFiles, config.tests).filter((p) => !specPathSet.has(join(root, p)));
-  const annotations = scanAnnotations(root, testFiles, config.prefix, config.commentLeaders);
+  const fileScopedStems = new Set(
+    specs.filter((s) => s.grammar === "file-scoped" && s.docId).map((s) => s.docId!),
+  );
+  const {
+    annotations,
+    violations: annotationViolations,
+    markerLineByFile,
+  } = scanAnnotations(root, testFiles, config.prefix, config.commentLeaders, fileScopedStems);
+  // 2119-spec import/bare-annotation errors are lint violations specifically (REQ-011.4.2/.3/.4).
+  lintViolations.push(...annotationViolations);
   const coverage = computeCoverage(specs, annotations, config.enforce);
 
-  const allReviewTargets = computeReviewTargets(config, specs, coverage, repoFiles, annotations);
+  const allReviewTargets = computeReviewTargets(config, specs, coverage, repoFiles, annotations, markerLineByFile);
   const reviewTargets = config.reviews ? allReviewTargets : [];
   // Malformed verdict files are loud violations, not silent passes or skips (REQ-003.7.2).
   const { verdicts, violations: malformedVerdicts } = scanVerdicts(root);
@@ -116,6 +127,7 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
     specs,
     coverage,
     annotations,
+    markerLineByFile,
     allReviewTargets,
     reviewTargets,
     verdicts,

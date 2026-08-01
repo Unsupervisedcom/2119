@@ -47,12 +47,14 @@ export interface Violation {
 
 export interface SpecFile {
   path: string;
-  /** e.g. "REQ-001" (with configured prefix). */
+  /** e.g. "REQ-001" (legacy) or "codex-session-scrollback" (file-scoped). */
   docId: string | null;
   title: string | null;
   sections: Section[];
   /** Structural problems found during parsing/linting. */
   violations: Violation[];
+  /** Which ID grammar this file was parsed under (REQ-011). */
+  grammar: "legacy" | "file-scoped";
 }
 
 export interface Annotation {

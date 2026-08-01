@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.5.3--552c76377d6a",
+  "requirementId": "REQ-011.5.3",
+  "hash": "552c76377d6a",
+  "verdict": "pass",
+  "summary": "Test drives the real CLI end-to-end: 2119 fail then 2119 pass on both a legacy (REQ-900.1.2) and a file-scoped (codex-session-scrollback.1.3) review ID, and proves the verdicts were actually persisted via check --json (REQ-003.2.4 failing violations appear, then check exits 0 after passes); a mutant that makes pass/fail a silent no-op for file-scoped IDs fails this test.",
+  "timestamp": "2026-08-01T05:50:55.836Z"
+}

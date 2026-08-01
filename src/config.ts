@@ -66,7 +66,8 @@ export function loadConfig(root: string): Config {
   const reviewModels = stringList(raw.review_model) ?? [DEFAULT_REVIEW_MODEL];
   return {
     root,
-    specs: stringList(raw.specs) ?? [`specs/**/*${prefix}-*.md`],
+    // Matches file-scoped spec filenames too (REQ-011.3.1) — they carry no `<prefix>-` substring.
+    specs: stringList(raw.specs) ?? [`specs/**/*.md`],
     tests: stringList(raw.tests) ?? DEFAULT_TEST_GLOBS,
     prefix,
     enforce: stringList(raw.enforce) ?? DEFAULT_ENFORCE,

@@ -15,7 +15,7 @@ const CONFIG_TEMPLATE = `# 2119 configuration — https://github.com/Unsupervise
 # All fields optional; these are the defaults unless noted.
 #
 # specs:
-#   - "specs/**/*REQ-*.md"
+#   - "specs/**/*.md"
 # tests:
 #   - "test/**"
 #   - "tests/**"

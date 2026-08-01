@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.4.1--7256e3e2317b",
+  "requirementId": "REQ-011.4.1",
+  "hash": "7256e3e2317b",
+  "verdict": "pass",
+  "summary": "Test drives real buildContext over seven independent fixture roots: markers on //, #, --, % and a configured non-default leader each resolve a bare annotation to a distinct canonical ID (no shared-root coverage carryover), a leader-less '2119-spec:' line yields a REQ-011.4.4 violation with nothing covered, and a cross-file case proves marker scope is file-local. Mutation-tested: restricting marker leaders to //, dropping the leader check entirely, ignoring configured comment_leaders for markers, and leaking a marker into a sibling marker-less file each make this test fail.",
+  "timestamp": "2026-08-01T06:03:42.695Z"
+}

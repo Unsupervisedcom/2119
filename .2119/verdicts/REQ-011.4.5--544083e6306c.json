@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.4.5--544083e6306c",
+  "requirementId": "REQ-011.4.5",
+  "hash": "544083e6306c",
+  "verdict": "pass",
+  "summary": "Two separate fixture repos (bare '1.1' under a marker vs. full 'codex-session-scrollback.1.1') are compared on all three named surfaces — coverage.covered, an existing reviewTarget, and real CLI 'check --json' uncoveredRequirements — plus equality of the two reviewIds; removing the canonical-ID hash normalization or letting bare resolve against every spec both break this test.",
+  "timestamp": "2026-08-01T05:51:07.616Z"
+}

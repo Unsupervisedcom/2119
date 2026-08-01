@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.1--90b6ed688b03",
+  "requirementId": "REQ-011.2.1",
+  "hash": "90b6ed688b03",
+  "verdict": "pass",
+  "summary": "Positive half: a bare '# Codex Session Scrollback' H1 yields title='Codex Session Scrollback' with no REQ-011.2.1 violation, so a doc-ID-prefix requirement would fail the test. Negative half: three distinct kinds of content preceding the H1 — prose, no H1 at all (file starts at '## Overview'), and an opening code fence — each raise REQ-011.2.1 from the real parseSpec.",
+  "timestamp": "2026-08-01T05:49:15.449Z"
+}

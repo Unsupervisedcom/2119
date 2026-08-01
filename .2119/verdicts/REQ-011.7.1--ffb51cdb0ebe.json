@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.7.1--ffb51cdb0ebe",
+  "requirementId": "REQ-011.7.1",
+  "hash": "ffb51cdb0ebe",
+  "verdict": "pass",
+  "summary": "Test records passing verdicts for the complete enforced set (both MUSTs; the SHOULD is excluded and that completeness is asserted), confirms check exits 0, then renames the spec file and asserts the old namespace is gone, both new stem-derived IDs are review targets again, and the real CLI check --json exits 1 with exactly two REQ-003.3.1 'no current review verdict' violations — the same rule as a never-reviewed requirement; a mutant deriving the namespace from the H1 title instead of the filename stem fails this test.",
+  "timestamp": "2026-08-01T05:51:20.307Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.6.2--a5b791babfe9",
+  "requirementId": "REQ-011.6.2",
+  "hash": "a5b791babfe9",
+  "verdict": "pass",
+  "summary": "The pinned golden hash REQ-900.1.1--aa6c379e9961 is not a snapshot of the new code: I recomputed it independently from the pre-feature algorithm at commit a92ad03 and got the same value, so a purely-legacy line still hashes bit-for-bit as before; the test also keeps legacy order-sensitivity (A,B != B,A) and pins that two 2119: occurrences on one line stay one evidence block, and forcing canonical-ID normalization on all lines breaks the golden assertion.",
+  "timestamp": "2026-08-01T05:51:17.465Z"
+}

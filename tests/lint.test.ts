@@ -49,6 +49,38 @@ describe("spec parsing and lint", () => {
     expect(parse("REQ-001-w.md", noSections).violations.some((v) => v.rule === "REQ-001.1.3")).toBe(true);
     const noHeading = `# REQ-001: W\n\n## Overview\n\nX.\n`;
     expect(parse("REQ-001-w.md", noHeading).violations.some((v) => v.rule === "REQ-001.1.3")).toBe(true);
+
+    // A heading inside `## Requirements` that doesn't match "### REQ-NNN.M: Title" at all — no
+    // doc-ID/number prefix, or missing the colon — is a malformed section, not a silently-accepted
+    // or silently-ignored one; sections stays empty and the requirement is still unmet.
+    const noDocPrefix = `# REQ-001: W\n\n## Overview\n\nX.\n\n## Requirements\n\n### Basics\n\n1. It MUST work.\n`;
+    const noDocPrefixSpec = parse("REQ-001-w.md", noDocPrefix);
+    expect(noDocPrefixSpec.violations.some((v) => v.rule === "REQ-001.1.3")).toBe(true);
+    expect(noDocPrefixSpec.sections).toEqual([]);
+
+    const missingColon = `# REQ-001: W\n\n## Overview\n\nX.\n\n## Requirements\n\n### REQ-001.1 Basics\n\n1. It MUST work.\n`;
+    const missingColonSpec = parse("REQ-001-w.md", missingColon);
+    expect(missingColonSpec.violations.some((v) => v.rule === "REQ-001.1.3")).toBe(true);
+    expect(missingColonSpec.sections).toEqual([]);
+
+    // The SAME malformed heading, but with a valid section already present, so `sections` is
+    // non-empty and the "at least one section" fallback below cannot be what's flagging it — only
+    // the per-heading check can be responsible for the violation here.
+    const malformedAfterValid = `${VALID}\n### REQ-001.2 Advanced\n\n1. It MUST also work.\n`;
+    const malformedAfterValidSpec = parse("REQ-001-w.md", malformedAfterValid);
+    expect(malformedAfterValidSpec.violations.some((v) => v.rule === "REQ-001.1.3")).toBe(true);
+    expect(malformedAfterValidSpec.sections.map((s) => s.id)).toEqual(["REQ-001.1"]);
+
+    // A well-formed-looking heading OUTSIDE `## Requirements` — before it, or after a later
+    // `## Notes` — is not a real section: it must not be smuggled into `sections`, the same
+    // scoping rule the file-scoped grammar shares this code path with.
+    const outsideBefore = `# REQ-001: W\n\n### REQ-001.9: Too Early\n\n1. It MUST NOT count.\n\n## Overview\n\nX.\n\n## Requirements\n\n### REQ-001.1: A\n\n1. It MUST work.\n`;
+    const outsideBeforeSpec = parse("REQ-001-w.md", outsideBefore);
+    expect(outsideBeforeSpec.sections.map((s) => s.id)).toEqual(["REQ-001.1"]);
+
+    const outsideAfterNotes = `# REQ-001: W\n\n## Overview\n\nX.\n\n## Requirements\n\n### REQ-001.1: A\n\n1. It MUST work.\n\n## Notes\n\n### REQ-001.2: Also Outside\n\n1. It MUST also work.\n`;
+    const outsideAfterNotesSpec = parse("REQ-001-w.md", outsideAfterNotes);
+    expect(outsideAfterNotesSpec.sections.map((s) => s.id)).toEqual(["REQ-001.1"]);
   });
 
   // 2119: REQ-001.1.4

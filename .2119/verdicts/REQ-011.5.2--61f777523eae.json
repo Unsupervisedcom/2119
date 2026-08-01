@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.5.2--61f777523eae",
+  "requirementId": "REQ-011.5.2",
+  "hash": "61f777523eae",
+  "verdict": "pass",
+  "summary": "Runs the real 'review' command and asserts an instruction file exists on disk at .2119/reviews/<reviewId>.md for all four pending enforced requirements (REQ-900.1.1/.1.2 and codex-session-scrollback.1.1/.1.3), not just stdout text; limiting generateInstructions to the first pending target makes this test fail.",
+  "timestamp": "2026-08-01T05:51:16.090Z"
+}

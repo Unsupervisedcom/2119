@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.1.3--d3e7874fd3ae",
+  "requirementId": "REQ-011.1.3",
+  "hash": "d3e7874fd3ae",
+  "verdict": "pass",
+  "summary": "Both letterless stems the requirement forbids — pure digits '12345' and digits-with-hyphen '123-45' — are run through the real parseSpec and asserted to raise rule REQ-011.1.3 specifically; the inverse direction (a letter-bearing stem not tripping it) is not asserted inside this test, but the same file's REQ-011.1.1/2.8 cases assert violations.toEqual([]) for codex-session-scrollback, so an always-flag implementation would still fail the suite.",
+  "timestamp": "2026-08-01T05:49:08.779Z"
+}

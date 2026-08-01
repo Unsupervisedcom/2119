@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.2.2--2fc5cca59212",
-  "requirementId": "REQ-003.2.2",
-  "hash": "2fc5cca59212",
-  "verdict": "pass",
-  "summary": "pass/fail write plain JSON to .2119/verdicts/ via writeVerdict(); init calls ensureReviewStorageRules() which un-ignores the directory; all three commands satisfy the requirement",
-  "timestamp": "2026-07-29T21:06:05.585Z"
-}

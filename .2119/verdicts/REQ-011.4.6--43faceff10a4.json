@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.4.6--43faceff10a4",
+  "requirementId": "REQ-011.4.6",
+  "hash": "43faceff10a4",
+  "verdict": "pass",
+  "summary": "file-scoped-ids.test.ts:742 checks full-ID resolution under a foreign marker, under the file's OWN marker (no double-prefixing), and with no marker at all, for both a file-scoped and a legacy target — and, because the fixture pre-covers other-spec.1.1 elsewhere, it asserts the covering annotation list contains the specific test file rather than a bare .has(). Exclusivity is covered both ways: bare under the scrollback marker never reaches other-spec.1.1, and bare with no marker covers nothing. Mutation-tested: prefixing full IDs whenever a marker is in scope, and dropping the trailing token boundary (so 'codex-session-scrollback.1.1junk'/'REQ-900.1.1x' truncate into valid IDs), each fail this test.",
+  "timestamp": "2026-08-01T06:31:40.791Z"
+}

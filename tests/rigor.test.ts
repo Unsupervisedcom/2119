@@ -60,15 +60,66 @@ describe("deterministic rigor (0.6)", () => {
         'run("2119: FIX-001.1.2");', // call argument
         "// 2119: FIX-001.1.3", // genuine comment
         "  # 2119: FIX-001.1.4", // indented hash comment
+        "* 2119: FIX-001.1.6", // block-comment leader
+        "/* 2119: FIX-001.1.11", // block-comment OPEN leader
+        "-- 2119: FIX-001.1.7", // SQL-style leader
+        "; 2119: FIX-001.1.8", // Lisp/ini-style leader
+        "% 2119: FIX-001.1.9", // LaTeX/Erlang-style leader
+        "<!-- 2119: FIX-001.1.10", // HTML-style leader
         "REM 2119: FIX-001.1.5", // not a leader by default
+        "code(); // 2119: FIX-001.1.12", // leader present, but mid-line — the line does not BEGIN with it
+        "Covers 2119: FIX-001.1.13 in this test.", // bare prose / generated-output line, no leader at all
       ].join("\n"),
     );
-    const ids = scanAnnotations(root, ["t.test.js"], "FIX").flatMap((a) => a.ids);
-    expect(ids).toEqual(["FIX-001.1.3", "FIX-001.1.4"]);
-    // comment_leaders extends the set (config escape hatch).
-    const extended = scanAnnotations(root, ["t.test.js"], "FIX", ["REM"]).flatMap((a) => a.ids);
-    expect(extended).toContain("FIX-001.1.5");
+    const ids = scanAnnotations(root, ["t.test.js"], "FIX").annotations.flatMap((a) => a.ids);
+    expect(ids).toEqual([
+      "FIX-001.1.3",
+      "FIX-001.1.4",
+      "FIX-001.1.6",
+      "FIX-001.1.11",
+      "FIX-001.1.7",
+      "FIX-001.1.8",
+      "FIX-001.1.9",
+      "FIX-001.1.10",
+    ]);
+    expect(ids).not.toContain("FIX-001.1.12");
+    expect(ids).not.toContain("FIX-001.1.13");
+    // comment_leaders EXTENDS the default set — it does not replace it.
+    const extended = scanAnnotations(root, ["t.test.js"], "FIX", ["REM"]).annotations.flatMap((a) => a.ids);
+    expect(extended).toContain("FIX-001.1.5"); // the newly configured leader
+    expect(extended).toContain("FIX-001.1.3"); // a default leader ("//") still recognized too
     expect(extended).not.toContain("FIX-001.1.1");
+
+    // A configured leader is bound by the SAME "line begins with it" restriction as the defaults —
+    // mid-line or inside code, it must not count either.
+    writeFileSync(
+      join(root, "remmed.test.js"),
+      [
+        'basic(); REM 2119: FIX-001.1.14', // configured leader present, but mid-line
+        'const s = "REM 2119: FIX-001.1.15";', // configured leader inside a string literal
+      ].join("\n"),
+    );
+    const extendedNegative = scanAnnotations(root, ["remmed.test.js"], "FIX", ["REM"]).annotations.flatMap(
+      (a) => a.ids,
+    );
+    expect(extendedNegative).not.toContain("FIX-001.1.14");
+    expect(extendedNegative).not.toContain("FIX-001.1.15");
+  });
+
+  // 2119: REQ-002.2.7
+  it("wires comment_leaders from .2119.yml itself into the real cover command, not just a direct function param", () => {
+    const root = tmp();
+    writeFileSync(root + "/.2119.yml", "comment_leaders: ['REM']\n");
+    mkdirSync(join(root, "specs"), { recursive: true });
+    mkdirSync(join(root, "tests"), { recursive: true });
+    writeFileSync(
+      join(root, "specs/FIX-001-widgets.md"),
+      "# FIX-001: Widgets\n\n## Overview\n\nWidgets.\n\n## Requirements\n\n### FIX-001.1: Basics\n\n1. The widget MUST spin.\n",
+    );
+    writeFileSync(join(root, ".2119.yml"), 'prefix: "FIX"\ncomment_leaders: ["REM"]\n');
+    writeFileSync(join(root, "tests/widget.test.js"), "REM 2119: FIX-001.1.1\ntest('spin', () => {})\n");
+    const result = run(root, ["cover"]);
+    expect(result.status).toBe(0);
   });
 
   // 2119: REQ-002.4.3

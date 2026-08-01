@@ -41,8 +41,15 @@ export function buildChangedContext(
     let current: CheckContext;
     try {
       baseline = buildContext(baselineRoot, { runVerify: false });
+      // Structural violations mean parseSpec silently dropped content (a missing section, a
+      // malformed heading) rather than throwing — the same "sound scoping cannot be read or
+      // parsed" hazard REQ-010.1.3 guards against, for either grammar's document-shape rules.
       const structural = baseline.lintViolations.filter(
-        (violation) => violation.rule.startsWith("REQ-001.1.") || violation.rule === "REQ-001.2.3",
+        (violation) =>
+          violation.rule.startsWith("REQ-001.1.") ||
+          violation.rule === "REQ-001.2.3" ||
+          violation.rule.startsWith("REQ-011.1.") ||
+          violation.rule.startsWith("REQ-011.2."),
       );
       if (structural.length > 0) {
         throw new Error(`${structural.length} structural baseline specification violation(s)`);
@@ -322,7 +329,7 @@ function evidenceKey(ctx: CheckContext, requirementId: string): string | undefin
   const requirement = allRequirements(ctx.specs).find((candidate) => !candidate.removed && candidate.id === requirementId);
   if (!requirement) return undefined;
   const covering = ctx.coverage.covered.get(requirementId) ?? [];
-  const parts = evidenceBlockParts(ctx.config.root, covering, ctx.annotations);
+  const parts = evidenceBlockParts(ctx.config.root, covering, ctx.annotations, ctx.config.prefix, ctx.markerLineByFile);
   if (requirement.coverage.kind === "test") {
     parts.push(...fileParts(ctx.config.root, matchGlobs(ctx.repoFiles, ctx.config.sharedEvidence)));
   } else if (requirement.coverage.kind === "review") {

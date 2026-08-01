@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.3.1--3a1bf5288135",
+  "requirementId": "REQ-011.3.1",
+  "hash": "3a1bf5288135",
+  "verdict": "pass",
+  "summary": "Test builds a fixture repo containing only specs/codex-session-scrollback.md and specs/other-spec.md with NO .2119.yml, then asserts buildContext reports notInitialized false and discovers both stems through the real default glob; narrowing the default in a scratch copy to 'specs/**/<prefix>-*.md' fails this test, and REQ-011.5.1's config-free fixture covers the legacy-parity half.",
+  "timestamp": "2026-08-01T05:49:09.279Z"
+}

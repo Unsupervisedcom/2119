@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.5.1--73ffcd5a348c",
+  "requirementId": "REQ-011.5.1",
+  "hash": "73ffcd5a348c",
+  "verdict": "pass",
+  "summary": "One repo holding REQ-900-widgets.md and codex-session-scrollback.md: asserts CLI 'lint'/'cover' exit 0 plus positive discovery (covered contains an ID from each grammar), then breaks one spec per grammar and requires lint exit 1 with violations attributed to both files, then drops one annotation per grammar and requires cover exit 1 with both IDs uncovered; filtering either grammar out of lint, or file-scoped specs out of computeCoverage, fails this test.",
+  "timestamp": "2026-08-01T05:51:16.010Z"
+}

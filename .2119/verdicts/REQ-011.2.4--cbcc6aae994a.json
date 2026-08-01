@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.4--cbcc6aae994a",
+  "requirementId": "REQ-011.2.4",
+  "hash": "cbcc6aae994a",
+  "verdict": "pass",
+  "summary": "Test parses a spec whose heading is '### codex-session-scrollback.1: Retention' inside specs/codex-session-scrollback.md and asserts a violation with rule REQ-011.2.4 specifically; scratch mutations that (a) route the own-stem case to the generic REQ-011.2.3 rule and (b) silently accept the stem-qualified heading as a valid section both fail this test, and sibling assertions that a well-formed bare spec has zero violations rule out an over-broad rule.",
+  "timestamp": "2026-08-01T05:48:56.522Z"
+}

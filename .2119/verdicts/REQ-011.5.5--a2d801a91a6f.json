@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.5.5--a2d801a91a6f",
+  "requirementId": "REQ-011.5.5",
+  "hash": "a2d801a91a6f",
+  "verdict": "pass",
+  "summary": "Test writes two genuinely orphaned verdict files (legacy REQ-900.1.1--aaa..., file-scoped codex-session-scrollback.1.1--bbb...), runs the real 2119 prune, and asserts both files are gone from disk; a mutant that skips non-legacy review IDs in pruneVerdicts leaves the file-scoped verdict behind and fails this test.",
+  "timestamp": "2026-08-01T05:51:02.857Z"
+}

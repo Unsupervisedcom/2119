@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.6.1--65b3843e7cd8",
+  "requirementId": "REQ-011.6.1",
+  "hash": "65b3843e7cd8",
+  "verdict": "pass",
+  "summary": "Reordering cases now build both fixtures via the real scanAnnotations() and assert the scanned ids differ in source order (codex/other and legacy REQ-900/file-scoped, both orders) before comparing reviewIds; mutants confirmed caught: dropping .sort() in evidenceBlockParts, some->every on the file-scoped trigger, skipping line normalization, and keeping the 2119-spec marker in the prelude; the mock-prelude negative control keeps real evidence changes hash-sensitive and the CLI end-to-end case records real passing verdicts then rewrites spelling and asserts check stays green with no stale reviews.",
+  "timestamp": "2026-08-01T06:36:43.404Z"
+}
