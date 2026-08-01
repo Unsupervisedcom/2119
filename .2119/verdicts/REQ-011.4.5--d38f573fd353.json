@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.4.5--d38f573fd353",
+  "requirementId": "REQ-011.4.5",
+  "hash": "d38f573fd353",
+  "verdict": "pass",
+  "summary": "Bare and full forms independently cover the same canonical requirement, produce the same review ID, and satisfy check coverage.",
+  "timestamp": "2026-08-01T04:56:41.330Z"
+}

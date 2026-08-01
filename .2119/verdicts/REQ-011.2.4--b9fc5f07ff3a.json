@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.4--b9fc5f07ff3a",
+  "requirementId": "REQ-011.2.4",
+  "hash": "b9fc5f07ff3a",
+  "verdict": "pass",
+  "summary": "Directly supplies the file's own stem in its subsection heading and verifies the named lint violation.",
+  "timestamp": "2026-08-01T04:56:31.301Z"
+}

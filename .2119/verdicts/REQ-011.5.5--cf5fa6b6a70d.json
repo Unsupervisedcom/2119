@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.5.5--cf5fa6b6a70d",
+  "requirementId": "REQ-011.5.5",
+  "hash": "cf5fa6b6a70d",
+  "verdict": "pass",
+  "summary": "Creates orphan verdict files for both grammar ID shapes, runs prune, and verifies both physical files are deleted.",
+  "timestamp": "2026-08-01T04:57:08.349Z"
+}

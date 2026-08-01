@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.3--b012d8b09f0c",
+  "requirementId": "REQ-011.2.3",
+  "hash": "b012d8b09f0c",
+  "verdict": "pass",
+  "summary": "Tests accept the exact heading and reject missing colon/title, nonnumeric forms, qualification, tabs, extra or missing spaces, closing qualifiers, and malformed later subsections.",
+  "timestamp": "2026-08-01T05:04:18.067Z"
+}

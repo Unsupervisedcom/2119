@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.6.1--866fa62e90f8",
+  "requirementId": "REQ-011.6.1",
+  "hash": "866fa62e90f8",
+  "verdict": "pass",
+  "summary": "Covers bare/full rewrites, file-scoped and mixed-ID reordering, marker changes, and end-to-end preservation of passing verdicts after a spelling-only rewrite.",
+  "timestamp": "2026-08-01T04:57:08.566Z"
+}

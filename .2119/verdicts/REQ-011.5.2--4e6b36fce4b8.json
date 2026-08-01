@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.5.2--4e6b36fce4b8",
+  "requirementId": "REQ-011.5.2",
+  "hash": "4e6b36fce4b8",
+  "verdict": "pass",
+  "summary": "Runs review over two pending requirements per grammar and verifies a distinct generated instruction file exists for every target.",
+  "timestamp": "2026-08-01T04:57:08.037Z"
+}

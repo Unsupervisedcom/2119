@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.4.3--8113a956753a",
+  "requirementId": "REQ-011.4.3",
+  "hash": "8113a956753a",
+  "verdict": "pass",
+  "summary": "Both boundary cases—two different stems and the same stem repeated—are independently required to produce file-specific lint violations.",
+  "timestamp": "2026-08-01T04:56:41.100Z"
+}

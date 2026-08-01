@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.3.1--c8ac8851f304",
+  "requirementId": "REQ-011.3.1",
+  "hash": "c8ac8851f304",
+  "verdict": "pass",
+  "summary": "The no-config fixture discovers two newly created file-scoped specs through the default glob, directly exercising the required default discovery behavior.",
+  "timestamp": "2026-08-01T04:56:40.659Z"
+}

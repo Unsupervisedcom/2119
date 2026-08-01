@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-008.1.2--08d4e3317b9c",
+  "requirementId": "REQ-008.1.2",
+  "hash": "08d4e3317b9c",
+  "verdict": "pass",
+  "summary": "README prominently lists all three non-goals and links docs/design.md before the Use it in your repo adoption section.",
+  "timestamp": "2026-08-01T04:56:51.851Z"
+}

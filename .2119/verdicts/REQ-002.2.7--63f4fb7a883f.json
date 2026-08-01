@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-002.2.7--63f4fb7a883f",
+  "requirementId": "REQ-002.2.7",
+  "hash": "63f4fb7a883f",
+  "verdict": "pass",
+  "summary": "Tests accept all default and configured comment leaders only at line start after whitespace, while rejecting strings, prose, unknown, and mid-line markers through scanner and CLI paths.",
+  "timestamp": "2026-08-01T05:13:38.983Z"
+}

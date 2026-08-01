@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.8--8f57e4cc02f8",
+  "requirementId": "REQ-011.2.8",
+  "hash": "8f57e4cc02f8",
+  "verdict": "pass",
+  "summary": "Tests exercise every named coverage tag, zero/two keyword violations, exact and near-miss tombstones, and compare equivalent legacy outcomes.",
+  "timestamp": "2026-08-01T05:04:18.288Z"
+}

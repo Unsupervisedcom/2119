@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.5.4--550b93db38f4",
+  "requirementId": "REQ-011.5.4",
+  "hash": "550b93db38f4",
+  "verdict": "pass",
+  "summary": "The test proves both grammars receive matching stale, uncovered, and failing classifications tied to their specific requirement IDs.",
+  "timestamp": "2026-08-01T05:04:18.599Z"
+}

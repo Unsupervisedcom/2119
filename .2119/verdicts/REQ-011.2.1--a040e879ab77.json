@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.1--a040e879ab77",
+  "requirementId": "REQ-011.2.1",
+  "hash": "a040e879ab77",
+  "verdict": "pass",
+  "summary": "Accepts an unprefixed top-level title and rejects both prose-first content and a non-top-level first heading.",
+  "timestamp": "2026-08-01T04:56:30.974Z"
+}

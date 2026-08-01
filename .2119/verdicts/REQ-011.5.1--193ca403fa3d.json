@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.5.1--193ca403fa3d",
+  "requirementId": "REQ-011.5.1",
+  "hash": "193ca403fa3d",
+  "verdict": "pass",
+  "summary": "Exercises lint and cover with both grammars, proves positive discovery, and rejects malformed and uncovered cases for each.",
+  "timestamp": "2026-08-01T04:57:07.927Z"
+}
