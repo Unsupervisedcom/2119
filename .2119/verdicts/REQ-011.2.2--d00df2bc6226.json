@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.2.2--d00df2bc6226",
-  "requirementId": "REQ-011.2.2",
-  "hash": "d00df2bc6226",
-  "verdict": "pass",
-  "summary": "Rejects missing Overview, missing Requirements, reversed ordering, and Requirements with no subsection.",
-  "timestamp": "2026-08-01T04:56:31.086Z"
-}

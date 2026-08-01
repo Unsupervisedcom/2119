@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseSpec } from "../src/spec.js";
+import { scanAnnotations, evidenceBlockParts } from "../src/annotations.js";
 import { computeCoverage } from "../src/cover.js";
 import { computeReviewTargets } from "../src/review.js";
 import { buildContext } from "../src/check.js";
@@ -223,6 +224,14 @@ describe("file-scoped document structure and canonical IDs (REQ-011.2)", () => {
     expect(
       parseSpec("specs/codex-session-scrollback.md", "REQ", noHeadingAtAll).violations.some((v) => v.rule === "REQ-011.2.1"),
     ).toBe(true);
+
+    // A fenced code block is content too — it just isn't STRUCTURE (REQ-002.1.1 exempts headings,
+    // list items, and keywords found INSIDE a fence from structural parsing; it does not exempt a
+    // fence's mere presence before the title from being "content before it").
+    const fenceFirst = "```\nsome fence\n```\n\n# Codex Session Scrollback\n\n## Overview\n\nX.\n\n## Requirements\n\n### 1: A\n\n1. It MUST work.\n";
+    expect(
+      parseSpec("specs/codex-session-scrollback.md", "REQ", fenceFirst).violations.some((v) => v.rule === "REQ-011.2.1"),
+    ).toBe(true);
   });
 
   // 2119: REQ-011.2.2
@@ -250,6 +259,20 @@ describe("file-scoped document structure and canonical IDs (REQ-011.2)", () => {
     expect(
       parseSpec("specs/codex-session-scrollback.md", "REQ", reversed).violations.some((v) => v.rule === "REQ-001.1.2"),
     ).toBe(true);
+
+    // A well-formed bare heading OUTSIDE `## Requirements` is not a real requirements section —
+    // it must not be smuggled into the document's sections (whether under `## Overview`, or after
+    // a later `## Notes`), and `## Requirements` still correctly reports having none of its own.
+    const outsideOverview =
+      "# Codex Session Scrollback\n\n## Overview\n\n### 1: Outside\n\n1. It MUST work.\n\n## Requirements\n\nProse only.\n";
+    const outsideSpec = parseSpec("specs/codex-session-scrollback.md", "REQ", outsideOverview);
+    expect(outsideSpec.sections).toEqual([]);
+    expect(outsideSpec.violations.some((v) => v.rule === "REQ-001.1.3")).toBe(true);
+
+    const outsideAfterNotes =
+      "# Codex Session Scrollback\n\n## Overview\n\nX.\n\n## Requirements\n\n### 1: A\n\n1. It MUST work.\n\n## Notes\n\n### 2: Also Outside\n\n1. It MUST also work.\n";
+    const afterNotesSpec = parseSpec("specs/codex-session-scrollback.md", "REQ", outsideAfterNotes);
+    expect(afterNotesSpec.sections.map((s) => s.id)).toEqual(["codex-session-scrollback.1"]);
   });
 
   // 2119: REQ-011.2.3
@@ -500,34 +523,65 @@ describe("discovery and namespace-collision protection (REQ-011.3)", () => {
 describe("annotation import and bare-number sugar (REQ-011.4)", () => {
   // 2119: REQ-011.4.1
   it("recognizes a 2119-spec marker on any recognized comment leader — default or configured — but not on a non-comment line", () => {
-    const root = fsFixture();
+    // Each case gets its OWN fresh root with only that one test file present, so passing
+    // depends on that specific leader's marker being recognized — not on section-level
+    // coverage already established by an earlier case in a shared root.
+    const defaultRoot = fsFixture();
     writeFileSync(
-      join(root, "tests/scrollback.test.ts"),
-      "// 2119-spec: codex-session-scrollback\n// 2119: 1\ntest('a', () => {})\n",
+      join(defaultRoot, "tests/scrollback.test.ts"),
+      "// 2119-spec: codex-session-scrollback\n// 2119: 1.1\ntest('a', () => {})\n",
     );
-    expect(buildContext(root).coverage.covered.has("codex-session-scrollback.1.1")).toBe(true);
+    expect(buildContext(defaultRoot).coverage.covered.has("codex-session-scrollback.1.1")).toBe(true);
 
-    writeFileSync(join(root, "tests/scrollback2.py"), "# 2119-spec: codex-session-scrollback\n# 2119: 1.3\n");
-    expect(buildContext(root).coverage.covered.has("codex-session-scrollback.1.3")).toBe(true);
+    const pyRoot = fsFixture();
+    writeFileSync(join(pyRoot, "tests/scrollback2.py"), "# 2119-spec: codex-session-scrollback\n# 2119: 1.2\n");
+    expect(buildContext(pyRoot).coverage.covered.has("codex-session-scrollback.1.2")).toBe(true);
 
-    writeFileSync(join(root, "tests/scrollback3.sql"), "-- 2119-spec: codex-session-scrollback\n-- 2119: 1.3\n");
-    expect(buildContext(root).coverage.covered.has("codex-session-scrollback.1.3")).toBe(true);
+    const sqlRoot = fsFixture();
+    writeFileSync(join(sqlRoot, "tests/scrollback3.sql"), "-- 2119-spec: codex-session-scrollback\n-- 2119: 1.3\n");
+    expect(buildContext(sqlRoot).coverage.covered.has("codex-session-scrollback.1.3")).toBe(true);
 
-    writeFileSync(join(root, "tests/scrollback4.erl"), "% 2119-spec: codex-session-scrollback\n% 2119: 1.3\n");
-    expect(buildContext(root).coverage.covered.has("codex-session-scrollback.1.3")).toBe(true);
+    const erlRoot = fsFixture();
+    writeFileSync(join(erlRoot, "tests/scrollback4.erl"), "% 2119-spec: codex-session-scrollback\n% 2119: 1\n");
+    expect(buildContext(erlRoot).coverage.covered.has("codex-session-scrollback.1.1")).toBe(true);
 
     // A configured, non-default comment leader is recognized the same way.
-    writeFileSync(join(root, ".2119.yml"), "comment_leaders: ['§']\n");
-    writeFileSync(join(root, "tests/scrollback5.txt"), "§ 2119-spec: codex-session-scrollback\n§ 2119: 1.3\n");
-    expect(buildContext(root).coverage.covered.has("codex-session-scrollback.1.3")).toBe(true);
+    const configuredRoot = fsFixture();
+    writeFileSync(join(configuredRoot, ".2119.yml"), "comment_leaders: ['§']\n");
+    writeFileSync(join(configuredRoot, "tests/scrollback5.txt"), "§ 2119-spec: codex-session-scrollback\n§ 2119: 1.2\n");
+    expect(buildContext(configuredRoot).coverage.covered.has("codex-session-scrollback.1.2")).toBe(true);
 
-    // Not a comment leader: this line must not be treated as an import.
-    writeFileSync(join(root, "tests/scrollback6.test.ts"), "2119-spec: codex-session-scrollback\n// 2119: 1.3\n");
-    const noImportCtx = buildContext(root);
+    // Not a comment leader: this line must not be treated as an import, and with no marker in
+    // scope the bare annotation on the next line must fail to resolve rather than silently
+    // covering anything.
+    const noImportRoot = fsFixture();
+    writeFileSync(
+      join(noImportRoot, "tests/scrollback6.test.ts"),
+      "2119-spec: codex-session-scrollback\n// 2119: 1.3\n",
+    );
+    const noImportCtx = buildContext(noImportRoot);
     const inFile6 = [...noImportCtx.lintViolations, ...noImportCtx.coverViolations].filter(
       (v) => v.file === "tests/scrollback6.test.ts",
     );
     expect(inFile6.some((v) => /import|2119-spec/i.test(v.message))).toBe(true);
+    expect(noImportCtx.coverage.covered.has("codex-session-scrollback.1.3")).toBe(false);
+
+    // A marker's scope is that SAME file only — it must not leak to bare annotations in a
+    // sibling file that declares no marker of its own.
+    const crossFileRoot = fsFixture();
+    writeFileSync(
+      join(crossFileRoot, "tests/withMarker.test.ts"),
+      "// 2119-spec: codex-session-scrollback\n// 2119: 1.1\ntest('a', () => {})\n",
+    );
+    writeFileSync(join(crossFileRoot, "tests/withoutMarker.test.ts"), "// 2119: 1.2\ntest('b', () => {})\n");
+    const crossFileCtx = buildContext(crossFileRoot);
+    expect(crossFileCtx.coverage.covered.has("codex-session-scrollback.1.1")).toBe(true);
+    expect(crossFileCtx.coverage.covered.has("codex-session-scrollback.1.2")).toBe(false);
+    expect(
+      crossFileCtx.lintViolations.some(
+        (v) => v.file === "tests/withoutMarker.test.ts" && v.rule === "REQ-011.4.4",
+      ),
+    ).toBe(true);
   });
 
   // 2119: REQ-011.4.2
@@ -539,6 +593,28 @@ describe("annotation import and bare-number sugar (REQ-011.4)", () => {
     );
     const ctx = buildContext(root);
     expect(ctx.lintViolations.some((v) => v.message.includes("does-not-exist"))).toBe(true);
+
+    // Two markers on one file, both unknown: EACH gets its own REQ-011.4.2 violation, not just
+    // the REQ-011.4.3 "multiple markers" violation swallowing both.
+    writeFileSync(
+      join(root, "tests/two-unknown.test.ts"),
+      "// 2119-spec: does-not-exist-1\n// 2119-spec: does-not-exist-2\n// 2119: 1\ntest('x', () => {})\n",
+    );
+    const twoUnknown = buildContext(root).lintViolations.filter((v) => v.file === "tests/two-unknown.test.ts");
+    expect(twoUnknown.some((v) => v.rule === "REQ-011.4.2" && v.message.includes("does-not-exist-1"))).toBe(true);
+    expect(twoUnknown.some((v) => v.rule === "REQ-011.4.2" && v.message.includes("does-not-exist-2"))).toBe(true);
+
+    // A marker naming a DISCOVERED spec is still rejected if that spec is legacy-grammar, not
+    // file-scoped: "exists" means "exists as a file-scoped namespace", not "exists at all".
+    writeFileSync(join(root, "specs/REQ-900-widgets.md"), LEGACY_SPEC);
+    writeFileSync(
+      join(root, "tests/legacy-marker.test.ts"),
+      "// 2119-spec: REQ-900\n// 2119: 1\ntest('y', () => {})\n",
+    );
+    const legacyMarkerCtx = buildContext(root);
+    const inLegacyMarkerFile = legacyMarkerCtx.lintViolations.filter((v) => v.file === "tests/legacy-marker.test.ts");
+    expect(inLegacyMarkerFile.some((v) => v.rule === "REQ-011.4.2" && v.message.includes("REQ-900"))).toBe(true);
+    expect(legacyMarkerCtx.coverage.covered.has("REQ-900.1.1")).toBe(false);
   });
 
   // 2119: REQ-011.4.3
@@ -554,6 +630,14 @@ describe("annotation import and bare-number sugar (REQ-011.4)", () => {
         (v) => v.file === "tests/scrollback.test.ts" && /2119-spec/.test(v.message) && /one|multiple|single/i.test(v.message),
       ),
     ).toBe(true);
+
+    // Two markers on the SAME physical line must also count as two, not one.
+    writeFileSync(
+      join(root, "tests/same-line.test.ts"),
+      "// 2119-spec: codex-session-scrollback 2119-spec: other-spec\n// 2119: 1\ntest('x', () => {})\n",
+    );
+    const sameLine = buildContext(root).lintViolations.filter((v) => v.file === "tests/same-line.test.ts");
+    expect(sameLine.some((v) => v.rule === "REQ-011.4.3")).toBe(true);
 
     writeFileSync(
       join(root, "tests/scrollback.test.ts"),
@@ -868,9 +952,14 @@ describe("grammar coexistence (REQ-011.5)", () => {
   });
 });
 
-function targetsWithFile(root: string, specs: ReturnType<typeof parseSpec>[], anns: Annotation[]) {
+function targetsWithFile(
+  root: string,
+  specs: ReturnType<typeof parseSpec>[],
+  anns: Annotation[],
+  markerLineByFile: Map<string, number> = new Map(),
+) {
   const coverage = computeCoverage(specs, anns, DEFAULT_ENFORCE);
-  return computeReviewTargets(loadConfig(root), specs, coverage, [], anns);
+  return computeReviewTargets(loadConfig(root), specs, coverage, [], anns, markerLineByFile);
 }
 
 describe("verdict-hash binding to canonical spelling (REQ-011.6)", () => {
@@ -957,9 +1046,12 @@ describe("verdict-hash binding to canonical spelling (REQ-011.6)", () => {
     const rootMarkerA = tmp("2119-hash-marker-a-");
     mkdirSync(join(rootMarkerA, "tests"));
     writeFileSync(join(rootMarkerA, "tests/s.test.ts"), "// 2119-spec: other-spec\n// 2119: 1\ntest(() => {});\n");
-    const markerATargets = targetsWithFile(rootMarkerA, otherSpecs, [
-      { file: "tests/s.test.ts", line: 2, ids: ["other-spec.1.1"] },
-    ]);
+    const markerATargets = targetsWithFile(
+      rootMarkerA,
+      otherSpecs,
+      [{ file: "tests/s.test.ts", line: 2, ids: ["other-spec.1.1"] }],
+      new Map([["tests/s.test.ts", 1]]),
+    );
 
     const rootMarkerB = tmp("2119-hash-marker-b-");
     mkdirSync(join(rootMarkerB, "tests"));
@@ -967,11 +1059,46 @@ describe("verdict-hash binding to canonical spelling (REQ-011.6)", () => {
       join(rootMarkerB, "tests/s.test.ts"),
       "// 2119-spec: codex-session-scrollback\n// 2119: other-spec.1.1\ntest(() => {});\n",
     );
-    const markerBTargets = targetsWithFile(rootMarkerB, otherSpecs, [
-      { file: "tests/s.test.ts", line: 2, ids: ["other-spec.1.1"] },
-    ]);
+    const markerBTargets = targetsWithFile(
+      rootMarkerB,
+      otherSpecs,
+      [{ file: "tests/s.test.ts", line: 2, ids: ["other-spec.1.1"] }],
+      new Map([["tests/s.test.ts", 1]]),
+    );
 
     expect(markerATargets[0].reviewId).toBe(markerBTargets[0].reviewId);
+
+    // Negative control: normalization must be scoped to the file's OWN confirmed marker line, by
+    // exact line number — never to any prelude line that merely contains the marker text (e.g.
+    // inside an unrelated comment on a shared mock). Changing such a line's real content MUST
+    // still move the hash; it is genuine evidence, not spelling.
+    const rootMockA = tmp("2119-hash-mock-a-");
+    mkdirSync(join(rootMockA, "tests"));
+    writeFileSync(
+      join(rootMockA, "tests/s.test.ts"),
+      "function mockPane() { return { lines: 10000 }; } // note: 2119-spec: unused-marker-text\n// 2119-spec: codex-session-scrollback\n// 2119: 1.1\ntest(() => {});\n",
+    );
+    const mockATargets = targetsWithFile(
+      rootMockA,
+      specs,
+      [{ file: "tests/s.test.ts", line: 3, ids: ["codex-session-scrollback.1.1"] }],
+      new Map([["tests/s.test.ts", 2]]),
+    );
+
+    const rootMockB = tmp("2119-hash-mock-b-");
+    mkdirSync(join(rootMockB, "tests"));
+    writeFileSync(
+      join(rootMockB, "tests/s.test.ts"),
+      "function mockPane() { return { lines: 1 }; }     // ALWAYS BROKEN, but keep 2119-spec: unused-marker-text\n// 2119-spec: codex-session-scrollback\n// 2119: 1.1\ntest(() => {});\n",
+    );
+    const mockBTargets = targetsWithFile(
+      rootMockB,
+      specs,
+      [{ file: "tests/s.test.ts", line: 3, ids: ["codex-session-scrollback.1.1"] }],
+      new Map([["tests/s.test.ts", 2]]),
+    );
+
+    expect(mockATargets[0].reviewId).not.toBe(mockBTargets[0].reviewId);
   });
 
   // 2119: REQ-011.6.2
@@ -1000,6 +1127,19 @@ describe("verdict-hash binding to canonical spelling (REQ-011.6)", () => {
     const ab = abTargets.find((t) => t.requirement.id === "REQ-900.1.1")!;
     const ba = baTargets.find((t) => t.requirement.id === "REQ-900.1.1")!;
     expect(ab.reviewId).not.toBe(ba.reviewId);
+
+    // Two SEPARATE "2119:" occurrences on one physical line must still hash as ONE evidence block
+    // for that line, not two — otherwise the block would be double-counted, moving the hash for no
+    // real content reason. Scanned through the real annotation scanner (not manually constructed),
+    // since the bug this pins is specifically in how the scanner groups same-line matches.
+    const rootDup = tmp("2119-legacy-dup-");
+    mkdirSync(join(rootDup, "tests"));
+    writeFileSync(join(rootDup, "tests/s.test.ts"), "// 2119: REQ-900.1.1 2119: REQ-900.1.1\ntest(() => {});\n");
+    const dupScan = scanAnnotations(rootDup, ["tests/s.test.ts"], "REQ");
+    expect(dupScan.annotations).toHaveLength(1); // one Annotation for the line, not two
+    const dupParts = evidenceBlockParts(rootDup, dupScan.annotations, dupScan.annotations, "REQ");
+    // prelude + exactly one block for the line (not one per "2119:" occurrence on it).
+    expect(dupParts).toHaveLength(2);
   });
 
   // 2119: REQ-011.6.1

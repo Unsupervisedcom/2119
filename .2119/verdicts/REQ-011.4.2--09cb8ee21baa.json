@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.4.2--09cb8ee21baa",
+  "requirementId": "REQ-011.4.2",
+  "hash": "09cb8ee21baa",
+  "verdict": "pass",
+  "summary": "The test asserts rule-tagged lint violations (not merely message text) for three distinct near-misses: an unknown stem, two unknown stems on one file each getting their own REQ-011.4.2 violation, and — the sharpest case — a marker naming REQ-900, a spec that IS discovered but under the legacy grammar, plus that REQ-900.1.1 stays uncovered. Verified by mutation: deleting the stem check, guarding it to only the first marker, widening known stems to all spec docIds (legacy included), and reverting effectiveStem to use an unvalidated marker's stem each make this test, and only this test, fail.",
+  "timestamp": "2026-08-01T05:59:42.749Z"
+}

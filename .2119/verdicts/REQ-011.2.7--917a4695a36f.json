@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.7--917a4695a36f",
+  "requirementId": "REQ-011.2.7",
+  "hash": "917a4695a36f",
+  "verdict": "pass",
+  "summary": "Same test asserts sections[0].id === 'codex-session-scrollback.1' and, in a two-section fixture, sections[1].id === 'codex-session-scrollback.2' so N tracks the declared section number rather than a hard-coded 1; a scratch mutation emitting '<stem>-N' fails it (index-vs-number is unobservable only for specs REQ-011.2.5 already forces to be sequential).",
+  "timestamp": "2026-08-01T05:49:02.694Z"
+}

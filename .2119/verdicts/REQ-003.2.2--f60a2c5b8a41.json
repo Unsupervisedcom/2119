@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.2.2--f60a2c5b8a41",
-  "requirementId": "REQ-003.2.2",
-  "hash": "f60a2c5b8a41",
-  "verdict": "pass",
-  "summary": "pass/fail write formatted JSON under .2119/verdicts and both writes and init repair layered ignore rules so verdict JSON remains trackable.",
-  "timestamp": "2026-08-01T05:04:17.714Z"
-}

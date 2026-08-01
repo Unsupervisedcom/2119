@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.2--d438287b637c",
+  "requirementId": "REQ-003.2.2",
+  "hash": "d438287b637c",
+  "verdict": "pass",
+  "summary": "writeVerdict emits pretty-printed plain JSON at .2119/verdicts/<reviewId>.json, and pass/fail/init all route through ensureReviewStorageRules, which re-appends a last-wins .gitignore block (!.2119/, .2119/reviews/, !.2119/verdicts/, !.2119/verdicts/**) plus repairs to any nested .2119/.gitignore and .2119/verdicts/.gitignore; empirically verified in two scratch repos whose .gitignore files already contained '*' and '.2119/' (and nested '*' at both levels) that the recorded verdict is untracked-not-ignored (git check-ignore exit 1) and stages with git add, while .2119/reviews stays ignored.",
+  "timestamp": "2026-08-01T05:59:31.269Z"
+}

@@ -122,6 +122,7 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
   let docId: string | null = isFileScoped ? stem : null;
   let sawOverview = false;
   let sawRequirementsHeading = false;
+  let insideRequirements = false;
   let overviewLine = 0;
   let requirementsLine = 0;
   let current: Section | null = null;
@@ -179,9 +180,23 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
     const lineNo = i + 1;
 
     // Fenced code blocks are content, not structure: headings, list items,
-    // and keywords inside them are ignored entirely (REQ-002.1.1).
+    // and keywords inside them are ignored entirely (REQ-002.1.1). A fence
+    // opening before any title is content-before-the-title too (REQ-001.1.1,
+    // REQ-011.2.1) — checked here since the block below never reaches the
+    // generic content check (it `continue`s first).
     const fence = line.match(/^\s*(`{3,}|~{3,})/);
     if (fence) {
+      if (title === null && !sawContent) {
+        sawContent = true;
+        violations.push({
+          file: path,
+          line: lineNo,
+          rule: isFileScoped ? "REQ-011.2.1" : "REQ-001.1.1",
+          message: isFileScoped
+            ? `Spec must begin with "# Title"; found content before it`
+            : `Spec must begin with "# ${expectedDocId ?? `${prefix}-NNN`}: Title"; found content before it`,
+        });
+      }
       const char = fence[1][0];
       const len = fence[1].length;
       if (inFence && inFence.char === char && len >= inFence.len) inFence = null;
@@ -204,10 +219,13 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
       });
     }
     const h2 = line.match(/^## (.+)$/);
-    // A tab is also a valid ATX separator (CommonMark) and is recognized as an attempted heading —
-    // captured separately so a near-miss like "###\t1: Title" is caught as a grammar violation
-    // (the bare grammar requires exactly a space) rather than silently ignored as prose.
-    const h3 = line.match(/^###([ \t])(.+)$/);
+    // File-scoped and legacy use SEPARATE heading detection, not a shared regex: file-scoped's
+    // grammar cares about the exact "###" separator (a tab is a recognized-but-rejected near miss,
+    // REQ-011.2.3), but that detection must not change legacy's own, unrelated behavior, which
+    // keeps its original space-only match untouched.
+    const h3Legacy = !isFileScoped ? line.match(/^### (.+)$/) : null;
+    const h3FileScoped = isFileScoped ? line.match(/^###([ \t])(.+)$/) : null;
+    const h3 = h3Legacy ?? h3FileScoped;
 
     if (h1 || h2 || h3) flushItem();
 
@@ -235,24 +253,30 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
       if (h2[1].trim() === "Overview") {
         sawOverview = true;
         overviewLine = lineNo;
+        insideRequirements = false;
       } else if (h2[1].trim() === "Requirements") {
         sawRequirementsHeading = true;
         requirementsLine = lineNo;
+        insideRequirements = true;
+      } else {
+        // Any other h2 (e.g. `## Notes`) ends the Requirements section — sections found
+        // under it are outside Requirements even though `## Requirements` was seen earlier.
+        insideRequirements = false;
       }
       continue;
     }
 
-    if (h3 && isFileScoped) {
+    if (h3FileScoped) {
       // Bare grammar (REQ-011.2.3): digit(s), a colon, exactly one space, then a non-empty title.
       // A tab where the "###" separator should be a space is a recognized-but-rejected near miss.
-      const content = h3[2];
-      const rawMatch = h3[1] === " " ? content.match(/^(\d+): (\S.*)$/) : null;
+      const content = h3FileScoped[2];
+      const rawMatch = h3FileScoped[1] === " " ? content.match(/^(\d+): (\S.*)$/) : null;
       // A trailing ATX-style closing sequence (CommonMark's optional " ###" at the end of a
       // heading) is a qualifier on the grammar, not free-form title text — reject it rather than
       // silently folding it into the title.
       const m = rawMatch && !/\s#+$/.test(rawMatch[2]) ? rawMatch : null;
       if (!m) {
-        if (sawRequirementsHeading) {
+        if (insideRequirements) {
           // A heading that bakes in the file's own stem gets its own, more specific rule
           // (REQ-011.2.4) — a file-scoped spec's own stem is never written inside itself.
           if (content.startsWith(`${stem}.`)) {
@@ -274,6 +298,13 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
         current = null;
         continue;
       }
+      // A well-formed section OUTSIDE `## Requirements` (e.g. under `## Overview`, or after a
+      // later `## Notes`) is not a real requirements section — it is silently ignored, exactly as
+      // a malformed one already is above, rather than smuggled into `sections` (REQ-011.2.2).
+      if (!insideRequirements) {
+        current = null;
+        continue;
+      }
       const [, secNumStr, secTitle] = m;
       const num = Number(secNumStr);
       current = { id: `${stem}.${num}`, num, title: secTitle, line: lineNo, items: [] };
@@ -281,11 +312,11 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
       continue;
     }
 
-    if (h3) {
-      const legacyContent = h3[2];
-      const m = h3[1] === " " ? legacyContent.match(new RegExp(`^(${prefix}-\\d+)\\.(\\d+):\\s*(.*)$`)) : null;
+    if (h3Legacy) {
+      const legacyContent = h3Legacy[1];
+      const m = legacyContent.match(new RegExp(`^(${prefix}-\\d+)\\.(\\d+):\\s*(.*)$`));
       if (!m) {
-        if (sawRequirementsHeading) {
+        if (insideRequirements) {
           violations.push({
             file: path,
             line: lineNo,
@@ -298,6 +329,12 @@ export function parseSpec(path: string, prefix: string, content?: string): SpecF
       }
       const [, secDoc, secNumStr, secTitle] = m;
       const num = Number(secNumStr);
+      // Same "not a real section outside Requirements" rule as file-scoped, above — checked before
+      // any further validation, so an out-of-place heading isn't scrutinized either.
+      if (!insideRequirements) {
+        current = null;
+        continue;
+      }
       if (expectedDocId && secDoc !== expectedDocId) {
         violations.push({
           file: path,

@@ -322,7 +322,7 @@ function evidenceKey(ctx: CheckContext, requirementId: string): string | undefin
   const requirement = allRequirements(ctx.specs).find((candidate) => !candidate.removed && candidate.id === requirementId);
   if (!requirement) return undefined;
   const covering = ctx.coverage.covered.get(requirementId) ?? [];
-  const parts = evidenceBlockParts(ctx.config.root, covering, ctx.annotations, ctx.config.prefix);
+  const parts = evidenceBlockParts(ctx.config.root, covering, ctx.annotations, ctx.config.prefix, ctx.markerLineByFile);
   if (requirement.coverage.kind === "test") {
     parts.push(...fileParts(ctx.config.root, matchGlobs(ctx.repoFiles, ctx.config.sharedEvidence)));
   } else if (requirement.coverage.kind === "review") {

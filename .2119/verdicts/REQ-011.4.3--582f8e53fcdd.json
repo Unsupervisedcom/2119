@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.4.3--582f8e53fcdd",
+  "requirementId": "REQ-011.4.3",
+  "hash": "582f8e53fcdd",
+  "verdict": "pass",
+  "summary": "Asserts a lint (not cover) violation for two markers with differing stems, two identical stems, and two on one physical line (rule REQ-011.4.3 checked by ID); mutation making the scanner count only the first marker per line fails the test, and single-marker files are proven violation-free elsewhere in the file, so the 'more than one' boundary is genuinely two-sided.",
+  "timestamp": "2026-08-01T05:50:59.333Z"
+}

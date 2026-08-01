@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.4.4--ee7d2dd48650",
+  "requirementId": "REQ-011.4.4",
+  "hash": "ee7d2dd48650",
+  "verdict": "pass",
+  "summary": "Covers no-marker, dotted bare IDs, a comma list ('1, 3'), and the nearest miss — a marker appearing LATER in the file — asserting both the lint violation and that coverage.covered lacks the ID; mutating inScope to ignore the marker's line ordering makes the test fail, and REQ-011.4.6's fixture adds the cross-file case (marker in another file does not put bare in scope).",
+  "timestamp": "2026-08-01T05:50:59.408Z"
+}

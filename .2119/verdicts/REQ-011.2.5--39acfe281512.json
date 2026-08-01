@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.2.5--39acfe281512",
-  "requirementId": "REQ-011.2.5",
-  "hash": "39acfe281512",
-  "verdict": "pass",
-  "summary": "Tests reject numbering that starts above 1, later gaps, and duplicates for both sections and items, including items in later sections.",
-  "timestamp": "2026-08-01T05:04:18.182Z"
-}

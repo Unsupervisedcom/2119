@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.1.3--bb3cd8f5cd0e",
-  "requirementId": "REQ-011.1.3",
-  "hash": "bb3cd8f5cd0e",
-  "verdict": "pass",
-  "summary": "Rejects both pure-digit and digit-hyphen stems, the nearest no-lowercase forms, while valid lowercase stems are accepted.",
-  "timestamp": "2026-08-01T04:56:30.751Z"
-}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.3.2--822c464d23dd",
-  "requirementId": "REQ-011.3.2",
-  "hash": "822c464d23dd",
-  "verdict": "pass",
-  "summary": "The test rejects equal namespace stems across nested directories and includes the nearest clean control with distinct basenames.",
-  "timestamp": "2026-08-01T04:56:40.768Z"
-}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.3.2--42629b97870f",
+  "requirementId": "REQ-011.3.2",
+  "hash": "42629b97870f",
+  "verdict": "pass",
+  "summary": "Test writes specs/other-spec.md plus specs/sub/other-spec.md and asserts a REQ-001.1.7 violation naming other-spec, with a control fixture (specs/sub/unrelated-spec.md) asserting no REQ-001.1.7 so an over-broad collision check cannot pass; skipping file-scoped specs in the duplicate-docId loop in a scratch copy fails this test.",
+  "timestamp": "2026-08-01T05:49:12.934Z"
+}

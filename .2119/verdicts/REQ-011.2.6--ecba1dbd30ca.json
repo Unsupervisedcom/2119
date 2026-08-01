@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.6--ecba1dbd30ca",
+  "requirementId": "REQ-011.2.6",
+  "hash": "ecba1dbd30ca",
+  "verdict": "pass",
+  "summary": "Test asserts the parsed item IDs are exactly codex-session-scrollback.1.1/.1.2/.1.3 for the file specs/codex-session-scrollback.md, and a second section yields codex-session-scrollback.2.1, pinning both the stem and the section-then-item shape; a scratch mutation changing the item join from '.' to '-' fails this assertion.",
+  "timestamp": "2026-08-01T05:49:02.615Z"
+}

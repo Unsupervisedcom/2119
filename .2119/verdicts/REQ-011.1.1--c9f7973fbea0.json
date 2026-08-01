@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.1.1--c9f7973fbea0",
-  "requirementId": "REQ-011.1.1",
-  "hash": "c9f7973fbea0",
-  "verdict": "pass",
-  "summary": "Tests distinguish the configured prefix boundary, require a hyphen plus one-or-more digits, preserve the full nonlegacy basename stem, and cover case and multidigit near-misses.",
-  "timestamp": "2026-08-01T05:04:17.834Z"
-}

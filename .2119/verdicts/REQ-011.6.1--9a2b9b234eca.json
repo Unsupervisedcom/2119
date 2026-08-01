@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.6.1--9a2b9b234eca",
+  "requirementId": "REQ-011.6.1",
+  "hash": "9a2b9b234eca",
+  "verdict": "pass",
+  "summary": "Tests pin equal review IDs across every spelling axis named in the requirement (bare vs full, A,B vs B,A including a legacy+file-scoped mix, all-bare/mixed/all-full under one marker, and two different in-scope markers reaching the same target), plus an end-to-end CLI run where rewriting bare annotations to full canonical form after 2119 pass leaves check green with staleReviews empty; a negative control proves a non-marker prelude line's real content still moves the hash, and reverting the normalization fails all three.",
+  "timestamp": "2026-08-01T05:51:11.183Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.7.1--b02d8c3e96cb",
-  "requirementId": "REQ-011.7.1",
-  "hash": "b02d8c3e96cb",
-  "verdict": "pass",
-  "summary": "The test passes all enforced verdicts, renames the basename, then verifies the real check CLI reports exactly both renamed requirements as unreviewed.",
-  "timestamp": "2026-08-01T05:04:18.705Z"
-}

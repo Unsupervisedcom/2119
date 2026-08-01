@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.5.6--21622512f840",
+  "requirementId": "REQ-011.5.6",
+  "hash": "21622512f840",
+  "verdict": "pass",
+  "summary": "Under prefix ACME-REQ the test proves both directions: REQ-900-widgets.md is no longer legacy while ACME-REQ-900-widgets.md is (docId ACME-REQ-900, its ### ACME-REQ-900.1 heading parsed and its full-ID annotation covered), and file-scoped discovery, bare 2119-spec resolution, and full <stem>.N.M annotations still work unchanged; a mutant that hardcodes REQ in the legacy section-heading regex fails this test.",
+  "timestamp": "2026-08-01T05:51:08.257Z"
+}

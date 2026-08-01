@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.1.4--5d623eb5fffc",
-  "requirementId": "REQ-011.1.4",
-  "hash": "5d623eb5fffc",
-  "verdict": "pass",
-  "summary": "Independently rejects leading, trailing, and consecutive hyphens, covering every prohibited stem boundary.",
-  "timestamp": "2026-08-01T04:56:30.864Z"
-}

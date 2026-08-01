@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.4.4--e2b1f5413aca",
-  "requirementId": "REQ-011.4.4",
-  "hash": "e2b1f5413aca",
-  "verdict": "pass",
-  "summary": "Tests reject dotted and comma-separated bare IDs without an earlier marker and prove a later same-file marker is not retroactive.",
-  "timestamp": "2026-08-01T04:56:41.217Z"
-}

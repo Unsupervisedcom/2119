@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.4.2--e1a21cf1e55a",
-  "requirementId": "REQ-011.4.2",
-  "hash": "e1a21cf1e55a",
-  "verdict": "pass",
-  "summary": "An otherwise valid comment marker naming an undiscovered namespace is asserted specifically to produce a lint violation containing that stem.",
-  "timestamp": "2026-08-01T04:56:40.990Z"
-}

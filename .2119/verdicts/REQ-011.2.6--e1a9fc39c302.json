@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.2.6--e1a9fc39c302",
-  "requirementId": "REQ-011.2.6",
-  "hash": "e1a9fc39c302",
-  "verdict": "pass",
-  "summary": "Asserts the full stem.N.M IDs for multiple items and a second section, covering stem, section, and item components.",
-  "timestamp": "2026-08-01T04:56:31.516Z"
-}

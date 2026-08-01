@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.8--8907fae64dee",
+  "requirementId": "REQ-011.2.8",
+  "hash": "8907fae64dee",
+  "verdict": "pass",
+  "summary": "Test parses a file-scoped spec carrying all four coverage tags and asserts the parsed kind/globs/command for each, asserts REQ-001.2.2 for both zero- and two-keyword items, asserts removed===true for the exact 'REQUIREMENT REMOVED' text and false (plus a keyword violation) for 'REQUIREMENT REMOVED for now', and repeats every one of these against an equivalent legacy REQ-900 spec for parity; scratch mutations disabling tag parsing, the keyword rule, or the tombstone for file-scoped specs each fail it.",
+  "timestamp": "2026-08-01T05:49:09.203Z"
+}

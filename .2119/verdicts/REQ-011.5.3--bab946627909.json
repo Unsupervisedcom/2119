@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.5.3--bab946627909",
-  "requirementId": "REQ-011.5.3",
-  "hash": "bab946627909",
-  "verdict": "pass",
-  "summary": "The CLI test obtains review IDs for both grammars, records fail and pass verdicts for each, and verifies the resulting check behavior.",
-  "timestamp": "2026-08-01T05:04:18.497Z"
-}

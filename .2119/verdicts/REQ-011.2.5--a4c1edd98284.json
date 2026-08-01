@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.5--a4c1edd98284",
+  "requirementId": "REQ-011.2.5",
+  "hash": "a4c1edd98284",
+  "verdict": "pass",
+  "summary": "Eight file-scoped fixtures — first section numbered 2, a later section jumping to 3, duplicate '### 1' sections, an item skipping to 4, an item list starting at 2, duplicate item numbers, and item gap/duplicate inside a SECOND section — are each asserted to raise the same rules the requirement names (REQ-001.1.4 / REQ-001.2.3); suppressing the sequence checks for file-scoped specs in a scratch copy fails this test.",
+  "timestamp": "2026-08-01T05:48:56.598Z"
+}

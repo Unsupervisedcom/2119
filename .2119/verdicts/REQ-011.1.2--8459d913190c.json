@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.1.2--8459d913190c",
+  "requirementId": "REQ-011.1.2",
+  "hash": "8459d913190c",
+  "verdict": "pass",
+  "summary": "Five separate out-of-charset stems (Scrollback uppercase, codex_scrollback underscore, codex.scrollback dot, 'codex scrollback' space, codex-scroellback non-ASCII) each assert a violation whose rule is specifically REQ-011.1.2 from the real parseSpec, and two negative controls (the valid hyphenated stem, and codex-2fa-scrollback) assert the rule does NOT fire, so neither an under- nor an over-broad charset check survives.",
+  "timestamp": "2026-08-01T05:49:05.765Z"
+}

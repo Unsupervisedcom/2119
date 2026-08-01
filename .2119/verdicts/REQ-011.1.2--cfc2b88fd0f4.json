@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.1.2--cfc2b88fd0f4",
-  "requirementId": "REQ-011.1.2",
-  "hash": "cfc2b88fd0f4",
-  "verdict": "pass",
-  "summary": "Tests reject uppercase, underscore, dot, space, and non-ASCII stems while accepting lowercase-hyphen stems and allowed digits.",
-  "timestamp": "2026-08-01T05:04:17.956Z"
-}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.4.1--0bdfe98c011f",
-  "requirementId": "REQ-011.4.1",
-  "hash": "0bdfe98c011f",
-  "verdict": "pass",
-  "summary": "Tests prove default and configured comment leaders import a stem for later bare annotations, while the nearest non-comment marker is rejected.",
-  "timestamp": "2026-08-01T04:56:40.879Z"
-}

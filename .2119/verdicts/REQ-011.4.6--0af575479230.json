@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-011.4.6--0af575479230",
-  "requirementId": "REQ-011.4.6",
-  "hash": "0af575479230",
-  "verdict": "pass",
-  "summary": "Tests genuinely resolve exact legacy and file-scoped canonical IDs under a foreign marker and with no marker, verify own-marker exactness, and reject bare cross-spec/no-marker resolution.",
-  "timestamp": "2026-08-01T05:09:23.246Z"
-}

@@ -32,6 +32,7 @@ export function computeReviewTargets(
   coverage: CoverageResult,
   repoFiles: string[],
   annotations: Annotation[],
+  markerLineByFile: Map<string, number> = new Map(),
 ): Omit<ReviewTask, "instructionPath">[] {
   const out: Omit<ReviewTask, "instructionPath">[] = [];
   for (const req of allRequirements(specs)) {
@@ -47,7 +48,7 @@ export function computeReviewTargets(
       // Configured shared fixtures/helpers join every test-quality hash, so
       // they can't be neutered without invalidating verdicts (REQ-003.1.8).
       const parts = [
-        ...evidenceBlockParts(config.root, anns, annotations, config.prefix),
+        ...evidenceBlockParts(config.root, anns, annotations, config.prefix, markerLineByFile),
         ...fileParts(config.root, matchGlobs(repoFiles, config.sharedEvidence)),
       ];
       out.push({

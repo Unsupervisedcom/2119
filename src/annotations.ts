@@ -33,7 +33,7 @@ export function buildAnnotationRegex(prefix: string): RegExp {
 
 /** A `// 2119-spec: <stem>` marker declaring the file-scoped spec a file's bare annotations import (REQ-011.4.1). */
 export function buildImportRegex(): RegExp {
-  return /2119-spec:\s*(\S+)/;
+  return /2119-spec:\s*(\S+)/g;
 }
 
 function isBareId(id: string): boolean {
@@ -68,11 +68,23 @@ export function buildLeaderRegex(extraLeaders: string[] = []): RegExp {
  * its own line is hashed as the sorted, canonical ID list rather than its
  * literal text (REQ-011.6.1): a spelling-only rewrite (bare vs. full,
  * reordering, which marker supplied a bare ID) leaves the hash — and any
- * recorded verdict — unchanged. Purely-legacy annotation lines are hashed
- * from their literal text exactly as before (REQ-011.6.2): no pre-existing
- * verdict is invalidated by adopting this feature.
+ * recorded verdict — unchanged. The file's `2119-spec:` marker line, if any,
+ * is spelling too — it is REMOVED (not blanked) from the prelude, so a file
+ * with a marker and a spelling-equivalent file with none produce identical
+ * prelude content. `markerLine` is the file's own scanner-confirmed marker
+ * line number (never guessed by a second, weaker regex here), so unrelated
+ * prelude content that merely contains the text "2119-spec:" is never
+ * mistaken for it. Purely-legacy annotation lines — and any file with no
+ * confirmed marker — are hashed from their literal text exactly as before
+ * (REQ-011.6.2): no pre-existing verdict is invalidated by adopting this.
  */
-export function evidenceBlockParts(root: string, covering: Annotation[], all: Annotation[], prefix: string): HashPart[] {
+export function evidenceBlockParts(
+  root: string,
+  covering: Annotation[],
+  all: Annotation[],
+  prefix: string,
+  markerLineByFile: Map<string, number> = new Map(),
+): HashPart[] {
   const boundariesByFile = new Map<string, number[]>();
   for (const a of all) {
     boundariesByFile.set(a.file, [...(boundariesByFile.get(a.file) ?? []), a.line]);
@@ -93,16 +105,13 @@ export function evidenceBlockParts(root: string, covering: Annotation[], all: An
     }
     const lines = content.split(/\r?\n/);
     const fileCoverings = coveringByFile.get(file)!;
-    // A `2119-spec:` marker line is spelling, not evidence: when this file's covering annotations
-    // resolve any file-scoped ID, blank the marker line(s) in the prelude so switching markers, or
-    // adding/removing one in favor of full IDs, doesn't move the hash (REQ-011.6.1). Legacy-only
-    // coverage never triggers this, so pre-existing prelude hashes stay exact (REQ-011.6.2).
     const coveringHasFileScopedId = fileCoverings.some((a) => a.ids.some((id) => !legacyIdRe.test(id)));
-    const importRe = buildImportRegex();
     const preludeLines = lines.slice(0, boundaries[0] - 1);
-    const normalizedPrelude = coveringHasFileScopedId
-      ? preludeLines.map((l) => (importRe.test(l) ? "" : l))
-      : preludeLines;
+    const markerLine = markerLineByFile.get(file);
+    const normalizedPrelude =
+      coveringHasFileScopedId && markerLine !== undefined && markerLine <= preludeLines.length
+        ? preludeLines.filter((_, i) => i !== markerLine - 1)
+        : preludeLines;
     parts.push({ label: `${file}#prelude`, content: normalizedPrelude.join("\n") });
     [...fileCoverings]
       .sort((a, b) => a.line - b.line)
@@ -123,6 +132,8 @@ export interface AnnotationScan {
   annotations: Annotation[];
   /** Lint violations from `2119-spec:` markers and bare-ID resolution (REQ-011.4.2/.3/.4). */
   violations: Violation[];
+  /** Per file, the line of its single scanner-confirmed `2119-spec:` marker (absent when a file has zero or more than one). */
+  markerLineByFile: Map<string, number>;
 }
 
 /**
@@ -141,9 +152,9 @@ export function scanAnnotations(
 ): AnnotationScan {
   const out: Annotation[] = [];
   const violations: Violation[] = [];
+  const markerLineByFile = new Map<string, number>();
   const leaderRe = buildLeaderRegex(commentLeaders);
   const idRe = buildAnnotationRegex(prefix);
-  const importRe = buildImportRegex();
 
   for (const file of testFiles) {
     let content: string;
@@ -155,18 +166,30 @@ export function scanAnnotations(
     if (!content.includes("2119:") && !content.includes("2119-spec:")) continue;
     const lines = content.split(/\r?\n/);
 
-    // Pass 1: locate the file's `2119-spec:` marker(s) — at most one is allowed (REQ-011.4.3).
+    // Pass 1: locate every `2119-spec:` marker occurrence on every comment-leader line — a line
+    // can carry more than one (REQ-011.4.3 counts each), and every occurrence's stem is validated
+    // independently (REQ-011.4.2), regardless of the total count.
     let importStem: string | null = null;
     let importLine = 0;
     let markerCount = 0;
     lines.forEach((line, idx) => {
       if (!leaderRe.test(line)) return;
-      const m = line.match(importRe);
-      if (!m) return;
-      markerCount++;
-      if (markerCount === 1) {
-        importStem = m[1];
-        importLine = idx + 1;
+      const markerRe = buildImportRegex();
+      let mm: RegExpExecArray | null;
+      while ((mm = markerRe.exec(line)) !== null) {
+        markerCount++;
+        if (markerCount === 1) {
+          importStem = mm[1];
+          importLine = idx + 1;
+        }
+        if (!knownFileScopedStems.has(mm[1])) {
+          violations.push({
+            file,
+            line: idx + 1,
+            rule: "REQ-011.4.2",
+            message: `"2119-spec: ${mm[1]}" names a spec that does not exist`,
+          });
+        }
       }
     });
     if (markerCount > 1) {
@@ -177,33 +200,35 @@ export function scanAnnotations(
         message: `File declares ${markerCount} "2119-spec:" markers; at most one is allowed per file`,
       });
     }
-    if (markerCount === 1 && importStem !== null && !knownFileScopedStems.has(importStem)) {
-      violations.push({
-        file,
-        line: importLine,
-        rule: "REQ-011.4.2",
-        message: `"2119-spec: ${importStem}" names a spec that does not exist`,
-      });
-    }
-    // A marker conflict (0 or >1) leaves no spec in scope for bare resolution.
-    const effectiveStem = markerCount === 1 ? importStem : null;
+    // A marker conflict (0 or >1), or a marker naming a spec that doesn't exist, leaves no spec
+    // in scope for bare resolution — an invalid marker must not silently alias bare annotations
+    // onto an unrelated (e.g. legacy) ID space that happens to share its stem.
+    const effectiveStem = markerCount === 1 && knownFileScopedStems.has(importStem ?? "") ? importStem : null;
+    if (markerCount === 1) markerLineByFile.set(file, importLine);
 
     // Pass 2: resolve `2119:` annotations, prefixing bare IDs with the in-scope marker's stem.
+    // Multiple `2119:` occurrences on the SAME line merge into one Annotation (matching a single
+    // evidence block for that line, not one per occurrence — REQ-011.6.2's stability guarantee).
+    const idsByLine = new Map<number, string[]>();
+    const addId = (line: number, id: string) => {
+      const list = idsByLine.get(line) ?? [];
+      list.push(id);
+      idsByLine.set(line, list);
+    };
     lines.forEach((line, idx) => {
       if (!leaderRe.test(line)) return; // not a comment line (REQ-002.2.7)
       idRe.lastIndex = 0;
       let m: RegExpExecArray | null;
       while ((m = idRe.exec(line)) !== null) {
         const rawIds = m[1].split(",").map((s) => s.trim()).filter(Boolean);
-        const ids: string[] = [];
         for (const raw of rawIds) {
           if (!isBareId(raw)) {
-            ids.push(raw);
+            addId(idx + 1, raw);
             continue;
           }
           const inScope = effectiveStem !== null && importLine > 0 && importLine < idx + 1;
           if (inScope) {
-            ids.push(`${effectiveStem}.${raw}`);
+            addId(idx + 1, `${effectiveStem}.${raw}`);
           } else {
             violations.push({
               file,
@@ -213,9 +238,11 @@ export function scanAnnotations(
             });
           }
         }
-        if (ids.length > 0) out.push({ file, line: idx + 1, ids });
       }
     });
+    for (const line of [...idsByLine.keys()].sort((a, b) => a - b)) {
+      out.push({ file, line, ids: idsByLine.get(line)! });
+    }
   }
-  return { annotations: out, violations };
+  return { annotations: out, violations, markerLineByFile };
 }

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.1.1--5669609dea54",
+  "requirementId": "REQ-011.1.1",
+  "hash": "5669609dea54",
+  "verdict": "pass",
+  "summary": "Test calls the real parseSpec on six filenames and asserts grammar-visible outcomes, not labels: codex-session-scrollback.md parses clean with docId=stem (would fail if legacy grammar were applied to its bare '### 1:' headings), REQ-5-widgets.md and REQ-12-widgets.md yield legacy docIds REQ-5/REQ-12 with no violations, and the three near misses the requirement forbids classifying as legacy — lowercase req-5-widgets, REQ-widgets (prefix with zero digits), and widgets.md under prefix ACME-REQ — each yield the whole basename as stem.",
+  "timestamp": "2026-08-01T05:49:01.068Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.1.4--e4e37b3a461c",
+  "requirementId": "REQ-011.1.4",
+  "hash": "e4e37b3a461c",
+  "verdict": "pass",
+  "summary": "All three forbidden hyphen positions are exercised as separate fixtures through the real parseSpec — '-scrollback' (leading), 'scrollback-' (trailing), 'codex--scrollback' (doubled) — each asserting rule REQ-011.1.4 with a per-case failure message, so an implementation catching only one or two disjuncts fails; the legal single-internal-hyphen stem is asserted violation-free elsewhere in the same file.",
+  "timestamp": "2026-08-01T05:49:12.985Z"
+}

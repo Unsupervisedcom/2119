@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.5.4--028971fafe34",
+  "requirementId": "REQ-011.5.4",
+  "hash": "028971fafe34",
+  "verdict": "pass",
+  "summary": "All three violation kinds are asserted for both grammars from real check --json output: stale (REQ-003.3.1 for REQ-900.1.1 and codex-session-scrollback.1.1), uncovered (uncoveredRequirements contains both after dropping one annotation per grammar), and failing (exactly two REQ-003.2.4 violations tied to the specific IDs, so a same-grammar misclassification cannot pass); a mutant that omits file-scoped requirements from the uncovered list fails this test.",
+  "timestamp": "2026-08-01T05:51:00.784Z"
+}

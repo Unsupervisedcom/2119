@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.2.2--b74d2f139691",
+  "requirementId": "REQ-011.2.2",
+  "hash": "b74d2f139691",
+  "verdict": "pass",
+  "summary": "Both inherited halves are falsified on file-scoped fixtures via the real parseSpec: deleting '## Overview' and putting '## Requirements' before '## Overview' each raise REQ-001.1.2, while a prose-only Requirements section, a missing Requirements heading, and a well-formed '### 1: Outside' heading placed under Overview (sections==[] , not smuggled in) each raise REQ-001.1.3.",
+  "timestamp": "2026-08-01T05:49:19.285Z"
+}

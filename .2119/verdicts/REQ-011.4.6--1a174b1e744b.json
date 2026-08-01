@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.4.6--1a174b1e744b",
+  "requirementId": "REQ-011.4.6",
+  "hash": "1a174b1e744b",
+  "verdict": "pass",
+  "summary": "Full IDs (foreign file-scoped, legacy REQ-900, and the file's own stem) are shown resolving both under a foreign marker and with no marker, with covered.get(...).some(a => a.file === ...) defeating the pre-covered fixture and an assertion that the own-stem full ID is neither double-prefixed nor flagged; the 'bare never reaches a foreign spec' clause is enforced — making bare resolve against all discovered stems fails this test.",
+  "timestamp": "2026-08-01T05:51:07.690Z"
+}
