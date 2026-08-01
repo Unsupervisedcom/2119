@@ -63,10 +63,10 @@ describe("deterministic rigor (0.6)", () => {
         "REM 2119: FIX-001.1.5", // not a leader by default
       ].join("\n"),
     );
-    const ids = scanAnnotations(root, ["t.test.js"], "FIX").flatMap((a) => a.ids);
+    const ids = scanAnnotations(root, ["t.test.js"], "FIX").annotations.flatMap((a) => a.ids);
     expect(ids).toEqual(["FIX-001.1.3", "FIX-001.1.4"]);
     // comment_leaders extends the set (config escape hatch).
-    const extended = scanAnnotations(root, ["t.test.js"], "FIX", ["REM"]).flatMap((a) => a.ids);
+    const extended = scanAnnotations(root, ["t.test.js"], "FIX", ["REM"]).annotations.flatMap((a) => a.ids);
     expect(extended).toContain("FIX-001.1.5");
     expect(extended).not.toContain("FIX-001.1.1");
   });

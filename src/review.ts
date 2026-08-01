@@ -47,7 +47,7 @@ export function computeReviewTargets(
       // Configured shared fixtures/helpers join every test-quality hash, so
       // they can't be neutered without invalidating verdicts (REQ-003.1.8).
       const parts = [
-        ...evidenceBlockParts(config.root, anns, annotations),
+        ...evidenceBlockParts(config.root, anns, annotations, config.prefix),
         ...fileParts(config.root, matchGlobs(repoFiles, config.sharedEvidence)),
       ];
       out.push({
