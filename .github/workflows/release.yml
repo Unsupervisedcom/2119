@@ -35,8 +35,12 @@ jobs:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
 
-      # Trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10.x.
-      - run: npm install --global npm@latest
+      # Trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10.x. Pinned to 11.x on
+      # purpose: npm 12 changed install-time defaults so dependency lifecycle scripts no longer
+      # run unless explicitly allowed, and this package's tree needs esbuild's postinstall to
+      # link its platform binary. Moving to 12 is a deliberate migration (npm approve-scripts
+      # --allow-scripts-pending, committed allowlist), not something to inherit from @latest.
+      - run: npm install --global npm@11
 
       - run: npm ci
 
