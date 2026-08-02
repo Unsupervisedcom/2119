@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.5.1--15d76cbfb0f1",
+  "requirementId": "self-supplied-evidence.5.1",
+  "hash": "15d76cbfb0f1",
+  "verdict": "fail",
+  "summary": "The test inspects only REQ-003.4.2 instead of every computed direct-judgment target; adding provenance questions only to another generated [review] instruction remains green, and rephrased provenance questions can evade the phrase blacklist.",
+  "timestamp": "2026-08-02T23:12:01.145Z"
+}

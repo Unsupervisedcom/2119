@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.1--611ec8687d7d",
+  "requirementId": "self-supplied-evidence.2.1",
+  "hash": "611ec8687d7d",
+  "verdict": "pass",
+  "summary": "Every computed production-generated test-quality task is compared with a complete oracle after only dynamic ID normalization, so changing consumption, emitted value, separate invocation, production-component, or production-data-source scope fails.",
+  "timestamp": "2026-08-02T23:14:10.359Z"
+}

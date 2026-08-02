@@ -96,14 +96,14 @@ supply the artifacts under assertion.
 ### 2: Conditional boundary provenance
 
 1. Each generated test-quality review instruction MUST define a producer/consumer boundary as consumption of a value emitted by a separately invoked production component or production data source.
-2. When a producer/consumer boundary exists, the generated test-quality review instruction MUST require `file:line` evidence that the covering test obtains its input through that production producer.
-3. When a producer/consumer boundary exists, the generated test-quality review instruction MUST require `file:line` evidence that the input exercised by the covering test preserves the production producer's value shape.
-4. When the decisive observation can equal an initial, default, placeholder, or sentinel value, the generated test-quality review instruction MUST require `file:line` evidence that the covering test distinguishes a newly produced observation from that pre-existing value.
+2. Each generated test-quality review instruction MUST require the reviewer, whenever a producer/consumer boundary exists, to cite `file:line` evidence that the covering test obtains its input through that production producer.
+3. Each generated test-quality review instruction MUST require the reviewer, whenever a producer/consumer boundary exists, to cite `file:line` evidence that the input exercised by the covering test preserves the production producer's value shape.
+4. Each generated test-quality review instruction MUST require the reviewer, whenever the decisive observation can equal an initial, default, placeholder, or sentinel value, to cite `file:line` evidence that the covering test distinguishes a newly produced observation from that pre-existing value.
 
 ### 3: Declared runtime environment
 
 1. Each generated test-quality review instruction MUST define a gate/runtime-environment boundary as invocation of a binary or service outside the gate's own process.
-2. When a gate/runtime-environment boundary exists, the generated test-quality review instruction MUST require `file:line` evidence of both the dependency's production provisioning declaration and the production path that fails when the dependency is absent.
+2. Each generated test-quality review instruction MUST require the reviewer, whenever a gate/runtime-environment boundary exists, to cite `file:line` evidence of both the dependency's production provisioning declaration and the production path that fails when the dependency is absent.
 
 ### 4: Decidable verdicts
 

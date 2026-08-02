@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.1.2--4f90050b0b09",
+  "requirementId": "self-supplied-evidence.1.2",
+  "hash": "4f90050b0b09",
+  "verdict": "pass",
+  "summary": "Every production-discovered test-quality instruction is still matched against the complete expected task with only dynamic IDs normalized, so any omission, weakening, or contradiction of the file:line production-reachability demand fails.",
+  "timestamp": "2026-08-02T23:14:09.042Z"
+}

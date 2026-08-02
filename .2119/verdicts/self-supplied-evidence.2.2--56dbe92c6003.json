@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.2--56dbe92c6003",
+  "requirementId": "self-supplied-evidence.2.2",
+  "hash": "56dbe92c6003",
+  "verdict": "pass",
+  "summary": "Every production-computed test-quality task pins the producer/consumer condition and requires file:line evidence that the covering test obtains its input from that production producer.",
+  "timestamp": "2026-08-02T23:14:23.989Z"
+}

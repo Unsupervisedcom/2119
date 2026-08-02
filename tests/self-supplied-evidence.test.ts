@@ -1,12 +1,119 @@
 import { execFileSync } from "node:child_process";
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { basename, join, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
 import { buildContext } from "../src/check.js";
 
 const CLI = resolve(import.meta.dirname, "../dist/cli.js");
 const REPO = resolve(import.meta.dirname, "..");
+const EXPECTED_PROVENANCE = `1. Name the concrete production failure this test would catch.
+   Cite file:line evidence that production can reach that failure without the test, fixtures, or prompts supplying the trigger or decisive observation.
+2. Trace each applicable production boundary with file:line evidence.
+   A producer/consumer boundary means consuming a value emitted by a separately invoked production component or production data source.
+   If that boundary exists, cite file:line evidence that the test obtains its input from that producer.
+   If that boundary exists, cite file:line evidence that the exercised value preserves the producer's production shape.
+   If the decisive observation can equal an initial/default/placeholder/sentinel value, cite file:line evidence that the test distinguishes a newly produced observation from that pre-existing value.
+   A gate/runtime-environment boundary means invoking a binary or service outside the gate's own process.
+   If that boundary exists, cite file:line evidence for both its production provisioning declaration and the production path that fails when it is absent.
+
+Record FAIL when applicable provenance evidence is absent or shows that production cannot produce the failure independently of the test setup.`;
+const EXPECTED_TASK = `**Would the covering tests fail if this requirement were violated?**
+
+Read the requirement and each evidence file's tests annotated with \`2119: <REQ-ID>\` (or its section ID). Judge whether they genuinely verify the requirement. You MUST flag:
+
+- **Tautological assertions** — tests that assert what they just set up, or that cannot fail.
+- **Over-mocking** — mocks/stubs that bypass the very behavior the requirement constrains.
+- **Unrelated assertions** — tests that reference the requirement ID but assert something other than its criterion.
+- **Keyword theater** — string/keyword matching standing in for behavioral verification.
+
+**Required production-provenance answers (a PASS is forbidden without them):**
+
+${EXPECTED_PROVENANCE}
+
+**Counterexample obligation:** enumerate the requirement's conjuncts and boundary terms (words
+like "comment", "exactly", "only", "begins with"). For each, construct the nearest violating
+input — the almost-conforming case the requirement forbids — and confirm a test rejects it.
+Do not reason from the implementation's current behavior; reason from the requirement's text.
+A review that cannot name a rejected counterexample for a boundary term is not a pass.
+
+**Judge the requirement too:** if the requirement itself is ambiguous, untestable, or states an
+implementation mechanism rather than an observable outcome, fail with that finding — a bad
+requirement honestly tested is still a bad requirement.
+
+## Recording your verdict
+
+Keep the verdict summary's subject no broader than the cited evidence: preserve concrete member names and singular/plural scope; do not promote member-specific evidence into a category claim.
+
+If the requirement's verification is genuine (or all findings were fixed), run:
+
+\`\`\`
+npx rfc2119 pass <REVIEW-ID> --summary "<one-line justification>"
+\`\`\`
+
+If there are unresolved findings, run:
+
+\`\`\`
+npx rfc2119 fail <REVIEW-ID> --summary "<the core finding>"
+\`\`\`
+
+The summary is committed to the repository and read by humans in PR review —
+be specific. Do not edit any files; report, don't fix.`;
+const RECORDING_GUIDANCE = "Keep the verdict summary's subject no broader than the cited evidence: preserve concrete member names and singular/plural scope; do not promote member-specific evidence into a category claim.";
+const EXPECTED_DIRECT_TASK = `**Is this requirement genuinely satisfied by the current state of the evidence files?**
+
+Read the requirement and the evidence files and judge compliance directly. This requirement was tagged \`[review]\` because it needs judgment rather than a test.
+
+**Judge the requirement too:** if the requirement itself is ambiguous, untestable, or states an
+implementation mechanism rather than an observable outcome, fail with that finding — a bad
+requirement honestly tested is still a bad requirement.
+
+## Recording your verdict
+
+${RECORDING_GUIDANCE}
+
+If the requirement's verification is genuine (or all findings were fixed), run:
+
+\`\`\`
+npx rfc2119 pass <REVIEW-ID> --summary "<one-line justification>"
+\`\`\`
+
+If there are unresolved findings, run:
+
+\`\`\`
+npx rfc2119 fail <REVIEW-ID> --summary "<the core finding>"
+\`\`\`
+
+The summary is committed to the repository and read by humans in PR review —
+be specific. Do not edit any files; report, don't fix.`;
+const EXPECTED_AUDIT_TASK = `**Construct a concrete mutant or input under which this requirement is violated while every
+covering test stays green.** Enumerate the requirement's conjuncts and boundary terms; probe the
+negative space (what must be refused, not what is accepted); consider shared fixtures, preludes,
+and paths the tests never touch. Reason from the requirement's text, never from the
+implementation's current behavior.
+
+- If you find such a counterexample: record a FAIL with the mutant described concretely enough
+  to reproduce.
+- Only if you genuinely cannot construct one after honest effort: record a PASS stating the
+  strongest candidate you tried and why it fails to survive.
+
+## Recording your verdict
+
+${RECORDING_GUIDANCE}
+
+\`\`\`
+npx rfc2119 pass <REVIEW-ID> --summary "audit: <strongest attempted counterexample and why it dies>"
+npx rfc2119 fail <REVIEW-ID> --summary "audit: <the counterexample, reproducibly>"
+\`\`\`
+
+Do not edit any files; report, don't fix.`;
+
+function normalizedTask(body: string): string {
+  return body
+    .replace(/[A-Za-z][A-Za-z0-9-]*\.\d+\.\d+--[0-9a-f]{12}/g, "<REVIEW-ID>")
+    .replace(/[A-Za-z][A-Za-z0-9-]*\.\d+\.\d+/g, "<REQ-ID>")
+    .trim();
+}
 
 // Bare annotations below resolve through the real file-scoped spec copied by dispatchFixture().
 // 2119-spec: self-supplied-evidence
@@ -41,14 +148,6 @@ function dispatchFixture(): string {
   return root;
 }
 
-function instruction(root: string, requirementId: string): string {
-  const name = readdirSync(join(root, ".2119/reviews")).find(
-    (entry) => entry.startsWith(`${requirementId}--`) && entry.endsWith(".md"),
-  );
-  expect(name, `instruction for ${requirementId}`).toBeDefined();
-  return readFileSync(join(root, ".2119/reviews", name!), "utf8");
-}
-
 function testQualityTaskBodies(root: string): string[] {
   // Production parsing and coverage—not generated wording—identify the complete target set.
   const targets = buildContext(root).reviewTargets.filter((target) => target.kind === "test-quality");
@@ -64,13 +163,11 @@ function expectEveryTestQualityTask(root: string, assertion: (body: string) => v
   const bodies = testQualityTaskBodies(root);
   expect(bodies.length).toBeGreaterThan(2);
   for (const body of bodies) {
-    expect(body).toContain("**Required production-provenance answers (a PASS is forbidden without them):**");
-    expect(body).not.toMatch(
-      /ignore|disregard|omit|skip|refrain from|need not|not required|no need|do not (?:need|have to|name|cite|record|answer|provide|trace|distinguish)|optional(?:ly)?|if you want|may decline|when (?:available|convenient|possible)|if (?:available|convenient|possible)|where possible|as time permits/i,
-    );
-    expect(body).not.toMatch(
-      /(?:but|however|except|alternatively|also (?:means|includes|allows)|may (?:also|instead)|fixture-produced|test-produced).*(?:boundary|producer|provenance|evidence|value|input|observation)/i,
-    );
+    expect(normalizedTask(body)).toBe(EXPECTED_TASK);
+    const provenance = body
+      .split("**Required production-provenance answers (a PASS is forbidden without them):**", 2)[1]
+      ?.split("**Counterexample obligation:**", 1)[0];
+    expect(provenance?.trim()).toBe(EXPECTED_PROVENANCE);
     assertion(body);
   }
 }
@@ -157,11 +254,12 @@ describe("self-supplied evidence review instructions", () => {
 
   // 2119: 5.1
   it("keeps the test-quality provenance questions out of direct judgments", () => {
-    const direct = instruction(root, "REQ-003.4.2");
-    expect(direct).toContain("Is this requirement genuinely satisfied");
-    expect(direct).not.toMatch(
-      /Required production-provenance answers|production failure|file:line|producer\/consumer boundary|sentinel value|runtime-environment boundary|provenance evidence/i,
-    );
+    const targets = buildContext(root).reviewTargets.filter((target) => target.kind === "requirement");
+    expect(targets.length).toBeGreaterThan(0);
+    for (const target of targets) {
+      const direct = readFileSync(join(root, ".2119/reviews", `${target.reviewId}.md`), "utf8");
+      expect(normalizedTask(direct.split("## Your task\n\n", 2)[1])).toBe(EXPECTED_DIRECT_TASK);
+    }
   });
 
   // 2119: 6.1
@@ -171,7 +269,6 @@ describe("self-supplied evidence review instructions", () => {
     const result = run(root, ["lint"]);
     expect(result.status).toBe(0);
     expect(result.stdout).toContain("2 spec file(s) clean");
-    expect(basename(root)).toMatch(/^2119-self-evidence-/);
   });
 
   // 2119: 7.1
@@ -189,7 +286,11 @@ describe("self-supplied evidence review instructions", () => {
     const targets = buildContext(root).reviewTargets;
     expect(targets.length).toBeGreaterThan(13);
     for (const target of targets) {
-      expectBoundedGuidance(instruction(root, target.requirement.id));
+      const standard = readFileSync(join(root, ".2119/reviews", `${target.reviewId}.md`), "utf8");
+      expectBoundedGuidance(standard);
+      expect(normalizedTask(standard.split("## Your task\n\n", 2)[1])).toBe(
+        target.kind === "test-quality" ? EXPECTED_TASK : EXPECTED_DIRECT_TASK,
+      );
     }
 
     cpSync(join(REPO, ".2119/verdicts"), join(root, ".2119/verdicts"), { recursive: true });
@@ -203,7 +304,9 @@ describe("self-supplied evidence review instructions", () => {
     const auditNames = readdirSync(join(root, ".2119/reviews")).filter((name) => name.endsWith(".audit.md"));
     expect(auditNames.sort()).toEqual(passingTargets.map((target) => `${target.reviewId}.audit.md`).sort());
     for (const auditName of auditNames) {
-      expectBoundedGuidance(readFileSync(join(root, ".2119/reviews", auditName), "utf8"));
+      const audit = readFileSync(join(root, ".2119/reviews", auditName), "utf8");
+      expectBoundedGuidance(audit);
+      expect(normalizedTask(audit.split("## Your task\n\n", 2)[1])).toBe(EXPECTED_AUDIT_TASK);
     }
   });
 });

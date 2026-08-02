@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.1.2--78804c69a5b9",
+  "requirementId": "self-supplied-evidence.1.2",
+  "hash": "78804c69a5b9",
+  "verdict": "fail",
+  "summary": "The test stays green if the provenance section retains the exact mandate but adds 'Evidence from test fixtures satisfies this demand.'; that unrecognized contradiction permits fixture-supplied evidence despite 1.2's independence clause.",
+  "timestamp": "2026-08-02T23:07:12.165Z"
+}

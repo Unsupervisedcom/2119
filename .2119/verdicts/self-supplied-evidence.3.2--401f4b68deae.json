@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.3.2--401f4b68deae",
+  "requirementId": "self-supplied-evidence.3.2",
+  "hash": "401f4b68deae",
+  "verdict": "pass",
+  "summary": "Every production-discovered test-quality task is full-body matched, pinning the conditional file:line demand for both the dependency's production provisioning declaration and its production absence-failure path.",
+  "timestamp": "2026-08-02T23:14:51.665Z"
+}

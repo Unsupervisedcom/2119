@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.1.2--419abd7dee19",
+  "requirementId": "self-supplied-evidence.1.2",
+  "hash": "419abd7dee19",
+  "verdict": "pass",
+  "summary": "Every production-discovered test-quality instruction is compared against the complete expected task body with only dynamic IDs normalized, so removing, weakening, or contradicting the file:line independence demand fails.",
+  "timestamp": "2026-08-02T23:10:46.134Z"
+}

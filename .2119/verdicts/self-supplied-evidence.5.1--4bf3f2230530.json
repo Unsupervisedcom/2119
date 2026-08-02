@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.5.1--4bf3f2230530",
+  "requirementId": "self-supplied-evidence.5.1",
+  "hash": "4bf3f2230530",
+  "verdict": "pass",
+  "summary": "Every production-computed direct-judgment target is compared with the complete canonical direct task, which contains no test-quality provenance questionnaire and fails on any insertion.",
+  "timestamp": "2026-08-02T23:15:24.252Z"
+}

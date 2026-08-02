@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.2--ec2046ab17a0",
+  "requirementId": "REQ-003.8.2",
+  "hash": "ec2046ab17a0",
+  "verdict": "pass",
+  "summary": "The current standard, direct-judgment, and audit instructions preserve the expected verdicts for calibration cases 001-014; corrected case 013 now independently covers its missing verdict, invalid verdict, and real-CLI acceptance clauses.",
+  "timestamp": "2026-08-02T23:02:58.593Z"
+}

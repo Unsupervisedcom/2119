@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.1--1fc1ddf5c224",
+  "requirementId": "self-supplied-evidence.2.1",
+  "hash": "1fc1ddf5c224",
+  "verdict": "pass",
+  "summary": "The real review-dispatch CLI generates every computed test-quality instruction, and the test rejects omission or alteration of consumption, emitted value, separate invocation, production component, or production data-source terms as well as weakening exceptions.",
+  "timestamp": "2026-08-02T23:07:04.908Z"
+}
