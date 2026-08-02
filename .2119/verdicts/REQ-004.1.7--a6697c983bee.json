@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.7--a6697c983bee",
+  "requirementId": "REQ-004.1.7",
+  "hash": "a6697c983bee",
+  "verdict": "pass",
+  "summary": "For each installed Claude, Codex, and Gemini SessionStart command, the test executes that production command and requires successful JSON with SessionStart additionalContext naming spec-driven testing, MUST-level obligations, and the check command in under 1000 characters.",
+  "timestamp": "2026-08-02T22:37:23.963Z"
+}

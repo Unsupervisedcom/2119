@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.7--0cff14d8a0f3",
+  "requirementId": "REQ-004.1.7",
+  "hash": "0cff14d8a0f3",
+  "verdict": "fail",
+  "summary": "The annotated test calls handleHook directly and never exercises generated platform hook wiring; deleting the SessionStart entries in src/adapters.ts would prevent session-start injection through the platform mechanism while every REQ-004.1.7 assertion stays green.",
+  "timestamp": "2026-08-02T22:33:04.234Z"
+}

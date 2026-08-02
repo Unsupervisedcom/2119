@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.1--c355ec3bc765",
+  "requirementId": "REQ-003.8.1",
+  "hash": "c355ec3bc765",
+  "verdict": "pass",
+  "summary": "The calibration corpus contains the required fixture fields and now includes 014 for the documented PR #112 singular-evidence-to-plural-category scope-inflation escape.",
+  "timestamp": "2026-08-02T22:34:46.490Z"
+}

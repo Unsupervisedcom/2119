@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.7--a4801c86dd0e",
+  "requirementId": "REQ-004.1.7",
+  "hash": "a4801c86dd0e",
+  "verdict": "fail",
+  "summary": "The test covers only Claude and derives the expected body from production SESSION_CONTEXT; Codex/Gemini omission or a non-descriptive/overlong context can remain green, while 'short' has no testable bound.",
+  "timestamp": "2026-08-02T22:29:38.198Z"
+}

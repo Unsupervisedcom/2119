@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.1--b858103eb35c",
+  "requirementId": "REQ-003.8.1",
+  "hash": "b858103eb35c",
+  "verdict": "fail",
+  "summary": "The listed fixtures have the required fields, but 'every known review escape' has no defined external inventory or scope, so corpus completeness is ambiguous and cannot be verified from the corpus's self-claim.",
+  "timestamp": "2026-08-02T22:31:09.428Z"
+}

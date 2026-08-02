@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.2--deb61e2892be",
+  "requirementId": "REQ-003.8.2",
+  "hash": "deb61e2892be",
+  "verdict": "fail",
+  "summary": "The test-quality template forbids PASS without production file:line provenance, but calibration cases 012-pass-control-perturbation and 013-pass-control-negative-positive contain only condensed snippets and expect PASS, so a reviewer following the template cannot preserve those two corpus verdicts.",
+  "timestamp": "2026-08-02T22:29:50.495Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.2--5262e7c71e7b",
+  "requirementId": "REQ-003.8.2",
+  "hash": "5262e7c71e7b",
+  "verdict": "fail",
+  "summary": "The current template cannot preserve calibration case 013's expected PASS: its conjunct rule requires rejected counterexamples for empty note, mismatched owner, and unparseable stamp, which that case's evidence does not provide.",
+  "timestamp": "2026-08-02T22:33:18.373Z"
+}
