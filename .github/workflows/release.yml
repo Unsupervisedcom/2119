@@ -1,0 +1,54 @@
+name: release
+
+# Publish to npm when a version tag is pushed (`npm version <bump> && git push --follow-tags`).
+#
+# Why this exists: `dist/` is gitignored, so a hand-run `npm publish` ships whatever happened to
+# be in the local working tree. Building here makes the published artifact reproducible from the
+# tagged commit — the tag and the tarball can't disagree.
+#
+# `prepublishOnly` (npm test && node dist/cli.js check) still runs inside `npm publish`, so the
+# suite and 2119's own gate remain the last thing between a tag and the registry. The explicit
+# steps below just make a failure legible in the log instead of buried in publish output.
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write # npm provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - run: npm ci
+
+      # Refuse to publish a tag whose version doesn't match package.json — the failure mode
+      # this workflow exists to prevent is a tag and an artifact that disagree.
+      - name: Verify tag matches package.json
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME#v}"
+          pkg="$(node -p 'require("./package.json").version')"
+          if [ "$tag" != "$pkg" ]; then
+            echo "::error::tag v$tag does not match package.json version $pkg"
+            exit 1
+          fi
+          echo "publishing $pkg"
+
+      - run: npm run build
+      - run: npm test
+      - run: node dist/cli.js check
+
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
