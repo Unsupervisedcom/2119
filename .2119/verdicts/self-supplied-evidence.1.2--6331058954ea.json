@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.1.2--6331058954ea",
+  "requirementId": "self-supplied-evidence.1.2",
+  "hash": "6331058954ea",
+  "verdict": "pass",
+  "summary": "All generated test-quality tasks are exhaustively selected from production review targets and require file:line production reachability for the named failure, with exact independence from test, fixture, and prompt-supplied triggers or decisive observations and explicit rejection of opt-outs.",
+  "timestamp": "2026-08-02T05:32:24.495Z"
+}

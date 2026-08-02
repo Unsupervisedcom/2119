@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.1--683e7215f03e",
+  "requirementId": "REQ-003.8.1",
+  "hash": "683e7215f03e",
+  "verdict": "fail",
+  "summary": "eval/calibration's 13 cases omit the repository's documented task_lib.sh-to-'shell libraries' verdict-scope inflation escape, so the corpus no longer contains every known review escape.",
+  "timestamp": "2026-08-02T22:32:53.245Z"
+}

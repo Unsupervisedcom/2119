@@ -85,13 +85,46 @@ describe("normalized hook handling", () => {
 
   // 2119: REQ-004.1.7
   it("injects workflow context on session-start", async () => {
-    const root = fixture();
-    const out = await handleHook(root, "session-start", "claude", {}) as {
-      hookSpecificOutput?: { hookEventName: string; additionalContext: string };
-    };
-    expect(out.hookSpecificOutput?.hookEventName).toBe("SessionStart");
-    expect(out.hookSpecificOutput?.additionalContext).toBe(SESSION_CONTEXT);
-    expect(SESSION_CONTEXT).toContain("npx rfc2119 check");
+    const { readFileSync } = await import("node:fs");
+    const { spawnSync } = await import("node:child_process");
+    const { installAgentHooks } = await import("../src/adapters.js");
+    for (const platform of ["claude", "codex", "gemini"] as const) {
+      const root = fixture();
+      const cache = join(root, "upgrade.json");
+      writeFileSync(cache, JSON.stringify({ checkedAt: Date.now(), latest: "0.0.0" }));
+      process.env.RFC2119_UPGRADE_CACHE = cache;
+      try {
+        installAgentHooks(root, platform);
+        const settingsPath = platform === "claude"
+          ? join(root, ".claude/settings.json")
+          : platform === "codex"
+            ? join(root, ".codex/hooks.json")
+            : join(root, ".gemini/settings.json");
+        const settings = JSON.parse(readFileSync(settingsPath, "utf8"));
+        const command = settings.hooks.SessionStart[0].hooks[0].command as string;
+        expect(command).toContain(`hook session-start --platform ${platform}`);
+
+        const run = spawnSync(command, {
+          cwd: root,
+          input: "{}",
+          encoding: "utf8",
+          env: process.env,
+          shell: true,
+        });
+        expect(run.status).toBe(0);
+        const out = JSON.parse(run.stdout) as {
+          hookSpecificOutput?: { hookEventName: string; additionalContext: string };
+        };
+        expect(out.hookSpecificOutput?.hookEventName).toBe("SessionStart");
+        const context = out.hookSpecificOutput?.additionalContext ?? "";
+        expect(context).toContain("spec-driven testing");
+        expect(context).toContain("every MUST-level requirement");
+        expect(context).toContain("npx rfc2119 check");
+        expect(context.length).toBeLessThan(1000);
+      } finally {
+        delete process.env.RFC2119_UPGRADE_CACHE;
+      }
+    }
   });
 
   // 2119: REQ-004.1.8

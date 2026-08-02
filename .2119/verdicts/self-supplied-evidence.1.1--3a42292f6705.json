@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.1.1--3a42292f6705",
+  "requirementId": "self-supplied-evidence.1.1",
+  "hash": "3a42292f6705",
+  "verdict": "pass",
+  "summary": "Every production-computed test-quality task is compared against the complete canonical task body, so removing, weakening, or contradicting the concrete-production-failure mandate fails the test.",
+  "timestamp": "2026-08-02T23:10:57.874Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.7--69cfdfd5ebdd",
+  "requirementId": "REQ-004.1.7",
+  "hash": "69cfdfd5ebdd",
+  "verdict": "fail",
+  "summary": "The test does not execute the installed SessionStart command: a broken command can retain the asserted hook substring while the separately invoked dist/cli.js still returns context, leaving the platform integration broken.",
+  "timestamp": "2026-08-02T22:36:05.854Z"
+}

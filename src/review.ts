@@ -194,6 +194,8 @@ implementation's current behavior.
 
 ## Recording your verdict
 
+Keep the verdict summary's subject no broader than the cited evidence: preserve concrete member names and singular/plural scope; do not promote member-specific evidence into a category claim.
+
 \`\`\`
 npx rfc2119 pass ${t.reviewId} --summary "audit: <strongest attempted counterexample and why it dies>"
 npx rfc2119 fail ${t.reviewId} --summary "audit: <the counterexample, reproducibly>"
@@ -242,6 +244,20 @@ Read the requirement and each evidence file's tests annotated with \`2119: ${t.r
 - **Unrelated assertions** — tests that reference the requirement ID but assert something other than its criterion.
 - **Keyword theater** — string/keyword matching standing in for behavioral verification.
 
+**Required production-provenance answers (a PASS is forbidden without them):**
+
+1. Name the concrete production failure this test would catch.
+   Cite file:line evidence that production can reach that failure without the test, fixtures, or prompts supplying the trigger or decisive observation.
+2. Trace each applicable production boundary with file:line evidence.
+   A producer/consumer boundary means consuming a value emitted by a separately invoked production component or production data source.
+   If that boundary exists, cite file:line evidence that the test obtains its input from that producer.
+   If that boundary exists, cite file:line evidence that the exercised value preserves the producer's production shape.
+   If the decisive observation can equal an initial/default/placeholder/sentinel value, cite file:line evidence that the test distinguishes a newly produced observation from that pre-existing value.
+   A gate/runtime-environment boundary means invoking a binary or service outside the gate's own process.
+   If that boundary exists, cite file:line evidence for both its production provisioning declaration and the production path that fails when it is absent.
+
+Record FAIL when applicable provenance evidence is absent or shows that production cannot produce the failure independently of the test setup.
+
 **Counterexample obligation:** enumerate the requirement's conjuncts and boundary terms (words
 like "comment", "exactly", "only", "begins with"). For each, construct the nearest violating
 input — the almost-conforming case the requirement forbids — and confirm a test rejects it.
@@ -289,6 +305,8 @@ implementation mechanism rather than an observable outcome, fail with that findi
 requirement honestly tested is still a bad requirement.
 ${custom ? `\n## Additional review criteria\n\n*(from \`${custom.path}\` — these extend the requirement above)*\n\n${custom.content}\n` : ""}
 ## Recording your verdict
+
+Keep the verdict summary's subject no broader than the cited evidence: preserve concrete member names and singular/plural scope; do not promote member-specific evidence into a category claim.
 
 If the requirement's verification is genuine (or all findings were fixed), run:
 

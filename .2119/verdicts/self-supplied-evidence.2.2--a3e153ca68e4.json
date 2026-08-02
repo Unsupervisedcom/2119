@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.2--a3e153ca68e4",
+  "requirementId": "self-supplied-evidence.2.2",
+  "hash": "a3e153ca68e4",
+  "verdict": "pass",
+  "summary": "Each generated test-quality task must match the complete normalized task oracle, which pins the existing-boundary trigger, file:line citation, covering test input, and production producer together and rejects reversal, omission, or weakening.",
+  "timestamp": "2026-08-02T23:11:02.928Z"
+}

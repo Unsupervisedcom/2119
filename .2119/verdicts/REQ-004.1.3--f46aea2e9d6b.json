@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.3--f46aea2e9d6b",
+  "requirementId": "REQ-004.1.3",
+  "hash": "f46aea2e9d6b",
+  "verdict": "fail",
+  "summary": "The tests handcraft hook payloads instead of obtaining a production platform payload, omit Codex Delete File apply_patch paths and custom/test-glob positive boundaries, and direct helper calls do not prove path determination occurs inside the CLI.",
+  "timestamp": "2026-08-02T22:31:15.380Z"
+}

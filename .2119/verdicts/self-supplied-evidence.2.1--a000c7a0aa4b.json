@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.1--a000c7a0aa4b",
+  "requirementId": "self-supplied-evidence.2.1",
+  "hash": "a000c7a0aa4b",
+  "verdict": "pass",
+  "summary": "Every generated test-quality task is matched against a complete independent task oracle after normalizing only requirement/review IDs, so any change to the producer/consumer definition's consumption, emitted value, separate invocation, production component, or data-source scope fails.",
+  "timestamp": "2026-08-02T23:10:44.573Z"
+}

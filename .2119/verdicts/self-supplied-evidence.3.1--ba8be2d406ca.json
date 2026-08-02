@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.3.1--ba8be2d406ca",
+  "requirementId": "self-supplied-evidence.3.1",
+  "hash": "ba8be2d406ca",
+  "verdict": "pass",
+  "summary": "Every production-generated test-quality task must match the complete normalized oracle, so changing invocation, binary-or-service scope, or outside-the-gate-process boundary wording fails.",
+  "timestamp": "2026-08-02T23:11:23.747Z"
+}

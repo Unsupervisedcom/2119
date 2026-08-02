@@ -13,6 +13,12 @@ failure_mode: none — control case
 
 ## Evidence
 
+Production provenance: this condensed case is taken from
+`tests/review.test.ts:84`, with the independent perturbation assertions at
+`tests/review.test.ts:94`, `tests/review.test.ts:100`, and
+`tests/review.test.ts:104`. Those lines invoke the production review-ID
+computation through `gearTargets` (`tests/review.test.ts:78`).
+
 ```ts
 // 2119: FIX-001.1.1
 it("scopes review IDs to evidence blocks", () => {

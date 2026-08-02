@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.4--3add2f8a8874",
+  "requirementId": "self-supplied-evidence.2.4",
+  "hash": "3add2f8a8874",
+  "verdict": "pass",
+  "summary": "The complete task snapshot pins the conditional trigger, all four pre-existing-value classes, file:line evidence, and the newly-produced-versus-pre-existing distinction for every production-computed test-quality target.",
+  "timestamp": "2026-08-02T23:11:20.691Z"
+}

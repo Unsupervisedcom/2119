@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.1.7--9247f44ae9d9",
+  "requirementId": "REQ-004.1.7",
+  "hash": "9247f44ae9d9",
+  "verdict": "fail",
+  "summary": "The test separately inspects installed SessionStart command text and calls handleHook, but never executes that command through the CLI; breaking src/cli.ts hook dispatch would prevent all three installed commands from injecting context while every annotated assertion stays green.",
+  "timestamp": "2026-08-02T22:34:39.173Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.4--2e7bb01145d0",
+  "requirementId": "self-supplied-evidence.2.4",
+  "hash": "2e7bb01145d0",
+  "verdict": "pass",
+  "summary": "Every computed production-generated test-quality task matches the complete oracle, pinning the decisive-observation trigger, all four initial/default/placeholder/sentinel cases, file:line evidence, and newly-produced versus pre-existing distinction.",
+  "timestamp": "2026-08-02T23:14:34.728Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.3.1--8f4768f6eda9",
+  "requirementId": "self-supplied-evidence.3.1",
+  "hash": "8f4768f6eda9",
+  "verdict": "pass",
+  "summary": "Enumerates every production-derived test-quality task and rejects missing or altered boundary wording, including inside-process and non-binary/service near-counterexamples, via an exact required definition.",
+  "timestamp": "2026-08-02T05:36:17.365Z"
+}

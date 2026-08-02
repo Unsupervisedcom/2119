@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.1--87a0d11bd0c2",
+  "requirementId": "REQ-003.8.1",
+  "hash": "87a0d11bd0c2",
+  "verdict": "pass",
+  "summary": "The corpus fixtures retain the required fields and documented escapes, while corrected case 013 now accurately condenses missing/invalid verdict rejection and real-CLI acceptance from its cited production test.",
+  "timestamp": "2026-08-02T23:02:34.369Z"
+}

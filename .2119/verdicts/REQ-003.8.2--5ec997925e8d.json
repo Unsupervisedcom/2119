@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.2--5ec997925e8d",
+  "requirementId": "REQ-003.8.2",
+  "hash": "5ec997925e8d",
+  "verdict": "fail",
+  "summary": "Calibration case 013-pass-control-negative-positive expects PASS, but the template requires a rejected counterexample for every conjunct while its evidence never independently rejects an empty note, mismatched owner, or unparseable stamp; a reviewer following the template must FAIL that case.",
+  "timestamp": "2026-08-02T22:31:16.326Z"
+}
