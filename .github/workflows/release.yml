@@ -9,6 +9,11 @@ name: release
 # `prepublishOnly` (npm test && node dist/cli.js check) still runs inside `npm publish`, so the
 # suite and 2119's own gate remain the last thing between a tag and the registry. The explicit
 # steps below just make a failure legible in the log instead of buried in publish output.
+#
+# Auth is npm trusted publishing (OIDC): npmjs.com is configured to trust this repo + workflow
+# filename, and the job exchanges the `id-token` for a short-lived credential at publish time.
+# There is no NPM_TOKEN secret to leak, rotate, or accidentally scope too widely. Provenance is
+# generated automatically from the OIDC claims, so the artifact is attested to this commit.
 
 on:
   push:
@@ -17,7 +22,7 @@ on:
 
 permissions:
   contents: read
-  id-token: write # npm provenance
+  id-token: write # OIDC exchange for npm trusted publishing (and provenance)
 
 jobs:
   publish:
@@ -29,6 +34,9 @@ jobs:
         with:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
+
+      # Trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10.x.
+      - run: npm install --global npm@latest
 
       - run: npm ci
 
@@ -49,6 +57,5 @@ jobs:
       - run: npm test
       - run: node dist/cli.js check
 
-      - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # No NODE_AUTH_TOKEN: credentials come from the OIDC exchange (see header).
+      - run: npm publish --access public
