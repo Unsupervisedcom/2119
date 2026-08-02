@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.4.1--dbb07998ba99",
+  "requirementId": "self-supplied-evidence.4.1",
+  "hash": "dbb07998ba99",
+  "verdict": "pass",
+  "summary": "Generated instructions are checked across every production-derived test-quality target and must explicitly record FAIL for either missing provenance or evidence that production cannot independently produce the failure; omission, weakened wording, and escape-clause counterexamples are rejected.",
+  "timestamp": "2026-08-02T05:36:27.004Z"
+}

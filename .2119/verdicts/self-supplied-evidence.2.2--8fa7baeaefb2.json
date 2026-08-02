@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.2--8fa7baeaefb2",
+  "requirementId": "self-supplied-evidence.2.2",
+  "hash": "8fa7baeaefb2",
+  "verdict": "pass",
+  "summary": "The test inspects every generated test-quality task, requires mandatory file:line evidence that its input comes from the production producer, and rejects waiver or self-supplied-evidence language.",
+  "timestamp": "2026-08-02T05:33:28.165Z"
+}
