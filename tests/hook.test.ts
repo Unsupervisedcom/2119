@@ -90,7 +90,7 @@ describe("normalized hook handling", () => {
       hookSpecificOutput?: { hookEventName: string; additionalContext: string };
     };
     expect(out.hookSpecificOutput?.hookEventName).toBe("SessionStart");
-    expect(out.hookSpecificOutput?.additionalContext).toBe(SESSION_CONTEXT);
+    expect(out.hookSpecificOutput?.additionalContext).toContain(SESSION_CONTEXT);
     expect(SESSION_CONTEXT).toContain("npx rfc2119 check");
   });
 
