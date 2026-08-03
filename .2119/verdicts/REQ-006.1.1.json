@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-006.1.1--5adc90405042",
+  "requirementId": "REQ-006.1.1",
+  "hash": "5adc90405042",
+  "verdict": "pass",
+  "summary": "CLI test rejects superseded, passed, and unrelated instruction packets and asserts the remaining .md files equal the production-computed pending review IDs",
+  "timestamp": "2026-08-03T16:14:55.176Z"
+}

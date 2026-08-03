@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.8.2--5fff49bf72aa",
-  "requirementId": "REQ-003.8.2",
-  "hash": "5fff49bf72aa",
-  "verdict": "pass",
-  "summary": "src/review.ts template prose (audit prompt, dispatch prompt, renderInstructions) is byte-identical to a92ad03, the commit that seeded eval/calibration, so no clause has been dropped since the corpus existed; every one of the 13 cases maps to a live clause — 'comment' is a named boundary term (001), conjunct enumeration (002/006/007), 'cannot fail' tautology (008), 'assert what they just set up' (009), over-mocking (011), criterion-mismatch (010), and 'judge the requirement too: mechanism not outcome' (005/011), with the two pass controls unpenalized.",
-  "timestamp": "2026-08-01T05:48:55.301Z"
-}

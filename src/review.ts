@@ -133,6 +133,7 @@ export function generateInstructions(
   config: Config,
   targets: Omit<ReviewTask, "instructionPath">[],
   verdicts: Map<string, Verdict>,
+  preserveAudits = false,
 ): ReviewTask[] {
   const pending = targets.filter((t) => verdicts.get(t.reviewId)?.verdict !== "pass");
   // Keep the directory exactly in sync with the pending set — stale
@@ -146,7 +147,7 @@ export function generateInstructions(
   );
   for (const file of readdirSync(dir)) {
     if (file.endsWith(".audit.md")) {
-      if (!passingIds.has(file.replace(/\.audit\.md$/, ""))) unlinkSync(join(dir, file));
+      if (!preserveAudits || !passingIds.has(file.replace(/\.audit\.md$/, ""))) unlinkSync(join(dir, file));
     } else if (file.endsWith(".md") && !pendingIds.has(file.replace(/\.md$/, ""))) {
       unlinkSync(join(dir, file));
     }

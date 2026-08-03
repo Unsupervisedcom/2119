@@ -708,6 +708,33 @@ test('stop', () => expect(widget.stop()).toBe(true))
     const verifyReport = json(run(verifyCase.root, ["check", "--changed", verifyCase.base, "--json"]));
     expect(verifyReport.violations.some((v) => v.message.includes("FIX-001.1.1"))).toBe(true);
     expect(verifyReport.violations.some((v) => v.message.includes("FIX-001.1.2"))).toBe(false);
+
+    const freshness = initRepo({
+      ".2119.yml": 'prefix: "FIX"\n',
+      "specs/FIX-001-widgets.md": TWO_REQUIREMENTS,
+      "tests/widget.test.js":
+        "// 2119: FIX-001.1.1\ntest('spins', () => {})\n" +
+        "// 2119: FIX-001.1.2\ntest('stops', () => {})\n",
+    });
+    passReviews(freshness.root, ["FIX-001.1.1", "FIX-001.1.2"]);
+    // Establish a baseline with a pre-existing stale verdict for requirement
+    // two, then affect only requirement one's evidence in the current view.
+    write(
+      freshness.root,
+      "tests/widget.test.js",
+      "// 2119: FIX-001.1.1\ntest('spins', () => {})\n" +
+        "// 2119: FIX-001.1.2\ntest('stops eventually', () => {})\n",
+    );
+    const freshnessBase = commitCurrent(freshness.root, "baseline with unrelated stale verdict");
+    write(
+      freshness.root,
+      "tests/widget.test.js",
+      "// 2119: FIX-001.1.1\ntest('spins twice', () => {})\n" +
+        "// 2119: FIX-001.1.2\ntest('stops eventually', () => {})\n",
+    );
+    const freshnessReport = json(run(freshness.root, ["check", "--changed", freshnessBase, "--json"]));
+    expect(freshnessReport.staleReviews.join("\n")).toContain("FIX-001.1.1");
+    expect(freshnessReport.staleReviews.join("\n")).not.toContain("FIX-001.1.2");
   });
 
   // 2119: REQ-010.3.2

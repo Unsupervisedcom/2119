@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.2.2--f06967fba1ab",
-  "requirementId": "REQ-003.2.2",
-  "hash": "f06967fba1ab",
-  "verdict": "pass",
-  "summary": "writeVerdict (called by pass/fail) and init both invoke ensureReviewStorageRules, which appends the 2119 gitignore block LAST in root .gitignore with !.2119/, !.2119/verdicts/ and !.2119/verdicts/**, plus last-position repairs to any existing .2119/.gitignore and .2119/verdicts/.gitignore; verdicts are written as pretty-printed 2-space JSON at .2119/verdicts/<reviewId>.json. Verified empirically: with a pre-existing '.2119/' rule and even with '*' in .gitignore, the verdict file is stageable without -f while .2119/reviews/ stays ignored.",
-  "timestamp": "2026-08-01T06:31:16.680Z"
-}

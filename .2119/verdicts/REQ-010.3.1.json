@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.3.1--4378fab560ac",
+  "requirementId": "REQ-010.3.1",
+  "hash": "4378fab560ac",
+  "verdict": "pass",
+  "summary": "End-to-end CLI cases report changed-spec lint, affected coverage/freshness/verify failures and changed-test annotation errors while suppressing paired pre-existing out-of-scope violations.",
+  "timestamp": "2026-08-03T16:10:07.763Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.2.2--c3734612e721",
+  "requirementId": "REQ-003.2.2",
+  "hash": "c3734612e721",
+  "verdict": "pass",
+  "summary": "pass and fail write JSON.stringify records to .2119/verdicts/<requirementId>.json, while verdict writes and init repair root and nested ignore rules to keep verdict JSON trackable",
+  "timestamp": "2026-08-03T16:02:57.025Z"
+}

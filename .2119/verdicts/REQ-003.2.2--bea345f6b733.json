@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.2.2--bea345f6b733",
-  "requirementId": "REQ-003.2.2",
-  "hash": "bea345f6b733",
-  "verdict": "pass",
-  "summary": "pass and fail serialize verdict records as plain JSON in .2119/verdicts/, while init and verdict writes repair ignore rules so those records remain trackable.",
-  "timestamp": "2026-08-02T22:29:35.122Z"
-}

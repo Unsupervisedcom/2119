@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.2--78914ea7df4a",
+  "requirementId": "REQ-003.8.2",
+  "hash": "78914ea7df4a",
+  "verdict": "pass",
+  "summary": "Current renderInstructions and generateAuditInstructions direct reviewers to reject corpus cases 001–011 and 014 for their documented escapes while accepting controls 012–013.",
+  "timestamp": "2026-08-03T16:03:01.696Z"
+}

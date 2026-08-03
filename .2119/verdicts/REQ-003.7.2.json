@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.7.2--9d4edf786d45",
+  "requirementId": "REQ-003.7.2",
+  "hash": "9d4edf786d45",
+  "verdict": "pass",
+  "summary": "Annotated test rejects truncated JSON and an empty-summary record, with check naming the stable verdict file and concrete parse or validation reason",
+  "timestamp": "2026-08-03T15:57:38.695Z"
+}

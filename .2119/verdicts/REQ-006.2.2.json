@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-006.2.2--1550ab3a466a",
+  "requirementId": "REQ-006.2.2",
+  "hash": "1550ab3a466a",
+  "verdict": "pass",
+  "summary": "The CLI test proves one current stable verdict is neither deleted nor rewritten and its passing check remains passing after prune.",
+  "timestamp": "2026-08-03T16:09:24.751Z"
+}

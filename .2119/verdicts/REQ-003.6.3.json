@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.6.3--4fa1d92e29a1",
+  "requirementId": "REQ-003.6.3",
+  "hash": "4fa1d92e29a1",
+  "verdict": "pass",
+  "summary": "Packaged CLI test rejects missing or mis-scoped audits, non-adversarial directives, stale passes, and any byte change to current, failing, orphan, or multiple verdict records",
+  "timestamp": "2026-08-03T16:15:20.573Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.7.3--957c25b9bde5",
+  "requirementId": "REQ-003.7.3",
+  "hash": "957c25b9bde5",
+  "verdict": "fail",
+  "summary": "The test accepts <requirementId>.json despite the exact <reviewId>.json requirement and never verifies prune agreement; it only rejects a legacy-shaped filename with the wrong hash.",
+  "timestamp": "2026-08-03T15:52:09.333Z"
+}
