@@ -229,6 +229,7 @@ switch (command) {
       console.log(JSON.stringify(report, null, 2));
     } else {
       printViolations(report.violations);
+      for (const notice of report.migrationNotices) console.log(notice);
       if (report.manualRequirements.length > 0) {
         console.log(`\nManual requirements (not automatically checked):`);
         for (const m of report.manualRequirements) console.log(`  - ${m.id}: ${m.text}`);
@@ -247,10 +248,18 @@ switch (command) {
   case "prune": {
     const ctx = buildContext(root);
     requireInitialized(ctx);
-    const current = new Set(ctx.reviewTargets.map((t) => t.reviewId));
-    const pruned = pruneVerdicts(root, current);
-    for (const id of pruned) console.log(`pruned .2119/verdicts/${id}.json`);
-    console.log(`prune: removed ${pruned.length} orphaned verdict(s), kept ${ctx.verdicts.size - pruned.length}`);
+    const current = new Map(ctx.reviewTargets.map((t) => [t.requirement.id, t.reviewId]));
+    const result = pruneVerdicts(root, current);
+    for (const action of result.actions) {
+      if (action.kind === "migrated") {
+        console.log(`migrated .2119/verdicts/${action.source} -> .2119/verdicts/${action.destination}`);
+      } else {
+        console.log(`pruned .2119/verdicts/${action.source}`);
+      }
+    }
+    const removed = result.actions.filter((action) => action.kind === "pruned").length;
+    const migrated = result.actions.filter((action) => action.kind === "migrated").length;
+    console.log(`prune: removed ${removed} orphaned verdict(s), migrated ${migrated}, kept ${result.kept}`);
     break;
   }
 

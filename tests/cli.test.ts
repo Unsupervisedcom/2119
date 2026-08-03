@@ -270,7 +270,7 @@ describe("cli end-to-end", () => {
       mkdirSync(join(verdictRoot, ".2119/verdicts"), { recursive: true });
       writeFileSync(join(verdictRoot, ".2119/verdicts/.gitignore"), "*.json\n");
       expect(run(verdictRoot, [command, verdictId!, "--summary", `${command} remains trackable`]).status).toBe(0);
-      const verdictPath = join(verdictRoot, `.2119/verdicts/${verdictId}.json`);
+      const verdictPath = join(verdictRoot, ".2119/verdicts/FIX-001.1.1.json");
       const record = JSON.parse(readFileSync(verdictPath, "utf8"));
       expect(record).toMatchObject({
         reviewId: verdictId,
@@ -281,7 +281,7 @@ describe("cli end-to-end", () => {
       expect(record.hash).toBe(verdictId!.slice(-12));
       expect(Number.isNaN(Date.parse(record.timestamp))).toBe(false);
       expect(() =>
-        execFileSync("git", ["check-ignore", "-q", `.2119/verdicts/${verdictId}.json`], { cwd: verdictRoot }),
+        execFileSync("git", ["check-ignore", "-q", ".2119/verdicts/FIX-001.1.1.json"], { cwd: verdictRoot }),
       ).toThrow();
     }
   });

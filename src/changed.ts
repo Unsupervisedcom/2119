@@ -268,7 +268,8 @@ function scopeContext(
     if (
       parsed &&
       currentRequirements.has(parsed.requirementId) &&
-      (currentReviewIds.get(parsed.requirementId) === parsed.reviewId ||
+      (parsed.reviewId === undefined ||
+        currentReviewIds.get(parsed.requirementId) === parsed.reviewId ||
         baselineReviewIds.get(parsed.requirementId) === parsed.reviewId)
     ) {
       affected.add(parsed.requirementId);
@@ -294,7 +295,8 @@ function scopeContext(
     const assigned = Boolean(
       parsed &&
         currentRequirements.has(parsed.requirementId) &&
-        (currentReviewIds.get(parsed.requirementId) === parsed.reviewId ||
+        (parsed.reviewId === undefined ||
+          currentReviewIds.get(parsed.requirementId) === parsed.reviewId ||
           baselineReviewIds.get(parsed.requirementId) === parsed.reviewId),
     );
     return assigned ? affected.has(parsed!.requirementId) : changedPaths.has(path);
@@ -319,6 +321,7 @@ function scopeContext(
     lintViolations,
     coverViolations,
     reviewViolations,
+    migrationNotices: current.migrationNotices.filter((notice) => affected.has(notice.requirementId)),
     verifyViolations,
     notInitialized: current.notInitialized && baseline.notInitialized,
     scopedRequirementIds: affected,
@@ -367,8 +370,9 @@ function quotedRequirementId(message: string): string | undefined {
   return message.match(/requirement ID "([^"]+)"/)?.[1];
 }
 
-function verdictReview(path: string): { reviewId: string; requirementId: string } | undefined {
+function verdictReview(path: string): { reviewId?: string; requirementId: string } | undefined {
   const name = basename(path).replace(/\.json$/, "");
   const parsed = splitReviewId(name);
-  return parsed ? { reviewId: name, requirementId: parsed.requirementId } : undefined;
+  if (parsed) return { reviewId: name, requirementId: parsed.requirementId };
+  return /^[A-Za-z0-9.-]+$/.test(name) ? { requirementId: name } : undefined;
 }

@@ -7,6 +7,7 @@ import { computeReviewId, fileParts } from "./hash.js";
 import { evidenceBlockParts } from "./annotations.js";
 import { matchGlobs } from "./files.js";
 import { allRequirements } from "./spec.js";
+import type { VerdictFile } from "./verdict.js";
 
 export const REVIEWS_DIR = ".2119/reviews";
 
@@ -79,9 +80,32 @@ export function computeReviewTargets(
 export function verdictViolations(
   targets: Omit<ReviewTask, "instructionPath">[],
   verdicts: Map<string, Verdict>,
+  stableFiles: Map<string, VerdictFile> = new Map(),
 ): Violation[] {
   const out: Violation[] = [];
   for (const t of targets) {
+    const stable = stableFiles.get(t.requirement.id);
+    if (stable) {
+      // Malformed stable files already produce their own fail-closed scan
+      // violation and must never fall back to a legacy pass.
+      if (!stable.verdict) continue;
+      if (stable.verdict.reviewId !== t.reviewId) {
+        out.push({
+          file: `${VERDICTS_DIR_HINT}/${stable.name}`,
+          line: 1,
+          rule: "REQ-003.3.1",
+          message: `${t.requirement.id} has a stale review verdict (recorded ${stable.verdict.reviewId}, current ${t.reviewId}); run \`2119 review\``,
+        });
+      } else if (stable.verdict.verdict === "fail") {
+        out.push({
+          file: `${VERDICTS_DIR_HINT}/${stable.name}`,
+          line: 1,
+          rule: "REQ-003.2.4",
+          message: `${t.requirement.id} has a failing review verdict: ${stable.verdict.summary}`,
+        });
+      }
+      continue;
+    }
     const v = verdicts.get(t.reviewId);
     if (!v) {
       out.push({

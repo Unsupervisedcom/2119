@@ -81,9 +81,9 @@ describe("state maintenance (REQ-006)", () => {
     writeFileSync(join(root, "tests/widget.test.js"), "// 2119: FIX-001.1.1\ntest('spin v2', () => {})\n");
     const prune = run(root, ["prune"]);
     expect(prune.status).toBe(0);
-    expect(prune.stdout).toContain(`pruned .2119/verdicts/${oldId}.json`);
+    expect(prune.stdout).toContain("pruned .2119/verdicts/FIX-001.1.1.json");
     expect(prune.stdout).toContain("removed 1 orphaned verdict(s)");
-    expect(existsSync(join(root, ".2119/verdicts", `${oldId}.json`))).toBe(false);
+    expect(existsSync(join(root, ".2119/verdicts/FIX-001.1.1.json"))).toBe(false);
   });
 
   // 2119: REQ-006.2.2
@@ -96,7 +96,7 @@ describe("state maintenance (REQ-006)", () => {
 
     const prune = run(root, ["prune"]);
     expect(prune.stdout).toContain("removed 0 orphaned verdict(s)");
-    expect(existsSync(join(root, ".2119/verdicts", `${id}.json`))).toBe(true);
+    expect(existsSync(join(root, ".2119/verdicts/FIX-001.1.1.json"))).toBe(true);
     expect(run(root, ["check"]).status).toBe(0);
   });
 });

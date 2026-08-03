@@ -6,7 +6,7 @@ import { parseSpec } from "./spec.js";
 import { scanAnnotations } from "./annotations.js";
 import { computeCoverage, type CoverageResult } from "./cover.js";
 import { computeReviewTargets, verdictViolations, type ReviewTask } from "./review.js";
-import { scanVerdicts } from "./verdict.js";
+import { legacyMigrationNotices, scanVerdicts, type MigrationNotice } from "./verdict.js";
 import { runVerifyCommands } from "./verify.js";
 import { allRequirements } from "./spec.js";
 import type { Annotation, SpecFile, Verdict, Violation } from "./model.js";
@@ -27,6 +27,7 @@ export interface CheckContext {
   coverViolations: Violation[];
   reviewViolations: Violation[];
   malformedVerdictViolations: Violation[];
+  migrationNotices: MigrationNotice[];
   verifyViolations: Violation[];
   notInitialized: boolean;
   /** Present for `check --changed`; limits report counts and manual output to affected requirements. */
@@ -90,8 +91,11 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
   const allReviewTargets = computeReviewTargets(config, specs, coverage, repoFiles, annotations, markerLineByFile);
   const reviewTargets = config.reviews ? allReviewTargets : [];
   // Malformed verdict files are loud violations, not silent passes or skips (REQ-003.7.2).
-  const { verdicts, violations: malformedVerdicts } = scanVerdicts(root);
-  const reviewViolations = [...malformedVerdicts, ...verdictViolations(reviewTargets, verdicts)];
+  const verdictScan = scanVerdicts(root);
+  const { verdicts, violations: malformedVerdicts, stableFiles } = verdictScan;
+  const currentReviewIds = new Map(reviewTargets.map((target) => [target.requirement.id, target.reviewId]));
+  const migrationNotices = legacyMigrationNotices(verdictScan, currentReviewIds);
+  const reviewViolations = [...malformedVerdicts, ...verdictViolations(reviewTargets, verdicts, stableFiles)];
 
   // [review: instructions: <path>] pointing at a missing file (REQ-005.1.4),
   // and [review: <globs>] matching nothing — a typo'd glob must fail loudly
@@ -135,6 +139,7 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
     coverViolations: coverage.violations,
     reviewViolations,
     malformedVerdictViolations: malformedVerdicts,
+    migrationNotices,
     verifyViolations,
     notInitialized,
   };
@@ -145,6 +150,7 @@ export interface CheckReport {
   violations: Violation[];
   uncoveredRequirements: string[];
   staleReviews: string[];
+  migrationNotices: string[];
   manualRequirements: { id: string; text: string }[];
   requirementCount: number;
   coveredCount: number;
@@ -160,6 +166,7 @@ export function buildReport(ctx: CheckContext): CheckReport {
     violations,
     uncoveredRequirements: ctx.coverage.uncovered.map((r) => r.id),
     staleReviews: ctx.reviewViolations.map((v) => v.message),
+    migrationNotices: ctx.migrationNotices.map((notice) => notice.message),
     manualRequirements: ctx.coverage.manual.map((r) => ({ id: r.id, text: r.text })),
     requirementCount: enforcedTestReqs.length,
     coveredCount: ctx.coverage.covered.size,

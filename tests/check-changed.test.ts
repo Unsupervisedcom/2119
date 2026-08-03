@@ -604,7 +604,9 @@ test('stop', () => expect(widget.stop()).toBe(true))
     const replaced = initRepo(files);
     passReviews(replaced.root, ["FIX-001.1.1"]);
     const replacedBase = commitCurrent(replaced.root);
-    const currentId = git(replaced.root, "ls-files", ".2119/verdicts/FIX-001.1.1*.json").match(/FIX-001\.1\.1--[0-9a-f]{12}/)![0];
+    const currentId = JSON.parse(
+      readFileSync(join(replaced.root, ".2119/verdicts/FIX-001.1.1.json"), "utf8"),
+    ).reviewId as string;
     expect(run(replaced.root, ["fail", currentId, "--summary", "replacement rejection"]).status).toBe(0);
     const replacedReport = json(run(replaced.root, ["check", "--changed", replacedBase, "--json"]));
     expect(replacedReport.staleReviews.join("\n")).toContain("FIX-001.1.1");

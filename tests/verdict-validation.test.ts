@@ -81,11 +81,11 @@ describe("verdict record validation (REQ-003.7)", () => {
     run(root, ["pass", reviewId, "--summary", "asserts spin"]);
 
     // Simulate a mangled merge: truncate the committed verdict.
-    const path = join(verdictsDir(root), `${reviewId}.json`);
+    const path = join(verdictsDir(root), "FIX-001.1.1.json");
     writeFileSync(path, readFileSync(path, "utf8").slice(0, 20));
     const r = run(root, ["check"]);
     expect(r.status).toBe(1);
-    expect(r.stderr).toContain(`.2119/verdicts/${reviewId}.json`);
+    expect(r.stderr).toContain(".2119/verdicts/FIX-001.1.1.json");
     expect(r.stderr).toContain("[REQ-003.7.2]");
     expect(r.stderr).toContain("unparseable JSON");
   });
@@ -97,7 +97,7 @@ describe("verdict record validation (REQ-003.7)", () => {
     expect(run(root, ["check"]).status).toBe(0);
 
     renameSync(
-      join(verdictsDir(root), `${reviewId}.json`),
+      join(verdictsDir(root), "FIX-001.1.1.json"),
       join(verdictsDir(root), `FIX-001.1.1--${"0".repeat(12)}.json`),
     );
     const r = run(root, ["check"]);
