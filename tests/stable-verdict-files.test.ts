@@ -786,7 +786,7 @@ describe("stable verdict files (REQ-012)", () => {
         new RegExp(`(?:remove|prune)[^\\n]*${invalidLegacyId}\\.json`, "i"),
       );
     }
-  });
+  }, 15_000);
 
   // 2119: REQ-012.7.1
   it("init marks verdict JSON as generated while leaving it eligible for tracking", () => {

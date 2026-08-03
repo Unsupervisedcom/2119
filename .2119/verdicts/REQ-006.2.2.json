@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-006.2.2--60f0ea2bac88",
+  "reviewId": "REQ-006.2.2--4a4c997aba5e",
   "requirementId": "REQ-006.2.2",
-  "hash": "60f0ea2bac88",
+  "hash": "4a4c997aba5e",
   "verdict": "pass",
-  "summary": "Real CLI migration preserves the production-created verdict object field-for-field and a post-prune check remains passing; malformed and stale near-counterexamples are rejected.",
-  "timestamp": "2026-08-03T16:44:37.256Z"
+  "summary": "Production-generated current verdict fields survive legacy-to-canonical prune migration exactly, and the post-prune check remains passing.",
+  "timestamp": "2026-08-03T17:19:24.239Z"
 }

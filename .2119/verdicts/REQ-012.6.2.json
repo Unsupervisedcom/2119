@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-012.6.2--7c3d768be7bf",
+  "reviewId": "REQ-012.6.2--a847c92259cf",
   "requirementId": "REQ-012.6.2",
-  "hash": "7c3d768be7bf",
+  "hash": "a847c92259cf",
   "verdict": "pass",
-  "summary": "The production CLI test rejects retained current, stale, orphan, malformed, or invalid legacy JSON; verifies each migration/removal is printed; and asserts only canonical per-requirement JSON remains.",
-  "timestamp": "2026-08-03T16:45:01.457Z"
+  "summary": "Real prune CLI test retains current stable or migrated pass/fail evidence, removes valid/stale/orphan/malformed legacy JSON, reports every exercised migration/prune, and leaves one canonical JSON per requirement.",
+  "timestamp": "2026-08-03T17:19:42.143Z"
 }
