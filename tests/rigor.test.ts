@@ -199,7 +199,8 @@ describe("deterministic rigor (0.6)", () => {
     const id = out.match(/FIX-001\.1\.1--[0-9a-f]{12}/)![0];
     const unpassedId = out.match(/FIX-001\.1\.2--[0-9a-f]{12}/)![0];
     run(root, ["pass", id, "--summary", "asserts spin"]);
-    const verdictBefore = readFileSync(join(root, `.2119/verdicts/${id}.json`), "utf8");
+    const verdictPath = join(root, ".2119/verdicts/FIX-001.1.1.json");
+    const verdictBefore = readFileSync(verdictPath, "utf8");
 
     const r = run(root, ["review", "--audit"]);
     expect(r.stdout).toContain("adversarial audit(s)");
@@ -212,7 +213,7 @@ describe("deterministic rigor (0.6)", () => {
     expect(body).toMatch(/violated while every\s+covering test stays green/);
     // The pass-only-if-no-counterexample directive is present.
     expect(body).toMatch(/Only if you genuinely cannot construct one/);
-    expect(readFileSync(join(root, `.2119/verdicts/${id}.json`), "utf8")).toBe(verdictBefore);
+    expect(readFileSync(verdictPath, "utf8")).toBe(verdictBefore);
   });
 
   // 2119: REQ-003.6.4
