@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.1.1--7c4774226fe5",
-  "requirementId": "self-supplied-evidence.1.1",
-  "hash": "7c4774226fe5",
-  "verdict": "pass",
-  "summary": "Every production-identified test-quality instruction is required to ask for a concrete production failure, while tests reject omission, optionality, and contradictory carve-outs.",
-  "timestamp": "2026-08-02T05:32:14.238Z"
-}

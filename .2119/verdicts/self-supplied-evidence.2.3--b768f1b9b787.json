@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.2.3--b768f1b9b787",
-  "requirementId": "self-supplied-evidence.2.3",
-  "hash": "b768f1b9b787",
-  "verdict": "pass",
-  "summary": "Every production-discovered test-quality instruction is full-body matched, including the conditional file:line demand that the exercised value preserve the production producer's shape; omissions, weakenings, and contradictions fail.",
-  "timestamp": "2026-08-02T23:11:13.182Z"
-}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.2.2--df4ea1367363",
-  "requirementId": "self-supplied-evidence.2.2",
-  "hash": "df4ea1367363",
-  "verdict": "pass",
-  "summary": "The independent full-block oracle now pins 'If that boundary exists' together with file:line citation, test input, and that producer for every production-dispatched test-quality instruction, rejecting reversed or weakened triggers.",
-  "timestamp": "2026-08-02T23:08:52.297Z"
-}

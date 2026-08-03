@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.3--3b0f7cd77ddc",
+  "requirementId": "self-supplied-evidence.2.3",
+  "hash": "3b0f7cd77ddc",
+  "verdict": "pass",
+  "summary": "Built CLI dispatch output is read without reshaping; whole-task equality rejects omission or weakening of the conditional production-shape evidence requirement.",
+  "timestamp": "2026-08-03T17:05:06.321Z"
+}

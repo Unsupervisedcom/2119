@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.3.2--5f8200b2fdd0",
-  "requirementId": "self-supplied-evidence.3.2",
-  "hash": "5f8200b2fdd0",
-  "verdict": "pass",
-  "summary": "PASS: every generated test-quality task is checked for an exact conditional instruction requiring file:line evidence of both production provisioning and the production absence-failure path; omitting the boundary condition, either conjunct, or file:line demand fails.",
-  "timestamp": "2026-08-02T05:36:21.818Z"
-}

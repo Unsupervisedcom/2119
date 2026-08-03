@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.1.1--ef8087c8df76",
-  "requirementId": "self-supplied-evidence.1.1",
-  "hash": "ef8087c8df76",
-  "verdict": "pass",
-  "summary": "Every production-computed test-quality instruction retains the complete canonical task body, so removing, weakening, or contradicting the concrete-production-failure mandate fails the test.",
-  "timestamp": "2026-08-02T23:14:00.257Z"
-}

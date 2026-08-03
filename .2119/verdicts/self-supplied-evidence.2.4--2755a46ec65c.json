@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.2.4--2755a46ec65c",
-  "requirementId": "self-supplied-evidence.2.4",
-  "hash": "2755a46ec65c",
-  "verdict": "pass",
-  "summary": "Fresh dispatch integration verifies every generated test-quality task explicitly requires file:line evidence distinguishing a newly produced observation from an equal pre-existing sentinel, while shared rejection checks forbid weakening language.",
-  "timestamp": "2026-08-02T05:34:49.897Z"
-}

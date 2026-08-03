@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.3.1--16a37e67b6e3",
+  "requirementId": "self-supplied-evidence.3.1",
+  "hash": "16a37e67b6e3",
+  "verdict": "pass",
+  "summary": "Built CLI dispatch output is exercised; whole-task equality rejects definitions omitting binary/service, external invocation, or the gate-process boundary.",
+  "timestamp": "2026-08-03T17:05:06.489Z"
+}

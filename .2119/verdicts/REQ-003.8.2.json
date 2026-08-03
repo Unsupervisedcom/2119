@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-003.8.2--9eb700bf037c",
+  "reviewId": "REQ-003.8.2--6e3c630dbed4",
   "requirementId": "REQ-003.8.2",
-  "hash": "9eb700bf037c",
+  "hash": "6e3c630dbed4",
   "verdict": "pass",
-  "summary": "review.ts requires provenance, conjunct/boundary counterexamples, grammar edges, tautology/over-mock checks, requirement-outcome judgment, adversarial mutants, and evidence-scoped summaries covering corpus cases 001-014",
-  "timestamp": "2026-08-03T16:36:27.245Z"
+  "summary": "test-quality, direct-judgment, audit, and evidence-scoping instructions still expose every expected pass/fail distinction in corpus cases 001-014",
+  "timestamp": "2026-08-03T17:05:00.892Z"
 }

@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.4--9ea89fc088ad",
+  "requirementId": "self-supplied-evidence.2.4",
+  "hash": "9ea89fc088ad",
+  "verdict": "pass",
+  "summary": "Built CLI dispatch output is freshly generated and whole-task equality rejects loss of any initial/default/placeholder/sentinel case or new-versus-pre-existing distinction.",
+  "timestamp": "2026-08-03T17:05:06.404Z"
+}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.7.1--ae376b3595ab",
-  "requirementId": "self-supplied-evidence.7.1",
-  "hash": "ae376b3595ab",
-  "verdict": "pass",
-  "summary": "The fixture rejects missing or weakened evidence-bounded wording for every computed standard target and exactly every audit generated from its computed passing-verdict targets.",
-  "timestamp": "2026-08-02T21:30:44.081Z"
-}

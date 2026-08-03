@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.1--7fbcc5496008",
+  "requirementId": "self-supplied-evidence.2.1",
+  "hash": "7fbcc5496008",
+  "verdict": "pass",
+  "summary": "Every CLI-generated test-quality packet is exact-body checked for consumption of emitted values from separately invoked production components or data sources",
+  "timestamp": "2026-08-03T17:05:01.293Z"
+}

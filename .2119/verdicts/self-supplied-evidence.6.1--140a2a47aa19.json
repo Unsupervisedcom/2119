@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.6.1--140a2a47aa19",
-  "requirementId": "self-supplied-evidence.6.1",
-  "hash": "140a2a47aa19",
-  "verdict": "pass",
-  "summary": "PASS: the real lint workflow exits clean on a covering test containing both literal config input and a factory-built fixture, so either syntax-triggered provenance violation would fail the test.",
-  "timestamp": "2026-08-02T21:27:52.554Z"
-}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.1.1--8e33566ca8c8",
-  "requirementId": "self-supplied-evidence.1.1",
-  "hash": "8e33566ca8c8",
-  "verdict": "fail",
-  "summary": "The provenance slice is exact, but contradictory guidance appended after the counterexample block can permit a generic failure category while every 1.1 assertion remains green.",
-  "timestamp": "2026-08-02T23:08:33.884Z"
-}

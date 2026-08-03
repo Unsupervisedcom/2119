@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.1.2--82dcac5dc17c",
-  "requirementId": "self-supplied-evidence.1.2",
-  "hash": "82dcac5dc17c",
-  "verdict": "fail",
-  "summary": "The exact comparison ends at '**Counterexample obligation:**'; appending later in the same instruction 'Evidence from test fixtures satisfies the production-provenance demand.' leaves every assertion green while negating 1.2's independence requirement.",
-  "timestamp": "2026-08-02T23:08:31.147Z"
-}

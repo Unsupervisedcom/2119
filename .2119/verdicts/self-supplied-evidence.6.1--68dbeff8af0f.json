@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.6.1--68dbeff8af0f",
-  "requirementId": "self-supplied-evidence.6.1",
-  "hash": "68dbeff8af0f",
-  "verdict": "pass",
-  "summary": "The production lint CLI scans copied annotated tests containing both literal constructions and factory functions, and the test requires status 0 plus the exact clean-spec count, so a syntax-only provenance violation fails.",
-  "timestamp": "2026-08-02T23:12:28.571Z"
-}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.3.1--0c0cd9b96a10",
-  "requirementId": "self-supplied-evidence.3.1",
-  "hash": "0c0cd9b96a10",
-  "verdict": "pass",
-  "summary": "Every production-computed test-quality task exactly defines the boundary as invocation of a binary or service outside the gate's own process, with the complete task snapshot rejecting weakened definitions.",
-  "timestamp": "2026-08-02T23:14:48.392Z"
-}

@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.2.1--7da77538aed0",
-  "requirementId": "self-supplied-evidence.2.1",
-  "hash": "7da77538aed0",
-  "verdict": "pass",
-  "summary": "Every production-dispatched test-quality instruction must match an independent full provenance oracle, so altering any producer/consumer boundary conjunct—consumption, emitted value, separate invocation, production component, or production data source—fails.",
-  "timestamp": "2026-08-02T23:08:26.294Z"
-}

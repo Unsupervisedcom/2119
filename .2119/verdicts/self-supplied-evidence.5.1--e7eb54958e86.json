@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.5.1--e7eb54958e86",
-  "requirementId": "self-supplied-evidence.5.1",
-  "hash": "e7eb54958e86",
-  "verdict": "pass",
-  "summary": "The test exercises a real generated [review] direct-judgment instruction and rejects inclusion of every specified test-quality provenance question category while confirming the direct-judgment prompt remains present.",
-  "timestamp": "2026-08-02T05:38:41.022Z"
-}

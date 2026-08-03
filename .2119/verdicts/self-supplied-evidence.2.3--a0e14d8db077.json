@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.2.3--a0e14d8db077",
-  "requirementId": "self-supplied-evidence.2.3",
-  "hash": "a0e14d8db077",
-  "verdict": "pass",
-  "summary": "Every production-discovered test-quality task is full-body matched, pinning the conditional file:line demand that the covering test's exercised input preserve the production producer's value shape.",
-  "timestamp": "2026-08-02T23:14:29.592Z"
-}

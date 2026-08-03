@@ -318,6 +318,13 @@ ${modelLine}
 ## Evidence files
 
 ${evidenceList}
+${custom ? `
+## Additional review criteria
+
+*(from \`${custom.path}\` — these extend the requirement above)*
+
+${custom.content}
+` : ""}
 
 ## Your task
 
@@ -326,7 +333,7 @@ ${question}
 **Judge the requirement too:** if the requirement itself is ambiguous, untestable, or states an
 implementation mechanism rather than an observable outcome, fail with that finding — a bad
 requirement honestly tested is still a bad requirement.
-${custom ? `\n## Additional review criteria\n\n*(from \`${custom.path}\` — these extend the requirement above)*\n\n${custom.content}\n` : ""}
+
 ## Recording your verdict
 
 Keep the verdict summary's subject no broader than the cited evidence: preserve concrete member names and singular/plural scope; do not promote member-specific evidence into a category claim.

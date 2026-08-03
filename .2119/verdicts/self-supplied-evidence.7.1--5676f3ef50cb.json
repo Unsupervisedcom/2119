@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.7.1--5676f3ef50cb",
-  "requirementId": "self-supplied-evidence.7.1",
-  "hash": "5676f3ef50cb",
-  "verdict": "pass",
-  "summary": "All mechanically computed standard targets match complete kind-specific task oracles, and audit filenames exactly equal the computed passing-target set with every audit matching its full oracle; each pins concrete names, cardinality, and the category-promotion prohibition.",
-  "timestamp": "2026-08-02T23:15:20.011Z"
-}

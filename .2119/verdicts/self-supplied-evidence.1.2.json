@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.1.2--c3c97de002d9",
+  "requirementId": "self-supplied-evidence.1.2",
+  "hash": "c3c97de002d9",
+  "verdict": "pass",
+  "summary": "Every CLI-generated test-quality packet is exact-body checked for file:line reachability independent of tests, fixtures, prompts, triggers, and decisive observations",
+  "timestamp": "2026-08-03T17:05:01.162Z"
+}
