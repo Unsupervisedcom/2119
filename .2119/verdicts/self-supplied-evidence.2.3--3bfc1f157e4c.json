@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.2.3--3bfc1f157e4c",
-  "requirementId": "self-supplied-evidence.2.3",
-  "hash": "3bfc1f157e4c",
-  "verdict": "pass",
-  "summary": "The generated-task test covers every production-derived test-quality target and rejects omission or weakening of the required file:line trace that the exercised input preserves the production producer's value shape.",
-  "timestamp": "2026-08-02T05:33:56.135Z"
-}

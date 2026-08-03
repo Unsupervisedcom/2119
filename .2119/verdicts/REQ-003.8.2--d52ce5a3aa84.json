@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.8.2--d52ce5a3aa84",
-  "requirementId": "REQ-003.8.2",
-  "hash": "d52ce5a3aa84",
-  "verdict": "pass",
-  "summary": "The current standard and audit instructions retain the checks needed by calibration cases 001-014: tautology/over-mocking flags, provenance, conjunct and boundary counterexamples, requirement-quality judgment, and evidence-bounded summary scope; case 013 now rejects each named malformed-record conjunct and keeps a genuine-writer pass control.",
-  "timestamp": "2026-08-02T22:34:56.716Z"
-}

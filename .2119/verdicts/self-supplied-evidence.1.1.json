@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.1.1--afb9cc135da4",
+  "requirementId": "self-supplied-evidence.1.1",
+  "hash": "afb9cc135da4",
+  "verdict": "pass",
+  "summary": "The CLI-generated packet set is exhaustively exact-body checked and rejects omission or weakening of the concrete covering-test production-failure demand",
+  "timestamp": "2026-08-03T17:05:01.031Z"
+}

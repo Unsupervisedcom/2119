@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.7.1--a75c8b3b6ac2",
-  "requirementId": "self-supplied-evidence.7.1",
-  "hash": "a75c8b3b6ac2",
-  "verdict": "fail",
-  "summary": "Standard and audit instructions are covered, but contradictory guidance such as 'A category-level summary is sufficient for member-specific evidence' bypasses the negative regex and leaves every assertion green.",
-  "timestamp": "2026-08-02T23:12:16.515Z"
-}

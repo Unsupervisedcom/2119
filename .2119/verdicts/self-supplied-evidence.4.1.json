@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.4.1--c246036538fc",
+  "requirementId": "self-supplied-evidence.4.1",
+  "hash": "c246036538fc",
+  "verdict": "pass",
+  "summary": "Generated test-quality packets from the spawned production CLI retain the explicit fail-on-absent-or-self-supplied-provenance direction for every parsed target.",
+  "timestamp": "2026-08-03T17:05:04.663Z"
+}

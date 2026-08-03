@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-012.6.1--159b88d54fa9",
+  "requirementId": "REQ-012.6.1",
+  "hash": "159b88d54fa9",
+  "verdict": "pass",
+  "summary": "The real prune CLI preserves current stable records over conflicting legacy evidence and migrates current legacy pass/fail records byte-for-field to stable paths; malformed near-counterexamples are rejected.",
+  "timestamp": "2026-08-03T17:19:26.772Z"
+}

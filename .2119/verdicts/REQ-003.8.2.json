@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.2--6e3c630dbed4",
+  "requirementId": "REQ-003.8.2",
+  "hash": "6e3c630dbed4",
+  "verdict": "pass",
+  "summary": "test-quality, direct-judgment, audit, and evidence-scoping instructions still expose every expected pass/fail distinction in corpus cases 001-014",
+  "timestamp": "2026-08-03T17:05:00.892Z"
+}

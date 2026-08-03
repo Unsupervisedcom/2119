@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.5.1--c1a086a4ad44",
+  "requirementId": "self-supplied-evidence.5.1",
+  "hash": "c1a086a4ad44",
+  "verdict": "pass",
+  "summary": "Generated direct-judgment packets for parsed [review] targets exactly retain the direct task and omit the test-quality provenance section.",
+  "timestamp": "2026-08-03T17:05:04.793Z"
+}

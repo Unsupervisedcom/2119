@@ -189,17 +189,34 @@ describe("deterministic rigor (0.6)", () => {
 
   // 2119: REQ-003.6.3
   it("--audit generates adversarial instructions for passing verdicts only, without touching them", () => {
-    // Two requirements: one gets a passing verdict, one stays unreviewed.
-    const root = fixture(`${SPEC}2. The widget MUST stop.\n`);
+    // Three requirements: one passes, one fails, and one has no verdict.
+    const root = fixture(`${SPEC}2. The widget MUST stop.\n3. The widget MUST pause.\n`);
     writeFileSync(
       join(root, "tests/widget.test.js"),
-      "// 2119: FIX-001.1.1\ntest('spins', () => {})\n// 2119: FIX-001.1.2\ntest('stops', () => {})\n",
+      "// 2119: FIX-001.1.1\ntest('spins', () => {})\n" +
+        "// 2119: FIX-001.1.2\ntest('stops', () => {})\n" +
+        "// 2119: FIX-001.1.3\ntest('pauses', () => {})\n",
     );
     const out = run(root, ["review"]).stdout;
     const id = out.match(/FIX-001\.1\.1--[0-9a-f]{12}/)![0];
     const unpassedId = out.match(/FIX-001\.1\.2--[0-9a-f]{12}/)![0];
+    const missingId = out.match(/FIX-001\.1\.3--[0-9a-f]{12}/)![0];
     run(root, ["pass", id, "--summary", "asserts spin"]);
-    const verdictBefore = readFileSync(join(root, `.2119/verdicts/${id}.json`), "utf8");
+    run(root, ["fail", unpassedId, "--summary", "stop boundary missing"]);
+    const verdictPath = join(root, ".2119/verdicts/FIX-001.1.1.json");
+    const failingVerdictPath = join(root, ".2119/verdicts/FIX-001.1.2.json");
+    const verdictBefore = readFileSync(verdictPath, "utf8");
+    const failingVerdictBefore = readFileSync(failingVerdictPath, "utf8");
+    const orphanVerdictPath = join(root, ".2119/verdicts/FIX-999.1.1.json");
+    const orphanVerdict = `${JSON.stringify({
+      reviewId: `FIX-999.1.1--${"a".repeat(12)}`,
+      requirementId: "FIX-999.1.1",
+      hash: "a".repeat(12),
+      verdict: "pass",
+      summary: "orphan audit history",
+      timestamp: "2026-08-03T00:00:00.000Z",
+    })}\n`;
+    writeFileSync(orphanVerdictPath, orphanVerdict);
 
     const r = run(root, ["review", "--audit"]);
     expect(r.stdout).toContain("adversarial audit(s)");
@@ -207,12 +224,94 @@ describe("deterministic rigor (0.6)", () => {
     expect(existsSync(auditPath)).toBe(true);
     // Scoping: no audit for the requirement without a passing verdict.
     expect(existsSync(join(root, `.2119/reviews/${unpassedId}.audit.md`))).toBe(false);
+    expect(existsSync(join(root, `.2119/reviews/${missingId}.audit.md`))).toBe(false);
     const body = readFileSync(auditPath, "utf8");
     expect(body).toContain("Adversarial Audit");
+    expect(body).toMatch(/concrete mutant or input/i);
     expect(body).toMatch(/violated while every\s+covering test stays green/);
     // The pass-only-if-no-counterexample directive is present.
     expect(body).toMatch(/Only if you genuinely cannot construct one/);
-    expect(readFileSync(join(root, `.2119/verdicts/${id}.json`), "utf8")).toBe(verdictBefore);
+    expect(body.split("\n").filter((line) => /\bpass(?:ed)?\b/i.test(line))).toEqual([
+      "This requirement's review previously PASSED. You are the adversary: your job is to break that",
+      "- Only if you genuinely cannot construct one after honest effort: record a PASS stating the",
+      `npx rfc2119 pass ${id} --summary "audit: <strongest attempted counterexample and why it dies>"`,
+    ]);
+    expect(body).toBe(
+      [
+        "# 2119 Adversarial Audit: FIX-001.1.1",
+        "",
+        "This requirement's review previously PASSED. You are the adversary: your job is to break that",
+        "verdict, not to confirm it. You did not write the code or the tests under audit.",
+        "",
+        "## Requirement",
+        "",
+        "> The widget MUST spin.",
+        "",
+        "*(FIX-001.1.1, keyword: MUST)*",
+        "",
+        "## Evidence files",
+        "",
+        "- tests/widget.test.js",
+        "",
+        "## Your task",
+        "",
+        "**Construct a concrete mutant or input under which this requirement is violated while every",
+        "covering test stays green.** Enumerate the requirement's conjuncts and boundary terms; probe the",
+        "negative space (what must be refused, not what is accepted); consider shared fixtures, preludes,",
+        "and paths the tests never touch. Reason from the requirement's text, never from the",
+        "implementation's current behavior.",
+        "",
+        "- If you find such a counterexample: record a FAIL with the mutant described concretely enough",
+        "  to reproduce.",
+        "- Only if you genuinely cannot construct one after honest effort: record a PASS stating the",
+        "  strongest candidate you tried and why it fails to survive.",
+        "",
+        "## Recording your verdict",
+        "",
+        "Keep the verdict summary's subject no broader than the cited evidence: preserve concrete member names and singular/plural scope; do not promote member-specific evidence into a category claim.",
+        "",
+        "```",
+        `npx rfc2119 pass ${id} --summary "audit: <strongest attempted counterexample and why it dies>"`,
+        `npx rfc2119 fail ${id} --summary "audit: <the counterexample, reproducibly>"`,
+        "```",
+        "",
+        "Do not edit any files; report, don't fix.",
+        "",
+      ].join("\n"),
+    );
+    expect(readFileSync(verdictPath, "utf8")).toBe(verdictBefore);
+    expect(readFileSync(failingVerdictPath, "utf8")).toBe(failingVerdictBefore);
+    expect(readFileSync(orphanVerdictPath, "utf8")).toBe(orphanVerdict);
+
+    // A pass for a superseded review ID is not a current pass and therefore
+    // must not continue producing audits.
+    writeFileSync(
+      join(root, "tests/widget.test.js"),
+      "// 2119: FIX-001.1.1\ntest('spins twice', () => {})\n" +
+        "// 2119: FIX-001.1.2\ntest('stops', () => {})\n" +
+        "// 2119: FIX-001.1.3\ntest('pauses', () => {})\n",
+    );
+    const staleAudit = run(root, ["review", "--audit"]);
+    expect(staleAudit.stdout).not.toContain("adversarial audit(s)");
+    expect(existsSync(auditPath)).toBe(false);
+    expect(readFileSync(verdictPath, "utf8")).toBe(verdictBefore);
+
+    // With multiple existing passing verdicts, audit generation preserves
+    // every record byte-for-byte while producing one audit for each.
+    const multiRoot = fixture(`${SPEC}2. The widget MUST stop.\n`);
+    writeFileSync(
+      join(multiRoot, "tests/widget.test.js"),
+      "// 2119: FIX-001.1.1\ntest('spins', () => {})\n// 2119: FIX-001.1.2\ntest('stops', () => {})\n",
+    );
+    const multiReview = run(multiRoot, ["review"]).stdout;
+    const multiIds = multiReview.match(/FIX-001\.1\.[12]--[0-9a-f]{12}/g)!;
+    for (const multiId of multiIds) run(multiRoot, ["pass", multiId, "--summary", "honest"]);
+    const multiPaths = ["FIX-001.1.1", "FIX-001.1.2"].map((requirementId) =>
+      join(multiRoot, `.2119/verdicts/${requirementId}.json`),
+    );
+    const beforeAudits = multiPaths.map((path) => readFileSync(path, "utf8"));
+    expect(run(multiRoot, ["review", "--audit"]).stdout).toContain("2 adversarial audit(s)");
+    expect(multiPaths.map((path) => readFileSync(path, "utf8"))).toEqual(beforeAudits);
   });
 
   // 2119: REQ-003.6.4

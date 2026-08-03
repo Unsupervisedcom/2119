@@ -27,4 +27,4 @@ a side effect.
 ### REQ-006.2: Verdict pruning
 
 1. `2119 prune` MUST delete every verdict file whose review ID does not match any current review target, listing each deleted file.
-2. `2119 prune` MUST leave verdicts that match current review targets untouched, so a passing `2119 check` still passes after a prune.
+2. `2119 prune` MUST preserve the fields of a well-formed verdict record that matches a current review target, even when migrating that record to its canonical path, so a passing `2119 check` still passes after a prune.

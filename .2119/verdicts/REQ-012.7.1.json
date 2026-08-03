@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-012.7.1--8875ee2f6f6c",
+  "requirementId": "REQ-012.7.1",
+  "hash": "8875ee2f6f6c",
+  "verdict": "pass",
+  "summary": "The annotated init test invokes dist/cli.js in a real Git repository, verifies the exact verdict JSON attribute resolves to true, and proves the file is unignored and stageable.",
+  "timestamp": "2026-08-03T16:10:01.883Z"
+}

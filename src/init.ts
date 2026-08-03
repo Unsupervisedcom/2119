@@ -9,7 +9,7 @@ import {
   refreshPinnedArtifacts,
   type AgentName,
 } from "./adapters.js";
-import { ensureReviewStorageRules } from "./verdict.js";
+import { ensureReviewStorageRules, ensureVerdictAttributes } from "./verdict.js";
 
 const CONFIG_TEMPLATE = `# 2119 configuration — https://github.com/Unsupervisedcom/2119
 # All fields optional; these are the defaults unless noted.
@@ -173,6 +173,9 @@ export function runInit(root: string, args: string[]): void {
   // history and must never be ignored (REQ-003.1.6, REQ-003.2.2).
   if (ensureReviewStorageRules(root)) {
     created.push(".gitignore (2119 review/verdict rules)");
+  }
+  if (ensureVerdictAttributes(root)) {
+    created.push(".gitattributes (2119 generated verdict rule)");
   }
 
   const agentsResult = upsertSection(join(root, "AGENTS.md"), refresh);

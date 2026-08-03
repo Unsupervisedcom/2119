@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.4.1--38564acf58d7",
-  "requirementId": "self-supplied-evidence.4.1",
-  "hash": "38564acf58d7",
-  "verdict": "pass",
-  "summary": "The complete task snapshot requires Record FAIL for both absent applicable provenance evidence and evidence that production cannot produce the failure independently of test setup across every production-computed test-quality target.",
-  "timestamp": "2026-08-02T23:11:40.674Z"
-}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-006.2.2--4a4c997aba5e",
+  "requirementId": "REQ-006.2.2",
+  "hash": "4a4c997aba5e",
+  "verdict": "pass",
+  "summary": "Production-generated current verdict fields survive legacy-to-canonical prune migration exactly, and the post-prune check remains passing.",
+  "timestamp": "2026-08-03T17:19:24.239Z"
+}

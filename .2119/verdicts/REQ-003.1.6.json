@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.6--1795cb813d37",
+  "requirementId": "REQ-003.1.6",
+  "hash": "1795cb813d37",
+  "verdict": "pass",
+  "summary": "Compiled CLI test confirms two generated instruction files land in .2119/reviews/ and clean init makes review packets effectively gitignored.",
+  "timestamp": "2026-08-03T15:57:48.088Z"
+}

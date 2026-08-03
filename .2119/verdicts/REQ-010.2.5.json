@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.5--92e235b8d036",
+  "requirementId": "REQ-010.2.5",
+  "hash": "92e235b8d036",
+  "verdict": "pass",
+  "summary": "Built-CLI integration rejects added, removed, replaced, assigned-malformed, and unassigned-malformed current verdict changes while excluding changed historical verdicts and unrelated requirements.",
+  "timestamp": "2026-08-03T15:54:09.368Z"
+}

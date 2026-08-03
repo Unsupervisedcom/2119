@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-006.2.1--b82b2c282604",
+  "requirementId": "REQ-006.2.1",
+  "hash": "b82b2c282604",
+  "verdict": "pass",
+  "summary": "The prune CLI test deletes and individually lists a production-created stale stable verdict plus stable and legacy verdicts with no current target.",
+  "timestamp": "2026-08-03T16:05:29.472Z"
+}

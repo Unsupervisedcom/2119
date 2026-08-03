@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-012.3.1--2cdcb2a572f9",
+  "requirementId": "REQ-012.3.1",
+  "hash": "2cdcb2a572f9",
+  "verdict": "pass",
+  "summary": "Production CLI records pass/fail fields at the canonical path, while check rejects wrong IDs, hash case/value, verdict, summary, timestamp, missing fields, and wrong paths.",
+  "timestamp": "2026-08-03T07:33:40.345Z"
+}

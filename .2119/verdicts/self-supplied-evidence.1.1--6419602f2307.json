@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.1.1--6419602f2307",
-  "requirementId": "self-supplied-evidence.1.1",
-  "hash": "6419602f2307",
-  "verdict": "fail",
-  "summary": "The exact mandate is asserted, but the anti-waiver check misses contradictory guidance such as 'A generic category-level failure is sufficient,' which permits a non-concrete answer while the test stays green.",
-  "timestamp": "2026-08-02T23:07:14.248Z"
-}

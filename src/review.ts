@@ -7,6 +7,7 @@ import { computeReviewId, fileParts } from "./hash.js";
 import { evidenceBlockParts } from "./annotations.js";
 import { matchGlobs } from "./files.js";
 import { allRequirements } from "./spec.js";
+import type { VerdictFile } from "./verdict.js";
 
 export const REVIEWS_DIR = ".2119/reviews";
 
@@ -79,9 +80,32 @@ export function computeReviewTargets(
 export function verdictViolations(
   targets: Omit<ReviewTask, "instructionPath">[],
   verdicts: Map<string, Verdict>,
+  stableFiles: Map<string, VerdictFile> = new Map(),
 ): Violation[] {
   const out: Violation[] = [];
   for (const t of targets) {
+    const stable = stableFiles.get(t.requirement.id);
+    if (stable) {
+      // Malformed stable files already produce their own fail-closed scan
+      // violation and must never fall back to a legacy pass.
+      if (!stable.verdict) continue;
+      if (stable.verdict.reviewId !== t.reviewId) {
+        out.push({
+          file: `${VERDICTS_DIR_HINT}/${stable.name}`,
+          line: 1,
+          rule: "REQ-003.3.1",
+          message: `${t.requirement.id} has a stale review verdict (recorded ${stable.verdict.reviewId}, current ${t.reviewId}); run \`2119 review\``,
+        });
+      } else if (stable.verdict.verdict === "fail") {
+        out.push({
+          file: `${VERDICTS_DIR_HINT}/${stable.name}`,
+          line: 1,
+          rule: "REQ-003.2.4",
+          message: `${t.requirement.id} has a failing review verdict: ${stable.verdict.summary}`,
+        });
+      }
+      continue;
+    }
     const v = verdicts.get(t.reviewId);
     if (!v) {
       out.push({
@@ -112,17 +136,14 @@ export function generateInstructions(
 ): ReviewTask[] {
   const pending = targets.filter((t) => verdicts.get(t.reviewId)?.verdict !== "pass");
   // Keep the directory exactly in sync with the pending set — stale
-  // instruction files from prior rounds are misleading (REQ-006.1). Audit
-  // files stay while their verdict is still a current pass (REQ-003.6.3).
+  // instruction files from prior rounds are misleading (REQ-006.1). Explicit
+  // audit requests regenerate their packets after this cleanup (REQ-003.6.3).
   const dir = join(config.root, REVIEWS_DIR);
   mkdirSync(dir, { recursive: true });
   const pendingIds = new Set(pending.map((t) => t.reviewId));
-  const passingIds = new Set(
-    targets.filter((t) => verdicts.get(t.reviewId)?.verdict === "pass").map((t) => t.reviewId),
-  );
   for (const file of readdirSync(dir)) {
     if (file.endsWith(".audit.md")) {
-      if (!passingIds.has(file.replace(/\.audit\.md$/, ""))) unlinkSync(join(dir, file));
+      unlinkSync(join(dir, file));
     } else if (file.endsWith(".md") && !pendingIds.has(file.replace(/\.md$/, ""))) {
       unlinkSync(join(dir, file));
     }
@@ -261,6 +282,8 @@ Record FAIL when applicable provenance evidence is absent or shows that producti
 **Counterexample obligation:** enumerate the requirement's conjuncts and boundary terms (words
 like "comment", "exactly", "only", "begins with"). For each, construct the nearest violating
 input — the almost-conforming case the requirement forbids — and confirm a test rejects it.
+When a requirement names a grammar or other defined input language, enumerate and probe its edge
+productions rather than accepting coverage of only the most common form.
 Do not reason from the implementation's current behavior; reason from the requirement's text.
 A review that cannot name a rejected counterexample for a boundary term is not a pass.`
       : `**Is this requirement genuinely satisfied by the current state of the evidence files?**
@@ -295,6 +318,13 @@ ${modelLine}
 ## Evidence files
 
 ${evidenceList}
+${custom ? `
+## Additional review criteria
+
+*(from \`${custom.path}\` — these extend the requirement above)*
+
+${custom.content}
+` : ""}
 
 ## Your task
 
@@ -303,7 +333,7 @@ ${question}
 **Judge the requirement too:** if the requirement itself is ambiguous, untestable, or states an
 implementation mechanism rather than an observable outcome, fail with that finding — a bad
 requirement honestly tested is still a bad requirement.
-${custom ? `\n## Additional review criteria\n\n*(from \`${custom.path}\` — these extend the requirement above)*\n\n${custom.content}\n` : ""}
+
 ## Recording your verdict
 
 Keep the verdict summary's subject no broader than the cited evidence: preserve concrete member names and singular/plural scope; do not promote member-specific evidence into a category claim.

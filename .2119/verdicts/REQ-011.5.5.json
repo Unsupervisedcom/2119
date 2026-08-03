@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-011.5.5--bd08ba2ce182",
+  "requirementId": "REQ-011.5.5",
+  "hash": "bd08ba2ce182",
+  "verdict": "pass",
+  "summary": "CLI prune removes pre-existing stale stable verdict files for both REQ-900.1.1 and codex-session-scrollback.1.1",
+  "timestamp": "2026-08-03T15:55:25.252Z"
+}

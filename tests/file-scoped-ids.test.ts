@@ -944,13 +944,13 @@ describe("grammar coexistence (REQ-011.5)", () => {
     const fsOrphan = "codex-session-scrollback.1.1--" + "b".repeat(12);
     writeVerdict(root, legacyOrphan, "REQ-900.1.1", "pass", "stale legacy");
     writeVerdict(root, fsOrphan, "codex-session-scrollback.1.1", "pass", "stale fs");
-    expect(existsSync(join(root, `.2119/verdicts/${legacyOrphan}.json`))).toBe(true);
-    expect(existsSync(join(root, `.2119/verdicts/${fsOrphan}.json`))).toBe(true);
+    expect(existsSync(join(root, ".2119/verdicts/REQ-900.1.1.json"))).toBe(true);
+    expect(existsSync(join(root, ".2119/verdicts/codex-session-scrollback.1.1.json"))).toBe(true);
 
     const prune = run(root, ["prune"]);
     expect(prune.status).toBe(0);
-    expect(existsSync(join(root, `.2119/verdicts/${legacyOrphan}.json`))).toBe(false);
-    expect(existsSync(join(root, `.2119/verdicts/${fsOrphan}.json`))).toBe(false);
+    expect(existsSync(join(root, ".2119/verdicts/REQ-900.1.1.json"))).toBe(false);
+    expect(existsSync(join(root, ".2119/verdicts/codex-session-scrollback.1.1.json"))).toBe(false);
   });
 
   // 2119: REQ-011.5.6

@@ -248,12 +248,19 @@ describe("cli end-to-end", () => {
     ).toThrow();
 
     const dispatchRoot = fixture();
+    writeFileSync(join(dispatchRoot, "specs/FIX-001-widgets.md"), `${SPEC}2. The widget MUST stop.\n`);
+    writeFileSync(
+      join(dispatchRoot, "tests/widget.test.js"),
+      "// 2119: FIX-001.1.1\ntest('spins', () => {})\n// 2119: FIX-001.1.2\ntest('stops', () => {})\n",
+    );
     run(dispatchRoot, ["init"]);
     const pending = run(dispatchRoot, ["review"]);
     expect(pending.status).toBe(1);
-    const reviewId = pending.stdout.match(/FIX-001\.1\.1--[0-9a-f]{12}/)?.[0];
-    expect(reviewId).toBeTruthy();
-    expect(readdirSync(join(dispatchRoot, ".2119/reviews"))).toEqual([`${reviewId}.md`]);
+    const reviewIds = pending.stdout.match(/FIX-001\.1\.[12]--[0-9a-f]{12}/g) ?? [];
+    expect(reviewIds).toHaveLength(2);
+    expect(readdirSync(join(dispatchRoot, ".2119/reviews")).sort()).toEqual(
+      reviewIds.map((reviewId) => `${reviewId}.md`).sort(),
+    );
 
     for (const command of ["pass", "fail"]) {
       const verdictRoot = fixture();
@@ -270,7 +277,7 @@ describe("cli end-to-end", () => {
       mkdirSync(join(verdictRoot, ".2119/verdicts"), { recursive: true });
       writeFileSync(join(verdictRoot, ".2119/verdicts/.gitignore"), "*.json\n");
       expect(run(verdictRoot, [command, verdictId!, "--summary", `${command} remains trackable`]).status).toBe(0);
-      const verdictPath = join(verdictRoot, `.2119/verdicts/${verdictId}.json`);
+      const verdictPath = join(verdictRoot, ".2119/verdicts/FIX-001.1.1.json");
       const record = JSON.parse(readFileSync(verdictPath, "utf8"));
       expect(record).toMatchObject({
         reviewId: verdictId,
@@ -281,7 +288,7 @@ describe("cli end-to-end", () => {
       expect(record.hash).toBe(verdictId!.slice(-12));
       expect(Number.isNaN(Date.parse(record.timestamp))).toBe(false);
       expect(() =>
-        execFileSync("git", ["check-ignore", "-q", `.2119/verdicts/${verdictId}.json`], { cwd: verdictRoot }),
+        execFileSync("git", ["check-ignore", "-q", ".2119/verdicts/FIX-001.1.1.json"], { cwd: verdictRoot }),
       ).toThrow();
     }
   });

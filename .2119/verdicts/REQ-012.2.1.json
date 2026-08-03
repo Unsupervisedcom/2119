@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-012.2.1--bffae6d192ea",
+  "requirementId": "REQ-012.2.1",
+  "hash": "bffae6d192ea",
+  "verdict": "pass",
+  "summary": "Two unawaited production CLI processes record distinct review IDs; both must succeed and leave separate parseable records with their own complete fields and fresh timestamps.",
+  "timestamp": "2026-08-03T16:34:03.118Z"
+}

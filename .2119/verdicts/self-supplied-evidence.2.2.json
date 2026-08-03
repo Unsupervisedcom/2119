@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.2.2--8796d4a6e793",
+  "requirementId": "self-supplied-evidence.2.2",
+  "hash": "8796d4a6e793",
+  "verdict": "pass",
+  "summary": "Built CLI dispatch output is read from generated files; whole-task equality rejects omission of file:line, conditional-boundary, or production-producer input provenance wording.",
+  "timestamp": "2026-08-03T17:05:06.235Z"
+}

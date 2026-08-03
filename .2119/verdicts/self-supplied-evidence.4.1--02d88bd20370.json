@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.4.1--02d88bd20370",
-  "requirementId": "self-supplied-evidence.4.1",
-  "hash": "02d88bd20370",
-  "verdict": "pass",
-  "summary": "Every computed production-generated test-quality task matches the complete oracle, pinning a FAIL for either absent applicable provenance or evidence that production cannot produce the claimed failure independently of test setup.",
-  "timestamp": "2026-08-02T23:14:55.202Z"
-}

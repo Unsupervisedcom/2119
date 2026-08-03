@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.3.2--e873b585f1a6",
+  "requirementId": "self-supplied-evidence.3.2",
+  "hash": "e873b585f1a6",
+  "verdict": "pass",
+  "summary": "Built CLI dispatch output is exercised; whole-task equality rejects omission of the conditional boundary, production provisioning declaration, absent-dependency failure path, or either half of both.",
+  "timestamp": "2026-08-03T17:05:06.568Z"
+}

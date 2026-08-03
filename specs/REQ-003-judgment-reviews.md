@@ -76,7 +76,7 @@ accidental corruption (mangled merges, hand-edits) silently reading as green.
 
 1. A verdict record MUST be counted by the gate only when its `verdict` field is exactly `pass` or `fail`, its `summary` is a nonempty string, its `requirementId` equals the requirement component of its `reviewId`, its `hash` equals the review ID's 12-character suffix, and its `timestamp` parses as a date.
 2. A verdict file that fails to parse or whose record fails validation MUST produce a check violation identifying the file and the reason, rather than being silently skipped or counted as passing.
-3. A verdict file whose filename is not exactly `<reviewId>.json` MUST be treated as malformed, so the check gate and `2119 prune` agree on which file a verdict lives in.
+3. REQUIREMENT REMOVED
 
 ### REQ-003.8: Reviewer calibration corpus
 

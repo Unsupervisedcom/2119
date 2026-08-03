@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.2.2--156362cfdb04",
-  "requirementId": "self-supplied-evidence.2.2",
-  "hash": "156362cfdb04",
-  "verdict": "fail",
-  "summary": "The assertion checks only the citation clause substring: changing its trigger to 'Unless that boundary exists' leaves the test and anti-waiver regexes green while no longer requiring evidence whenever a producer/consumer boundary exists.",
-  "timestamp": "2026-08-02T23:07:37.188Z"
-}

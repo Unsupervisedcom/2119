@@ -1,0 +1,8 @@
+{
+  "reviewId": "self-supplied-evidence.6.1--9eff2a724166",
+  "requirementId": "self-supplied-evidence.6.1",
+  "hash": "9eff2a724166",
+  "verdict": "pass",
+  "summary": "Built lint accepts isolated string/object/array/template/regexp/number/bigint/boolean/null inputs and named/static/imported/arrow factory forms without provenance violations.",
+  "timestamp": "2026-08-03T17:07:21.073Z"
+}

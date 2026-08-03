@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-012.5.1--3828831c8775",
+  "requirementId": "REQ-012.5.1",
+  "hash": "3828831c8775",
+  "verdict": "pass",
+  "summary": "Real-CLI coverage rejects malformed, current-fail, and superseded-only legacy evidence while verifying non-failing source-to-stable migration notices for current and superseded records",
+  "timestamp": "2026-08-03T15:55:36.181Z"
+}

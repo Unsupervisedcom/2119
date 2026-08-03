@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.3.2--781809753ed3",
-  "requirementId": "self-supplied-evidence.3.2",
-  "hash": "781809753ed3",
-  "verdict": "pass",
-  "summary": "Every production-discovered test-quality instruction is full-body matched, pinning the conditional file:line demand for both the production provisioning declaration and the production path that fails when the external dependency is absent.",
-  "timestamp": "2026-08-02T23:11:33.535Z"
-}

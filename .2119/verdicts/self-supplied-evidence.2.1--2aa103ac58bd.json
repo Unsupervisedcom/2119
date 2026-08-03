@@ -1,8 +1,0 @@
-{
-  "reviewId": "self-supplied-evidence.2.1--2aa103ac58bd",
-  "requirementId": "self-supplied-evidence.2.1",
-  "hash": "2aa103ac58bd",
-  "verdict": "pass",
-  "summary": "All generated test-quality tasks are enumerated from production review targets and must contain the exact narrow boundary definition; omission or alteration of consumption, emitted value, separate invocation, or production component/data-source terms fails, while anti-waiver assertions reject contradictory weakening.",
-  "timestamp": "2026-08-02T05:32:29.175Z"
-}
