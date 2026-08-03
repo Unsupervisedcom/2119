@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-003.8.2--78914ea7df4a",
+  "reviewId": "REQ-003.8.2--9eb700bf037c",
   "requirementId": "REQ-003.8.2",
-  "hash": "78914ea7df4a",
+  "hash": "9eb700bf037c",
   "verdict": "pass",
-  "summary": "Current renderInstructions and generateAuditInstructions direct reviewers to reject corpus cases 001–011 and 014 for their documented escapes while accepting controls 012–013.",
-  "timestamp": "2026-08-03T16:03:01.696Z"
+  "summary": "review.ts requires provenance, conjunct/boundary counterexamples, grammar edges, tautology/over-mock checks, requirement-outcome judgment, adversarial mutants, and evidence-scoped summaries covering corpus cases 001-014",
+  "timestamp": "2026-08-03T16:36:27.245Z"
 }

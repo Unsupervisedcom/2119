@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-006.2.2--1550ab3a466a",
+  "reviewId": "REQ-006.2.2--60f0ea2bac88",
   "requirementId": "REQ-006.2.2",
-  "hash": "1550ab3a466a",
+  "hash": "60f0ea2bac88",
   "verdict": "pass",
-  "summary": "The CLI test proves one current stable verdict is neither deleted nor rewritten and its passing check remains passing after prune.",
-  "timestamp": "2026-08-03T16:09:24.751Z"
+  "summary": "Real CLI migration preserves the production-created verdict object field-for-field and a post-prune check remains passing; malformed and stale near-counterexamples are rejected.",
+  "timestamp": "2026-08-03T16:44:37.256Z"
 }

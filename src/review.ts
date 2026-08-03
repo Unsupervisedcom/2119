@@ -133,21 +133,17 @@ export function generateInstructions(
   config: Config,
   targets: Omit<ReviewTask, "instructionPath">[],
   verdicts: Map<string, Verdict>,
-  preserveAudits = false,
 ): ReviewTask[] {
   const pending = targets.filter((t) => verdicts.get(t.reviewId)?.verdict !== "pass");
   // Keep the directory exactly in sync with the pending set — stale
-  // instruction files from prior rounds are misleading (REQ-006.1). Audit
-  // files stay while their verdict is still a current pass (REQ-003.6.3).
+  // instruction files from prior rounds are misleading (REQ-006.1). Explicit
+  // audit requests regenerate their packets after this cleanup (REQ-003.6.3).
   const dir = join(config.root, REVIEWS_DIR);
   mkdirSync(dir, { recursive: true });
   const pendingIds = new Set(pending.map((t) => t.reviewId));
-  const passingIds = new Set(
-    targets.filter((t) => verdicts.get(t.reviewId)?.verdict === "pass").map((t) => t.reviewId),
-  );
   for (const file of readdirSync(dir)) {
     if (file.endsWith(".audit.md")) {
-      if (!preserveAudits || !passingIds.has(file.replace(/\.audit\.md$/, ""))) unlinkSync(join(dir, file));
+      unlinkSync(join(dir, file));
     } else if (file.endsWith(".md") && !pendingIds.has(file.replace(/\.md$/, ""))) {
       unlinkSync(join(dir, file));
     }
@@ -286,6 +282,8 @@ Record FAIL when applicable provenance evidence is absent or shows that producti
 **Counterexample obligation:** enumerate the requirement's conjuncts and boundary terms (words
 like "comment", "exactly", "only", "begins with"). For each, construct the nearest violating
 input — the almost-conforming case the requirement forbids — and confirm a test rejects it.
+When a requirement names a grammar or other defined input language, enumerate and probe its edge
+productions rather than accepting coverage of only the most common form.
 Do not reason from the implementation's current behavior; reason from the requirement's text.
 A review that cannot name a rejected counterexample for a boundary term is not a pass.`
       : `**Is this requirement genuinely satisfied by the current state of the evidence files?**

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-012.6.2--7c3d768be7bf",
+  "requirementId": "REQ-012.6.2",
+  "hash": "7c3d768be7bf",
+  "verdict": "pass",
+  "summary": "The production CLI test rejects retained current, stale, orphan, malformed, or invalid legacy JSON; verifies each migration/removal is printed; and asserts only canonical per-requirement JSON remains.",
+  "timestamp": "2026-08-03T16:45:01.457Z"
+}

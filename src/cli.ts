@@ -111,7 +111,7 @@ switch (command) {
       }
     }
     const auditRequested = args.includes("--audit") || ctx.config.auditAlways;
-    const tasks = generateInstructions(ctx.config, ctx.reviewTargets, ctx.verdicts, auditRequested);
+    const tasks = generateInstructions(ctx.config, ctx.reviewTargets, ctx.verdicts);
     // Audit generation is explicit-only: the flag or `audit: always`, never
     // the plain loop (REQ-003.6.4).
     const auditTasks =

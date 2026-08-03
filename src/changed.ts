@@ -8,7 +8,7 @@ import { evidenceBlockParts } from "./annotations.js";
 import { matchGlobs } from "./files.js";
 import { allRequirements } from "./spec.js";
 import { fileParts, splitReviewId } from "./hash.js";
-import { VERDICTS_DIR } from "./verdict.js";
+import { SAFE_REQUIREMENT_ID, VERDICTS_DIR } from "./verdict.js";
 import { runVerifyCommands, VERIFY_TIMEOUT_MS } from "./verify.js";
 import type { Requirement, Violation } from "./model.js";
 
@@ -374,5 +374,5 @@ function verdictReview(path: string): { reviewId?: string; requirementId: string
   const name = basename(path).replace(/\.json$/, "");
   const parsed = splitReviewId(name);
   if (parsed) return { reviewId: name, requirementId: parsed.requirementId };
-  return /^[A-Za-z0-9.-]+$/.test(name) ? { requirementId: name } : undefined;
+  return SAFE_REQUIREMENT_ID.test(name) ? { requirementId: name } : undefined;
 }

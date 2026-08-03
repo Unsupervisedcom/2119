@@ -78,7 +78,7 @@ export function ensureVerdictAttributes(root: string): boolean {
 }
 
 const SAFE_ID = /^[A-Za-z0-9.-]+--[0-9a-f]{12}$/;
-const SAFE_REQUIREMENT_ID = /^[A-Za-z0-9.-]+$/;
+export const SAFE_REQUIREMENT_ID = /^[A-Za-z0-9.-]+$/;
 
 function verdictPath(root: string, requirementId: string): string {
   if (!SAFE_REQUIREMENT_ID.test(requirementId)) {

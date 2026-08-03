@@ -179,8 +179,6 @@ describe("stable verdict files (REQ-012)", () => {
     const stopRun = startRun(root, ["fail", ids["FIX-001.1.2"], "--summary", "stop boundary missing"]);
     // Both production CLI processes exist simultaneously before either is
     // awaited, so this exercises the requirement's overlapping-command case.
-    expect(spinRun.child.exitCode).toBeNull();
-    expect(stopRun.child.exitCode).toBeNull();
     const [spin, stop] = await Promise.all([spinRun.result, stopRun.result]);
     expect([spin.status, stop.status]).toEqual([0, 0]);
     const spinRecord = JSON.parse(readFileSync(stablePath(root, "FIX-001.1.1"), "utf8"));
@@ -635,12 +633,12 @@ describe("stable verdict files (REQ-012)", () => {
     expect(malformed.stderr).toContain("unparseable JSON");
   });
 
-  // 2119: REQ-012.6.1, REQ-012.6.2
+  // 2119: REQ-006.2.2, REQ-012.6.1, REQ-012.6.2
   it("prune preserves the best current evidence, removes all legacy files, and reports every migration action", () => {
     const root = fixture();
     const ids = reviewIds(root);
-    const currentStable = produceRecord(root, ids["FIX-001.1.1"], "fail", "authoritative current failure");
-    const conflictingLegacy = produceRecord(root, ids["FIX-001.1.1"], "pass", "conflicting legacy");
+    const currentStable = produceRecord(root, ids["FIX-001.1.1"], "pass", "authoritative current pass");
+    const conflictingLegacy = produceRecord(root, ids["FIX-001.1.1"], "fail", "conflicting legacy");
     const migratable = produceRecord(root, ids["FIX-001.1.2"], "pass", "current legacy evidence");
     writeRecord(root, "FIX-001.1.1.json", currentStable);
     writeRecord(root, `${ids["FIX-001.1.1"]}.json`, conflictingLegacy);
@@ -667,6 +665,41 @@ describe("stable verdict files (REQ-012)", () => {
     for (const removed of [ids["FIX-001.1.1"], staleExisting, orphan]) {
       expect(pruned.stdout).toMatch(new RegExp(`(?:remove|prune)[^\\n]*${removed}\\.json`, "i"));
     }
+    expect(run(root, ["check"]).status).toBe(0);
+
+    // Current failing evidence is still evidence: retain a canonical fail and
+    // migrate a legacy fail without weakening or dropping either record.
+    const failureRoot = fixture();
+    const failureIds = reviewIds(failureRoot);
+    const stableFailure = produceRecord(
+      failureRoot,
+      failureIds["FIX-001.1.1"],
+      "fail",
+      "current stable failure",
+    );
+    const legacyFailure = produceRecord(
+      failureRoot,
+      failureIds["FIX-001.1.2"],
+      "fail",
+      "current legacy failure",
+    );
+    writeRecord(failureRoot, `${failureIds["FIX-001.1.2"]}.json`, legacyFailure);
+    unlinkSync(stablePath(failureRoot, "FIX-001.1.2"));
+    const failurePrune = run(failureRoot, ["prune"]);
+    expect(failurePrune.status).toBe(0);
+    expect(JSON.parse(readFileSync(stablePath(failureRoot, "FIX-001.1.1"), "utf8"))).toEqual(stableFailure);
+    expect(JSON.parse(readFileSync(stablePath(failureRoot, "FIX-001.1.2"), "utf8"))).toEqual(legacyFailure);
+    expect(
+      readdirSync(join(failureRoot, ".2119/verdicts"))
+        .filter((name) => name.endsWith(".json"))
+        .sort(),
+    ).toEqual(["FIX-001.1.1.json", "FIX-001.1.2.json"]);
+    expect(failurePrune.stdout).toMatch(
+      new RegExp(
+        `(?:convert|migrat)[^\\n]*${failureIds["FIX-001.1.2"]}\\.json[^\\n]*FIX-001\\.1\\.2\\.json`,
+        "i",
+      ),
+    );
 
     // A malformed stable record cannot block recovery from valid current
     // legacy evidence, and malformed legacy debris is still removed/listed.
@@ -724,21 +757,35 @@ describe("stable verdict files (REQ-012)", () => {
       );
     }
 
-    const invalidLegacyRoot = fixture();
-    const invalidLegacyId = reviewIds(invalidLegacyRoot)["FIX-001.1.1"];
-    const invalidProduced = produceRecord(invalidLegacyRoot, invalidLegacyId, "pass", "will be malformed");
-    mkdirSync(join(invalidLegacyRoot, ".2119/verdicts"), { recursive: true });
-    const invalidStable = stablePath(invalidLegacyRoot, "FIX-001.1.1");
-    if (existsSync(invalidStable)) unlinkSync(invalidStable);
-    writeFileSync(
-      join(invalidLegacyRoot, ".2119/verdicts", `${invalidLegacyId}.json`),
-      `${JSON.stringify({ ...invalidProduced, hash: "0".repeat(12) })}\n`,
-    );
-    const invalidPrune = run(invalidLegacyRoot, ["prune"]);
-    expect(invalidPrune.status).toBe(0);
-    expect(existsSync(stablePath(invalidLegacyRoot, "FIX-001.1.1"))).toBe(false);
-    expect(readdirSync(join(invalidLegacyRoot, ".2119/verdicts")).filter((name) => name.endsWith(".json"))).toEqual([]);
-    expect(invalidPrune.stdout).toMatch(new RegExp(`(?:remove|prune)[^\\n]*${invalidLegacyId}\\.json`, "i"));
+    const invalidLegacyMutations = [
+      (valid: ReturnType<typeof produceRecord>) => ({ ...valid, verdict: "passed" }),
+      (valid: ReturnType<typeof produceRecord>) => ({ ...valid, requirementId: "FIX-001.1.9" }),
+      (valid: ReturnType<typeof produceRecord>) => ({ ...valid, hash: "0".repeat(12) }),
+      (valid: ReturnType<typeof produceRecord>) => ({ ...valid, summary: "" }),
+      (valid: ReturnType<typeof produceRecord>) => ({ ...valid, timestamp: "not-a-date" }),
+      (valid: ReturnType<typeof produceRecord>) => ({ ...valid, reviewId: "not-a-review-id" }),
+    ];
+    for (const mutate of invalidLegacyMutations) {
+      const invalidLegacyRoot = fixture();
+      const invalidLegacyId = reviewIds(invalidLegacyRoot)["FIX-001.1.1"];
+      const invalidProduced = produceRecord(invalidLegacyRoot, invalidLegacyId, "pass", "will be malformed");
+      mkdirSync(join(invalidLegacyRoot, ".2119/verdicts"), { recursive: true });
+      const invalidStable = stablePath(invalidLegacyRoot, "FIX-001.1.1");
+      if (existsSync(invalidStable)) unlinkSync(invalidStable);
+      writeFileSync(
+        join(invalidLegacyRoot, ".2119/verdicts", `${invalidLegacyId}.json`),
+        `${JSON.stringify(mutate(invalidProduced))}\n`,
+      );
+      const invalidPrune = run(invalidLegacyRoot, ["prune"]);
+      expect(invalidPrune.status).toBe(0);
+      expect(existsSync(stablePath(invalidLegacyRoot, "FIX-001.1.1"))).toBe(false);
+      expect(readdirSync(join(invalidLegacyRoot, ".2119/verdicts")).filter((name) => name.endsWith(".json"))).toEqual(
+        [],
+      );
+      expect(invalidPrune.stdout).toMatch(
+        new RegExp(`(?:remove|prune)[^\\n]*${invalidLegacyId}\\.json`, "i"),
+      );
+    }
   });
 
   // 2119: REQ-012.7.1

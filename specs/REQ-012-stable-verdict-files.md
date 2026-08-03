@@ -35,6 +35,12 @@ record when present, otherwise recovers valid current evidence from the
 legacy set, and then removes superseded legacy files. `check` remains
 non-mutating.
 
+This contract supersedes the former REQ-003.7.3 filename rule, which required
+the content-addressed review ID in the filename. That rule was removed because
+it directly conflicts with the stable per-requirement path; record validation
+continues to enforce agreement among the stable filename, requirement ID,
+review ID, and stored hash.
+
 Verdicts remain committed evidence and remain mandatory. Stable storage does
 not reduce review coverage, skip judgment, or relax any gate. Marking the
 remaining JSON as generated changes only GitHub's presentation of those
