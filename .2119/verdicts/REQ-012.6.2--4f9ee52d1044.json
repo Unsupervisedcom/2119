@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-012.6.2--4f9ee52d1044",
+  "requirementId": "REQ-012.6.2",
+  "hash": "4f9ee52d1044",
+  "verdict": "pass",
+  "summary": "CLI prune tests verify retained evidence, removal of current, stale, orphaned, and malformed legacy JSON, one file per requirement, and output for every exercised conversion or removal.",
+  "timestamp": "2026-08-03T07:33:40.929Z"
+}

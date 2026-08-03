@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-012.2.1--b803ff478bbe",
+  "requirementId": "REQ-012.2.1",
+  "hash": "b803ff478bbe",
+  "verdict": "pass",
+  "summary": "Overlapping production CLI processes for two distinct requirements both succeed and leave separate parseable stable records with their own complete contents.",
+  "timestamp": "2026-08-03T07:33:40.226Z"
+}

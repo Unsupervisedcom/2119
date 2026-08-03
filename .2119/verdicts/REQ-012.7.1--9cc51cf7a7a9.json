@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-012.7.1--9cc51cf7a7a9",
+  "requirementId": "REQ-012.7.1",
+  "hash": "9cc51cf7a7a9",
+  "verdict": "pass",
+  "summary": "The init CLI integration test consumes the emitted .gitattributes through Git, rejects a missing or wrong verdict JSON generated attribute, and proves the path remains unignored and stageable.",
+  "timestamp": "2026-08-03T07:33:41.048Z"
+}

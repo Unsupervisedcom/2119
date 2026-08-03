@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-012.6.1--ab20d2dd807d",
+  "requirementId": "REQ-012.6.1",
+  "hash": "ab20d2dd807d",
+  "verdict": "pass",
+  "summary": "The annotated prune test proves a current stable record wins over conflicting legacy evidence and current legacy evidence replaces stale or malformed stable data unchanged at the stable path.",
+  "timestamp": "2026-08-03T07:33:40.812Z"
+}

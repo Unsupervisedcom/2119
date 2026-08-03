@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-012.5.1--025d7c066774",
+  "requirementId": "REQ-012.5.1",
+  "hash": "025d7c066774",
+  "verdict": "pass",
+  "summary": "CLI test rejects malformed, failing, mismatched, and superseded-only legacy evidence while requiring non-failing source-to-stable migration notices for current and superseded records.",
+  "timestamp": "2026-08-03T07:33:40.694Z"
+}
