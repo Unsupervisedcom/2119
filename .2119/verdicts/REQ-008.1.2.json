@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-008.1.2--1fcd1a57103b",
+  "reviewId": "REQ-008.1.2--664c5abc793a",
   "requirementId": "REQ-008.1.2",
-  "hash": "1fcd1a57103b",
+  "hash": "664c5abc793a",
   "verdict": "pass",
-  "summary": "Boundaries paragraph names all three exclusions with rationales and the design.md link, in the intro before the adoption instructions",
-  "timestamp": "2026-08-08T07:28:09.788Z"
+  "summary": "Header block states all three exclusions bolded with the design.md link before any install command; numbered trio restates them before the adoption section",
+  "timestamp": "2026-08-08T08:53:49.587Z"
 }

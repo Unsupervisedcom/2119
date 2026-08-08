@@ -1,23 +1,22 @@
 # 2119
 
-**Spec-driven test enforcement for coding agents.** Named for
-[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119) · [unsupervised.com/2119](https://unsupervised.com/2119)
+**Spec-driven test enforcement for coding agents — a gate your agent can't quietly game.** Named for [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
 
-2119 makes the planning → building → testing loop hard to cheat:
+- **Plans become numbered requirements** — specs where every MUST is individually addressable, and `2119 lint` enforces the format.
+- **Every requirement gets a test that could actually fail** — `2119 cover` fails on missing tests; a *fresh-context* reviewer judges each one: *would these tests fail if this requirement were violated?*
+- **"Done" becomes one exit code** — `2119 check` gates agent hooks, pre-commit, and CI identically. Verdicts are committed, hash-bound artifacts: edit the code or the requirement, and the approval visibly dies.
 
-1. **Plans become requirements.** Features start as specs in `specs/` — RFC 2119
-   documents where every requirement is a numbered, individually addressable
-   statement with exactly one normative keyword. `2119 lint` enforces the format.
-2. **Requirements become tests.** Every MUST-level requirement needs at least one
-   test annotated with its ID (`// 2119: REQ-001.2.3` — a comment, so it works in
-   any language). `2119 cover` fails on any gap, in either direction.
-3. **Tests get judged.** `2119 review` generates one instruction file per
-   requirement asking a *fresh-context* reviewer — one that did not write the
-   code — a single question: **would these tests fail if this requirement were
-   violated?** Verdicts are recorded with `2119 pass` / `2119 fail`.
-4. **One gate.** `2119 check` = lint + coverage + verdict freshness (a verdict
-   counts only while its hash still matches the content it vouched for). Exit
-   code 0 or it isn't done. Agent hooks, git, and CI all call the same command.
+2119 is **not** a test runner, **not** a CI replacement, and **not** a security boundary ([why](docs/design.md)).
+
+```bash
+npx rfc2119 init
+```
+
+[unsupervised.com/2119](https://unsupervised.com/2119) · [design decisions](docs/design.md) · [scaling guide](docs/scaling.md) · [live adoption example](https://github.com/tylerwillis/panopticon)
+
+═══════════════════════════════════════════════════════════════════
+
+## 2119 makes the planning → building → testing loop hard to cheat
 
 Here is the gate catching an untested requirement and a stale review:
 
@@ -38,15 +37,18 @@ see the full gate running in another codebase — specs, committed verdicts,
 and the CI check on every PR —
 browse [panopticon](https://github.com/tylerwillis/panopticon).
 
-Three things 2119 is deliberately **not**: a test runner (`check` never
-executes your suite — compose them: `npm test && npx rfc2119 check`), a CI
-replacement (it's one exit code your CI calls), and a security boundary (a
-deliberate cheater is made *conspicuous*, not impossible — see
-[Risks](#risks)). These boundaries are
-[enforced as reviewed requirements](specs/REQ-008-honest-boundaries.md); the
-reasoning lives in [docs/design.md](docs/design.md), and
-[docs/scaling.md](docs/scaling.md) covers hardening for larger or more formal
-projects.
+Three things 2119 is deliberately **not** — each
+[enforced as a reviewed requirement](specs/REQ-008-honest-boundaries.md):
+
+1. **Not a test runner** — `check` never executes your suite; compose them:
+   `npm test && npx rfc2119 check`.
+2. **Not a CI replacement** — it's one exit code your CI calls.
+3. **Not a security boundary** — a deliberate cheater is made *conspicuous*,
+   not impossible (see [Risks](#risks)).
+
+The reasoning lives in [docs/design.md](docs/design.md);
+[docs/scaling.md](docs/scaling.md) covers hardening for larger or more
+formal projects.
 
 ## Use it in your repo
 
