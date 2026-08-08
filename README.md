@@ -203,12 +203,21 @@ What this subsystem is and why.
 > they appear in all capitals. This citation lives here — project-level,
 > once — rather than in every spec file, so it never costs agent context.
 
-There is a second, **file-scoped** ID grammar with no shared counter — name
-the spec for its feature (`codex-session-scrollback.md`), write bare
-`### 1: Title` headings, and the filename becomes the namespace, so two
-concurrent PRs can't silently grab the same requirement number. Both grammars
-are permanent and interoperate; prefer file-scoped naming for anything likely
-to see concurrent authorship. Full rules:
+There is a second, **file-scoped** ID grammar with no shared counter. Name
+the spec file for its feature and write bare `### N: Title` headings; the
+canonical ID is derived at parse time as `<stem>.N.M` (file stem, section,
+item) — the same two-level shape as the legacy `<prefix>-NNN.M.K` grammar,
+keyed by the filename instead of a counter, so two concurrent PRs can't
+silently grab the same requirement number. Test files opt into short
+annotations with a file-local import: a `2119-spec: <stem>` marker line
+resolves any bare annotation below it (`// 2119: 3`) as sugar for
+`<stem>.3`, for that one file only.
+
+Renaming a spec file changes the canonical ID of everything it contains,
+which invalidates that spec's recorded verdicts and requires re-review —
+loud and deliberate, exactly like a `git mv` showing up in a diff. Both
+grammars are permanent and interoperate; prefer file-scoped naming for
+anything likely to see concurrent authorship. Full rules:
 [docs/file-scoped-ids.md](docs/file-scoped-ids.md).
 
 ## Agent integration

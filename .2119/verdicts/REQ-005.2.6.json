@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.2.6--2a5fd0e33825",
+  "requirementId": "REQ-005.2.6",
+  "hash": "2a5fd0e33825",
+  "verdict": "pass",
+  "summary": "README's verify docs state the arbitrary-shell execution and the package.json-script trust equivalence directly beside the [verify] semantics",
+  "timestamp": "2026-08-08T07:20:28.333Z"
+}
