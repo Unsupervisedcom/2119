@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-003.4.2--2558ff342f6b",
+  "reviewId": "REQ-003.4.2--3e386c0febf7",
   "requirementId": "REQ-003.4.2",
-  "hash": "2558ff342f6b",
+  "hash": "3e386c0febf7",
   "verdict": "pass",
   "summary": "Risks section states the self-pass residual risk plainly and names the committed-verdict, hash-invalidation, and CI re-run mitigations",
-  "timestamp": "2026-08-08T08:53:49.315Z"
+  "timestamp": "2026-08-08T09:06:52.659Z"
 }

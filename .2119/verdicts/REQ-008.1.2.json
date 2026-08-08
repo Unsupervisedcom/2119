@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-008.1.2--664c5abc793a",
+  "reviewId": "REQ-008.1.2--4d6b2a51f53e",
   "requirementId": "REQ-008.1.2",
-  "hash": "664c5abc793a",
+  "hash": "4d6b2a51f53e",
   "verdict": "pass",
-  "summary": "Header block states all three exclusions bolded with the design.md link before any install command; numbered trio restates them before the adoption section",
-  "timestamp": "2026-08-08T08:53:49.587Z"
+  "summary": "README header block prominently states 2119 is not a test runner, CI replacement, or security boundary with the design.md link, before the adoption section",
+  "timestamp": "2026-08-08T09:07:04.379Z"
 }

@@ -1,6 +1,9 @@
 # 2119
 
-**Spec-driven test enforcement for coding agents — a gate your agent can't quietly game.** Named for [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
+**Specs your agents will follow & tests they can't fake.**
+
+Spec-driven test enforcement for coding agents, named for
+[RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
 
 - **Plans become numbered requirements** — specs where every MUST is individually addressable, and `2119 lint` enforces the format.
 - **Every requirement gets a test that could actually fail** — `2119 cover` fails on missing tests; a *fresh-context* reviewer judges each one: *would these tests fail if this requirement were violated?*
