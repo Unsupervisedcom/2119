@@ -113,6 +113,12 @@ this repo's own gate:
 }
 ```
 
+Invalidation is visible in this repository's own history: the pull request
+that rewrote this README ([#34](https://github.com/Unsupervisedcom/2119/pull/34))
+invalidated the four verdicts that vouched for README content, and CI held
+the merge until fresh-context reviews re-earned them — the re-recorded
+verdicts are in that diff.
+
 ### Risks
 
 Nothing physically prevents the implementing agent from running `2119 pass` on
