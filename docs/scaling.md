@@ -116,3 +116,27 @@ npx --yes rfc2119@<pinned> check --no-verify
 `[verify]` requirements are then surfaced alongside `[manual]` exemptions instead of executed;
 run the full `check` (with verify) only on trusted branches, or in a job gated on maintainer
 approval.
+
+## Measured baselines
+
+Wall-clock for the full deterministic gate (`time npx -y rfc2119 check`, Apple
+M-series, rfc2119 0.7.0, measured 2026-08; "cold" includes npx package
+resolution):
+
+| Corpus | Scale | `check` wall time |
+|---|---|---|
+| Production application (private) | ~5,400 tracked files, ~600k lines incl. subprojects; sparse specs, 110 committed verdicts (hash verification in path) | ~1.4s steady, ~2.7s cold |
+| Subproject of the same application (private) | 84 files, ~40k lines | ~1.0s |
+| Synthetic dense corpus (reproducible) | 100 spec files · 3,000 MUST requirements · 2,000 annotated test files, ~300k lines; judgment layer disabled | ~1.7–2.0s steady |
+
+The spread is the point: a sparse-specced production codebase and a corpus
+with 3,000 requirements land within a second of each other, because the walk
+and parse are the cost and both are bounded — spec/annotation volume, not
+repository size, is what you are budgeting. All three sit well inside the
+enforced sub-5-second perf requirement.
+
+To regenerate the synthetic corpus: 100 spec files of 5 sections × 6
+single-keyword MUST items each; 2,000 test files of ~150 lines, each opening
+with one section-level annotation (`// 2119: REQ-0NN.M`); `reviews: false` in
+`.2119.yml`. Numbers rot with hardware and versions — re-measure on yours
+before relying on them.
