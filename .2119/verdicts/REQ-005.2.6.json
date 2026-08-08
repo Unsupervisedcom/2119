@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-005.2.6--1c79c4f2f0d0",
+  "requirementId": "REQ-005.2.6",
+  "hash": "1c79c4f2f0d0",
+  "verdict": "pass",
+  "summary": "Verify-tag docs state arbitrary-shell execution and package.json-script trust equivalence in the section documenting [verify]",
+  "timestamp": "2026-08-08T07:28:03.467Z"
+}
