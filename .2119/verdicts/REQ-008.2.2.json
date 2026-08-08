@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-008.2.2--456734b19776",
+  "reviewId": "REQ-008.2.2--5308de176d8b",
   "requirementId": "REQ-008.2.2",
-  "hash": "456734b19776",
+  "hash": "5308de176d8b",
   "verdict": "pass",
   "summary": "README's Diversify-then-audit bullet and scaling.md's cross-provider audit section both advise periodic sweeps plus targeted audits of challenging or high-consequence requirements",
-  "timestamp": "2026-08-08T07:57:56.365Z"
+  "timestamp": "2026-08-08T08:53:49.719Z"
 }
