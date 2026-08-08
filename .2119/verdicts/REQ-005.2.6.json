@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-005.2.6--403de8d5f77f",
+  "reviewId": "REQ-005.2.6--cf4818fa400c",
   "requirementId": "REQ-005.2.6",
-  "hash": "403de8d5f77f",
+  "hash": "cf4818fa400c",
   "verdict": "pass",
   "summary": "Verify-tag docs state arbitrary-shell execution and package.json-script trust equivalence beside the [verify] semantics",
-  "timestamp": "2026-08-08T08:53:49.450Z"
+  "timestamp": "2026-08-08T09:06:58.759Z"
 }
