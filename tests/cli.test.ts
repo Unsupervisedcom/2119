@@ -184,6 +184,11 @@ describe("cli end-to-end", () => {
     expect(body).toContain("critique the draft\nrequirements");
     expect(body).toContain("review --audit");
     expect(body).toContain("different providers");
+    expect(body).toContain("narrowly scoped text actually delivered through a product surface");
+    expect(body).toContain("implementation notes non-normative");
+    expect(body).toContain("Consolidate duplicate requirements");
+    expect(body).toContain("One behavioral test may cover multiple requirement IDs");
+    expect(body).toContain("rather than duplicating the test for traceability");
   });
 
   // 2119: REQ-003.5.2, REQ-003.5.5

@@ -203,10 +203,10 @@ ${evidenceList}
 ## Your task
 
 **Construct a concrete mutant or input under which this requirement is violated while every
-covering test stays green.** Enumerate the requirement's conjuncts and boundary terms; probe the
-negative space (what must be refused, not what is accepted); consider shared fixtures, preludes,
-and paths the tests never touch. Reason from the requirement's text, never from the
-implementation's current behavior.
+covering test stays green.** Probe the negative space (what must be refused, not what is accepted);
+consider shared fixtures, preludes, and paths the tests never touch. Prefer a discriminating
+counterexample over exhaustive permutations of equivalent inputs. Reason from the requirement's
+text, never from the implementation's current behavior.
 
 - If you find such a counterexample: record a FAIL with the mutant described concretely enough
   to reproduce.
@@ -279,13 +279,27 @@ Read the requirement and each evidence file's tests annotated with \`2119: ${t.r
 
 Record FAIL when applicable provenance evidence is absent or shows that production cannot produce the failure independently of the test setup.
 
-**Counterexample obligation:** enumerate the requirement's conjuncts and boundary terms (words
-like "comment", "exactly", "only", "begins with"). For each, construct the nearest violating
-input — the almost-conforming case the requirement forbids — and confirm a test rejects it.
-When a requirement names a grammar or other defined input language, enumerate and probe its edge
-productions rather than accepting coverage of only the most common form.
-Do not reason from the implementation's current behavior; reason from the requirement's text.
-A review that cannot name a rejected counterexample for a boundary term is not a pass.`
+**Symmetric change probes (a PASS is forbidden without both):**
+
+1. Name one concrete implementation change that violates the requirement and confirm the cited
+   evidence would fail. Choose a discriminating case; do not demand a counterexample for every
+   word or a Cartesian product of inputs that exercise the same production behavior.
+2. Name one legitimate change that preserves the requirement's meaning — such as paraphrasing,
+   renaming, reformatting, adding a sibling item, or reorganizing files — and confirm the cited
+   evidence would stay green.
+
+One evidence body may cover multiple requirement IDs. When existing evidence already rejects the
+violating change, request an annotation or explicit cross-reference, not a duplicate test.
+
+Reject evidence whose only value is pinning irrelevant wording, layout, digests, or implementation
+organization. Preserve legitimate contracts for text delivered as the product surface, inventories
+derived from the real product that fail loudly on zero subjects, and snapshots with an explicit,
+inexpensive update path.
+
+For parameterized evidence, ask whether each value exercises meaningfully distinct production
+behavior. Universal wording alone is not a reason to demand every spelling or combination.
+
+Do not reason from the implementation's current behavior; reason from the requirement's text.`
       : `**Is this requirement genuinely satisfied by the current state of the evidence files?**
 
 Read the requirement and the evidence files and judge compliance directly. This requirement was tagged \`[review]\` because it needs judgment rather than a test.`;

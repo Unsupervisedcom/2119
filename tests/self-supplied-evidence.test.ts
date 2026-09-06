@@ -31,13 +31,27 @@ Read the requirement and each evidence file's tests annotated with \`2119: <REQ-
 
 ${EXPECTED_PROVENANCE}
 
-**Counterexample obligation:** enumerate the requirement's conjuncts and boundary terms (words
-like "comment", "exactly", "only", "begins with"). For each, construct the nearest violating
-input — the almost-conforming case the requirement forbids — and confirm a test rejects it.
-When a requirement names a grammar or other defined input language, enumerate and probe its edge
-productions rather than accepting coverage of only the most common form.
+**Symmetric change probes (a PASS is forbidden without both):**
+
+1. Name one concrete implementation change that violates the requirement and confirm the cited
+   evidence would fail. Choose a discriminating case; do not demand a counterexample for every
+   word or a Cartesian product of inputs that exercise the same production behavior.
+2. Name one legitimate change that preserves the requirement's meaning — such as paraphrasing,
+   renaming, reformatting, adding a sibling item, or reorganizing files — and confirm the cited
+   evidence would stay green.
+
+One evidence body may cover multiple requirement IDs. When existing evidence already rejects the
+violating change, request an annotation or explicit cross-reference, not a duplicate test.
+
+Reject evidence whose only value is pinning irrelevant wording, layout, digests, or implementation
+organization. Preserve legitimate contracts for text delivered as the product surface, inventories
+derived from the real product that fail loudly on zero subjects, and snapshots with an explicit,
+inexpensive update path.
+
+For parameterized evidence, ask whether each value exercises meaningfully distinct production
+behavior. Universal wording alone is not a reason to demand every spelling or combination.
+
 Do not reason from the implementation's current behavior; reason from the requirement's text.
-A review that cannot name a rejected counterexample for a boundary term is not a pass.
 
 **Judge the requirement too:** if the requirement itself is ambiguous, untestable, or states an
 implementation mechanism rather than an observable outcome, fail with that finding — a bad
@@ -89,10 +103,10 @@ npx rfc2119 fail <REVIEW-ID> --summary "<the core finding>"
 The summary is committed to the repository and read by humans in PR review —
 be specific. Do not edit any files; report, don't fix.`;
 const EXPECTED_AUDIT_TASK = `**Construct a concrete mutant or input under which this requirement is violated while every
-covering test stays green.** Enumerate the requirement's conjuncts and boundary terms; probe the
-negative space (what must be refused, not what is accepted); consider shared fixtures, preludes,
-and paths the tests never touch. Reason from the requirement's text, never from the
-implementation's current behavior.
+covering test stays green.** Probe the negative space (what must be refused, not what is accepted);
+consider shared fixtures, preludes, and paths the tests never touch. Prefer a discriminating
+counterexample over exhaustive permutations of equivalent inputs. Reason from the requirement's
+text, never from the implementation's current behavior.
 
 - If you find such a counterexample: record a FAIL with the mutant described concretely enough
   to reproduce.
@@ -204,7 +218,7 @@ function expectEveryTestQualityTask(root: string, assertion: (body: string) => v
     expect(normalizedTask(body)).toBe(EXPECTED_TASK);
     const provenance = body
       .split("**Required production-provenance answers (a PASS is forbidden without them):**", 2)[1]
-      ?.split("**Counterexample obligation:**", 1)[0];
+      ?.split("**Symmetric change probes (a PASS is forbidden without both):**", 1)[0];
     expect(provenance?.trim()).toBe(EXPECTED_PROVENANCE);
     assertion(body);
   }

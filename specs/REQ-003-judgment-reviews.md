@@ -29,8 +29,12 @@ their findings (not empty markers), and they live in version control.
 7. An annotation's evidence block MUST comprise the file's prelude (all content before the file's first annotation, hashed once per file) plus the text from the annotation's line through the line before the file's next annotation or the end of file, so shared imports and mocks stay under the hash while unrelated tests fall outside it.
 8. When the optional `shared_evidence` config key lists globs, the content of every matching file MUST be included in the hash input of every test-quality review, so shared fixtures and helper modules cannot change without invalidating the verdicts that depend on them.
 9. A `[review: <globs>]` tag whose globs match no files MUST produce a check violation naming the requirement and the unmatched globs, rather than silently degrading to a text-only hash.
-10. Instruction files MUST direct the reviewer to enumerate the requirement's conjuncts and boundary terms (words like `comment`, `exactly`, `only`, `begins with`) and, for each, construct the nearest violating input and confirm a test rejects it — a review that cannot name a rejected counterexample for a boundary term is not a pass.
+10. Instruction files MUST direct the reviewer to name one concrete implementation change that violates the requirement and confirm the cited evidence would detect it, without demanding a counterexample for every word or a Cartesian product of equivalent inputs.
 11. Instruction files MUST direct the reviewer to fail with a finding when the requirement itself is ambiguous, untestable, or states an implementation mechanism rather than an observable outcome, since a bad requirement honestly tested is still a bad requirement.
+12. Instruction files MUST direct the reviewer to name one legitimate change that preserves the requirement's meaning and confirm the cited evidence would remain green.
+13. Instruction files MUST permit one evidence body to cover multiple requirement IDs and direct reviewers to request an annotation or cross-reference, not a duplicate test, when existing evidence already detects the violating change.
+14. Instruction files MUST direct the reviewer to reject evidence whose only value is pinning irrelevant wording, layout, digests, or implementation organization, while preserving legitimate delivered-text contracts, derived real-product inventories that fail loudly on zero subjects, and maintainable snapshots.
+15. Instruction files MUST direct the reviewer to judge parameter cases by whether they exercise meaningfully distinct production behavior, not by whether universal wording can generate more spellings or combinations.
 
 ### REQ-003.2: Verdict recording
 
@@ -88,5 +92,5 @@ changes ratchet: they may never lose the ability to catch a past escape. The cor
 committed fixtures; optimization loops over it (e.g. SkillOpt-style tuning) are dev-time
 experiments outside this tool, whose proposed edits land through normal spec amendments.
 
-1. The repository MUST maintain a calibration corpus under `eval/calibration/` of fixture cases — each a requirement, its evidence, the expected verdict, and the reason — including a case for every known review escape. [review: eval/calibration/**]
+1. The repository MUST maintain a calibration corpus under `eval/calibration/` of fixture cases — each a requirement, its evidence, the expected verdict, and the reason — including known review escapes and controls for prose tripwires, redundant parameter matrices, derived security inventories, delivered agent instructions, and distinct malformed data shapes. [review: eval/calibration/**]
 2. Changes to the reviewer instruction template MUST preserve detection of every corpus case: a template revision under which a reviewer following the instructions would no longer catch a corpus escape is a regression, not a simplification. [review: eval/calibration/**, src/review.ts]

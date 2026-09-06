@@ -75,6 +75,13 @@ against a new spec**, dispatch a fresh-context reviewer to critique the draft
 requirements themselves: outcome-stated, individually testable, one obligation
 each. A flawed requirement steers the whole implementation wrong.
 
+**Classify before making it normative**: use requirements for observable product
+behavior and narrowly scoped text actually delivered through a product surface.
+Keep test strategy, CI commands, review procedure, migration bookkeeping, and
+implementation notes non-normative unless they are themselves supported
+interfaces. Consolidate duplicate requirements instead of splitting wording into
+proof obligations.
+
 **Requirement granularity**: A first-pass feature spec should aim for around
 3–8 enforced \`MUST\` requirements. Prefer workflow-level requirements (what the
 user can observably do) over implementation-step requirements (how the code
@@ -92,7 +99,9 @@ marker line must start with a comment leader). Write tests that would genuinely
 fail if the requirement were violated — including its negative space: what the
 requirement forbids needs a rejection test, not just what it allows. A
 fresh-context reviewer judges each test's honesty; tautological or over-mocked
-tests will be rejected.
+tests will be rejected. One behavioral test may cover multiple requirement IDs:
+add annotations or cross-references when the evidence is already sufficient,
+rather than duplicating the test for traceability.
 
 **Reviewer diversity**: use reviewer models from different providers, routinely
 or as periodic \`npx rfc2119 review --audit\` sweeps — adversarial audits of

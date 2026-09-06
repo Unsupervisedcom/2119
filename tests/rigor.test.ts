@@ -163,15 +163,22 @@ describe("deterministic rigor (0.6)", () => {
     expect(r.stderr).toContain("docs/autth/**");
   });
 
-  // 2119: REQ-003.1.10, REQ-003.1.11
-  it("instruction files carry the counterexample obligation and bad-requirement clause", () => {
+  // 2119: REQ-003.1.10, REQ-003.1.11, REQ-003.1.12, REQ-003.1.13, REQ-003.1.14, REQ-003.1.15
+  it("instruction files demand discriminating evidence without rewarding duplication", () => {
     const root = fixture();
     run(root, ["review"]);
     const dir = join(root, ".2119/reviews");
     const body = readFileSync(join(dir, readdirSync(dir)[0]), "utf8");
-    expect(body).toContain("Counterexample obligation");
-    expect(body).toMatch(/nearest violating\s+input/);
-    expect(body).toContain("not a pass");
+    expect(body).toContain("one concrete implementation change that violates");
+    expect(body).toContain("one legitimate change that preserves");
+    expect(body).toContain("One evidence body may cover multiple requirement IDs");
+    expect(body).toContain("not a duplicate test");
+    expect(body).toContain("pinning irrelevant wording, layout, digests");
+    expect(body).toContain("text delivered as the product surface");
+    expect(body).toContain("fail loudly on zero subjects");
+    expect(body).toContain("meaningfully distinct production");
+    expect(body).toContain("not a reason to demand every spelling or combination");
+    expect(body).not.toContain("For each, construct the nearest violating");
     expect(body).toMatch(/bad\s+requirement honestly tested is still a bad requirement/);
   });
 
@@ -256,10 +263,10 @@ describe("deterministic rigor (0.6)", () => {
         "## Your task",
         "",
         "**Construct a concrete mutant or input under which this requirement is violated while every",
-        "covering test stays green.** Enumerate the requirement's conjuncts and boundary terms; probe the",
-        "negative space (what must be refused, not what is accepted); consider shared fixtures, preludes,",
-        "and paths the tests never touch. Reason from the requirement's text, never from the",
-        "implementation's current behavior.",
+        "covering test stays green.** Probe the negative space (what must be refused, not what is accepted);",
+        "consider shared fixtures, preludes, and paths the tests never touch. Prefer a discriminating",
+        "counterexample over exhaustive permutations of equivalent inputs. Reason from the requirement's",
+        "text, never from the implementation's current behavior.",
         "",
         "- If you find such a counterexample: record a FAIL with the mutant described concretely enough",
         "  to reproduce.",
