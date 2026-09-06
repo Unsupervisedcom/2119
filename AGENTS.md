@@ -3,6 +3,7 @@
 
 This repository enforces spec-driven testing with [2119](https://www.rfc-editor.org/rfc/rfc2119).
 
+<!-- 2119-workflow:planning -->
 **When planning a feature**, write or update a spec in `specs/` first. Every
 requirement is a numbered item under a `### REQ-NNN.M` heading with exactly one
 RFC 2119 keyword, stating an observable outcome — not an implementation
@@ -11,6 +12,7 @@ against a new spec**, dispatch a fresh-context reviewer to critique the draft
 requirements themselves: outcome-stated, individually testable, one obligation
 each. A flawed requirement steers the whole implementation wrong.
 
+<!-- 2119-workflow:classification -->
 **Classify before making it normative**: use requirements for observable product
 behavior and narrowly scoped text actually delivered through a product surface.
 Keep test strategy, CI commands, review procedure, migration bookkeeping, and
@@ -18,6 +20,7 @@ implementation notes non-normative unless they are themselves supported
 interfaces. Consolidate duplicate requirements instead of splitting wording into
 proof obligations.
 
+<!-- 2119-workflow:granularity -->
 **Requirement granularity**: A first-pass feature spec should aim for around
 3–8 enforced `MUST` requirements. Prefer workflow-level requirements (what the
 user can observably do) over implementation-step requirements (how the code
@@ -29,6 +32,7 @@ instead of describing product behavior. Use `SHOULD` for polish and edge cases,
 `[manual]` for UI-only behaviors, and notes or acceptance-checklist bullets for
 implementation details rather than making every detail an enforced `MUST`.
 
+<!-- 2119-workflow:implementation -->
 **When implementing**, every MUST/SHALL requirement needs at least one test
 annotated with a comment containing its ID, e.g. `// 2119: REQ-001.2.3` (the
 marker line must start with a comment leader). Write tests that would genuinely
@@ -39,11 +43,13 @@ tests will be rejected. One behavioral test may cover multiple requirement IDs:
 add annotations or cross-references when the evidence is already sufficient,
 rather than duplicating the test for traceability.
 
+<!-- 2119-workflow:reviewerDiversity -->
 **Reviewer diversity**: use reviewer models from different providers, routinely
 or as periodic `npx rfc2119 review --audit` sweeps — adversarial audits of
 passing verdicts. Audit especially the challenging or high-consequence
 requirements; a single model family shares blind spots.
 
+<!-- 2119-workflow:gate -->
 **Before finishing any task**, run `npx rfc2119 check`. It must exit 0. If it
 reports pending judgment reviews, run `npx rfc2119 review --dispatch` and
 dispatch each instruction file in `.2119/reviews/` to a fresh-context subagent

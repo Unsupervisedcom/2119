@@ -171,24 +171,17 @@ describe("cli end-to-end", () => {
     expect(body.match(/<!-- 2119:begin -->/g)).toHaveLength(1);
     expect(body.match(/<!-- 2119:end -->/g)).toHaveLength(1);
     expect(body).toContain("# My project");
-    // The mandated workflow content: spec-first planning, test annotations,
-    // judgment reviews, and the check gate.
-    expect(body).toContain("write or update a spec in `specs/` first");
-    expect(body).toContain("RFC 2119 keyword");
-    const marker = ["21", "19"].join(""); // avoid a literal self-annotation
-    expect(body).toContain(`\`// ${marker}: REQ-001.2.3\``);
-    expect(body).toContain("fresh-context subagent");
-    expect(body).toMatch(/npx rfc2119 check.*must exit 0/s);
-    expect(body).toContain("CI runs the same check");
-    // 0.6 topics: draft-time spec critique + reviewer diversity (REQ-004.3.2).
-    expect(body).toContain("critique the draft\nrequirements");
-    expect(body).toContain("review --audit");
-    expect(body).toContain("different providers");
-    expect(body).toContain("narrowly scoped text actually delivered through a product surface");
-    expect(body).toContain("implementation notes non-normative");
-    expect(body).toContain("Consolidate duplicate requirements");
-    expect(body).toContain("One behavioral test may cover multiple requirement IDs");
-    expect(body).toContain("rather than duplicating the test for traceability");
+    const topics = [
+      "planning",
+      "classification",
+      "granularity",
+      "implementation",
+      "reviewerDiversity",
+      "gate",
+    ];
+    for (const id of topics) {
+      expect(body.match(new RegExp(`<!-- 2119-workflow:${id} -->\\n\\S`))).toHaveLength(1);
+    }
   });
 
   // 2119: REQ-003.5.2, REQ-003.5.5

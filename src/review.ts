@@ -11,6 +11,44 @@ import type { VerdictFile } from "./verdict.js";
 
 export const REVIEWS_DIR = ".2119/reviews";
 
+export const TEST_QUALITY_GUIDANCE = [
+  {
+    id: "violating-change",
+    text: `Name one concrete implementation change that violates the requirement and confirm the cited
+evidence would fail. Before selecting it, scan the requirement's conjuncts, boundaries, precedence
+rules, grammar shapes, and distinct data shapes; choose the probe most likely to expose uncovered
+behavior. Do not demand a counterexample for every word or a Cartesian product of inputs that
+exercise the same production behavior.`,
+  },
+  {
+    id: "legitimate-change",
+    text: `Name one legitimate change that preserves the requirement's meaning — such as paraphrasing,
+renaming, reformatting, adding a sibling item, or reorganizing files — and confirm the cited
+evidence would stay green.`,
+  },
+  {
+    id: "shared-evidence",
+    text: `One evidence body may cover multiple requirement IDs. When existing evidence already rejects
+the violating change, request an annotation or explicit cross-reference, not a duplicate test.`,
+  },
+  {
+    id: "irrelevant-pins",
+    text: `Reject evidence whose only value is pinning irrelevant wording, layout, digests, or
+implementation organization. Preserve legitimate contracts for text delivered as the product
+surface, inventories derived from the real product that fail loudly on zero subjects, and snapshots
+with an explicit, inexpensive update path.`,
+  },
+  {
+    id: "parameter-cases",
+    text: `For parameterized evidence, ask whether each value exercises meaningfully distinct production
+behavior. Universal wording alone is not a reason to demand every spelling or combination.`,
+  },
+] as const;
+
+export const REQUIREMENT_QUALITY_GUIDANCE = `If the requirement itself is ambiguous, untestable, or
+states an implementation mechanism rather than an observable outcome, fail with that finding — a
+bad requirement honestly tested is still a bad requirement.`;
+
 export interface ReviewTask {
   reviewId: string;
   requirement: Requirement;
@@ -281,23 +319,7 @@ Record FAIL when applicable provenance evidence is absent or shows that producti
 
 **Symmetric change probes (a PASS is forbidden without both):**
 
-1. Name one concrete implementation change that violates the requirement and confirm the cited
-   evidence would fail. Choose a discriminating case; do not demand a counterexample for every
-   word or a Cartesian product of inputs that exercise the same production behavior.
-2. Name one legitimate change that preserves the requirement's meaning — such as paraphrasing,
-   renaming, reformatting, adding a sibling item, or reorganizing files — and confirm the cited
-   evidence would stay green.
-
-One evidence body may cover multiple requirement IDs. When existing evidence already rejects the
-violating change, request an annotation or explicit cross-reference, not a duplicate test.
-
-Reject evidence whose only value is pinning irrelevant wording, layout, digests, or implementation
-organization. Preserve legitimate contracts for text delivered as the product surface, inventories
-derived from the real product that fail loudly on zero subjects, and snapshots with an explicit,
-inexpensive update path.
-
-For parameterized evidence, ask whether each value exercises meaningfully distinct production
-behavior. Universal wording alone is not a reason to demand every spelling or combination.
+${TEST_QUALITY_GUIDANCE.map((item) => `<!-- 2119-review:${item.id} -->\n${item.text}`).join("\n\n")}
 
 Do not reason from the implementation's current behavior; reason from the requirement's text.`
       : `**Is this requirement genuinely satisfied by the current state of the evidence files?**
@@ -344,9 +366,8 @@ ${custom.content}
 
 ${question}
 
-**Judge the requirement too:** if the requirement itself is ambiguous, untestable, or states an
-implementation mechanism rather than an observable outcome, fail with that finding — a bad
-requirement honestly tested is still a bad requirement.
+<!-- 2119-review:requirement-quality -->
+**Judge the requirement too:** ${REQUIREMENT_QUALITY_GUIDANCE}
 
 ## Recording your verdict
 

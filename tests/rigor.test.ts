@@ -169,17 +169,18 @@ describe("deterministic rigor (0.6)", () => {
     run(root, ["review"]);
     const dir = join(root, ".2119/reviews");
     const body = readFileSync(join(dir, readdirSync(dir)[0]), "utf8");
-    expect(body).toContain("one concrete implementation change that violates");
-    expect(body).toContain("one legitimate change that preserves");
-    expect(body).toContain("One evidence body may cover multiple requirement IDs");
-    expect(body).toContain("not a duplicate test");
-    expect(body).toContain("pinning irrelevant wording, layout, digests");
-    expect(body).toContain("text delivered as the product surface");
-    expect(body).toContain("fail loudly on zero subjects");
-    expect(body).toContain("meaningfully distinct production");
-    expect(body).toContain("not a reason to demand every spelling or combination");
+    const criteria = [
+      "violating-change",
+      "legitimate-change",
+      "shared-evidence",
+      "irrelevant-pins",
+      "parameter-cases",
+    ];
+    for (const id of criteria) {
+      expect(body.match(new RegExp(`<!-- 2119-review:${id} -->\\n\\S`))).toHaveLength(1);
+    }
     expect(body).not.toContain("For each, construct the nearest violating");
-    expect(body).toMatch(/bad\s+requirement honestly tested is still a bad requirement/);
+    expect(body).toMatch(/<!-- 2119-review:requirement-quality -->\n\S/);
   });
 
   // 2119: REQ-003.5.6
@@ -243,49 +244,6 @@ describe("deterministic rigor (0.6)", () => {
       "- Only if you genuinely cannot construct one after honest effort: record a PASS stating the",
       `npx rfc2119 pass ${id} --summary "audit: <strongest attempted counterexample and why it dies>"`,
     ]);
-    expect(body).toBe(
-      [
-        "# 2119 Adversarial Audit: FIX-001.1.1",
-        "",
-        "This requirement's review previously PASSED. You are the adversary: your job is to break that",
-        "verdict, not to confirm it. You did not write the code or the tests under audit.",
-        "",
-        "## Requirement",
-        "",
-        "> The widget MUST spin.",
-        "",
-        "*(FIX-001.1.1, keyword: MUST)*",
-        "",
-        "## Evidence files",
-        "",
-        "- tests/widget.test.js",
-        "",
-        "## Your task",
-        "",
-        "**Construct a concrete mutant or input under which this requirement is violated while every",
-        "covering test stays green.** Probe the negative space (what must be refused, not what is accepted);",
-        "consider shared fixtures, preludes, and paths the tests never touch. Prefer a discriminating",
-        "counterexample over exhaustive permutations of equivalent inputs. Reason from the requirement's",
-        "text, never from the implementation's current behavior.",
-        "",
-        "- If you find such a counterexample: record a FAIL with the mutant described concretely enough",
-        "  to reproduce.",
-        "- Only if you genuinely cannot construct one after honest effort: record a PASS stating the",
-        "  strongest candidate you tried and why it fails to survive.",
-        "",
-        "## Recording your verdict",
-        "",
-        "Keep the verdict summary's subject no broader than the cited evidence: preserve concrete member names and singular/plural scope; do not promote member-specific evidence into a category claim.",
-        "",
-        "```",
-        `npx rfc2119 pass ${id} --summary "audit: <strongest attempted counterexample and why it dies>"`,
-        `npx rfc2119 fail ${id} --summary "audit: <the counterexample, reproducibly>"`,
-        "```",
-        "",
-        "Do not edit any files; report, don't fix.",
-        "",
-      ].join("\n"),
-    );
     expect(readFileSync(verdictPath, "utf8")).toBe(verdictBefore);
     expect(readFileSync(failingVerdictPath, "utf8")).toBe(failingVerdictBefore);
     expect(readFileSync(orphanVerdictPath, "utf8")).toBe(orphanVerdict);

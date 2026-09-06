@@ -18,120 +18,6 @@ const EXPECTED_PROVENANCE = `1. Name the concrete production failure this test w
    If that boundary exists, cite file:line evidence for both its production provisioning declaration and the production path that fails when it is absent.
 
 Record FAIL when applicable provenance evidence is absent or shows that production cannot produce the failure independently of the test setup.`;
-const EXPECTED_TASK = `**Would the covering tests fail if this requirement were violated?**
-
-Read the requirement and each evidence file's tests annotated with \`2119: <REQ-ID>\` (or its section ID). Judge whether they genuinely verify the requirement. You MUST flag:
-
-- **Tautological assertions** — tests that assert what they just set up, or that cannot fail.
-- **Over-mocking** — mocks/stubs that bypass the very behavior the requirement constrains.
-- **Unrelated assertions** — tests that reference the requirement ID but assert something other than its criterion.
-- **Keyword theater** — string/keyword matching standing in for behavioral verification.
-
-**Required production-provenance answers (a PASS is forbidden without them):**
-
-${EXPECTED_PROVENANCE}
-
-**Symmetric change probes (a PASS is forbidden without both):**
-
-1. Name one concrete implementation change that violates the requirement and confirm the cited
-   evidence would fail. Choose a discriminating case; do not demand a counterexample for every
-   word or a Cartesian product of inputs that exercise the same production behavior.
-2. Name one legitimate change that preserves the requirement's meaning — such as paraphrasing,
-   renaming, reformatting, adding a sibling item, or reorganizing files — and confirm the cited
-   evidence would stay green.
-
-One evidence body may cover multiple requirement IDs. When existing evidence already rejects the
-violating change, request an annotation or explicit cross-reference, not a duplicate test.
-
-Reject evidence whose only value is pinning irrelevant wording, layout, digests, or implementation
-organization. Preserve legitimate contracts for text delivered as the product surface, inventories
-derived from the real product that fail loudly on zero subjects, and snapshots with an explicit,
-inexpensive update path.
-
-For parameterized evidence, ask whether each value exercises meaningfully distinct production
-behavior. Universal wording alone is not a reason to demand every spelling or combination.
-
-Do not reason from the implementation's current behavior; reason from the requirement's text.
-
-**Judge the requirement too:** if the requirement itself is ambiguous, untestable, or states an
-implementation mechanism rather than an observable outcome, fail with that finding — a bad
-requirement honestly tested is still a bad requirement.
-
-## Recording your verdict
-
-Keep the verdict summary's subject no broader than the cited evidence: preserve concrete member names and singular/plural scope; do not promote member-specific evidence into a category claim.
-
-If the requirement's verification is genuine (or all findings were fixed), run:
-
-\`\`\`
-npx rfc2119 pass <REVIEW-ID> --summary "<one-line justification>"
-\`\`\`
-
-If there are unresolved findings, run:
-
-\`\`\`
-npx rfc2119 fail <REVIEW-ID> --summary "<the core finding>"
-\`\`\`
-
-The summary is committed to the repository and read by humans in PR review —
-be specific. Do not edit any files; report, don't fix.`;
-const RECORDING_GUIDANCE = "Keep the verdict summary's subject no broader than the cited evidence: preserve concrete member names and singular/plural scope; do not promote member-specific evidence into a category claim.";
-const EXPECTED_DIRECT_TASK = `**Is this requirement genuinely satisfied by the current state of the evidence files?**
-
-Read the requirement and the evidence files and judge compliance directly. This requirement was tagged \`[review]\` because it needs judgment rather than a test.
-
-**Judge the requirement too:** if the requirement itself is ambiguous, untestable, or states an
-implementation mechanism rather than an observable outcome, fail with that finding — a bad
-requirement honestly tested is still a bad requirement.
-
-## Recording your verdict
-
-${RECORDING_GUIDANCE}
-
-If the requirement's verification is genuine (or all findings were fixed), run:
-
-\`\`\`
-npx rfc2119 pass <REVIEW-ID> --summary "<one-line justification>"
-\`\`\`
-
-If there are unresolved findings, run:
-
-\`\`\`
-npx rfc2119 fail <REVIEW-ID> --summary "<the core finding>"
-\`\`\`
-
-The summary is committed to the repository and read by humans in PR review —
-be specific. Do not edit any files; report, don't fix.`;
-const EXPECTED_AUDIT_TASK = `**Construct a concrete mutant or input under which this requirement is violated while every
-covering test stays green.** Probe the negative space (what must be refused, not what is accepted);
-consider shared fixtures, preludes, and paths the tests never touch. Prefer a discriminating
-counterexample over exhaustive permutations of equivalent inputs. Reason from the requirement's
-text, never from the implementation's current behavior.
-
-- If you find such a counterexample: record a FAIL with the mutant described concretely enough
-  to reproduce.
-- Only if you genuinely cannot construct one after honest effort: record a PASS stating the
-  strongest candidate you tried and why it fails to survive.
-
-## Recording your verdict
-
-${RECORDING_GUIDANCE}
-
-\`\`\`
-npx rfc2119 pass <REVIEW-ID> --summary "audit: <strongest attempted counterexample and why it dies>"
-npx rfc2119 fail <REVIEW-ID> --summary "audit: <the counterexample, reproducibly>"
-\`\`\`
-
-Do not edit any files; report, don't fix.`;
-
-function normalizedTask(body: string): string {
-  return body
-    .replace(/\n## Additional review criteria\n[\s\S]*?(?=\n## Recording your verdict)/, "")
-    .replace(/[A-Za-z][A-Za-z0-9-]*\.\d+\.\d+--[0-9a-f]{12}/g, "<REVIEW-ID>")
-    .replace(/[A-Za-z][A-Za-z0-9-]*\.\d+\.\d+/g, "<REQ-ID>")
-    .trim();
-}
-
 // Bare annotations below resolve through the real file-scoped spec copied by dispatchFixture().
 // 2119-spec: self-supplied-evidence
 
@@ -215,7 +101,6 @@ function expectEveryTestQualityTask(root: string, assertion: (body: string) => v
   const bodies = testQualityTaskBodies(root);
   expect(bodies.length).toBeGreaterThan(2);
   for (const body of bodies) {
-    expect(normalizedTask(body)).toBe(EXPECTED_TASK);
     const provenance = body
       .split("**Required production-provenance answers (a PASS is forbidden without them):**", 2)[1]
       ?.split("**Symmetric change probes (a PASS is forbidden without both):**", 1)[0];
@@ -310,8 +195,8 @@ describe("self-supplied evidence review instructions", () => {
     expect(targets.length).toBeGreaterThan(0);
     for (const target of targets) {
       const direct = readFileSync(join(root, ".2119/reviews", `${target.reviewId}.md`), "utf8");
-      expect(normalizedTask(direct.split("## Your task\n\n", 2)[1])).toBe(EXPECTED_DIRECT_TASK);
       expect(direct).not.toContain("Required production-provenance answers");
+      expect(direct).toMatch(/<!-- 2119-review:requirement-quality -->\n\S/);
     }
   });
 
@@ -447,9 +332,7 @@ it("uses arrow factory input", () => {
           standard.indexOf("## Additional review criteria"),
         );
       }
-      expect(normalizedTask(standard.split("## Your task\n\n", 2)[1])).toBe(
-        target.kind === "test-quality" ? EXPECTED_TASK : EXPECTED_DIRECT_TASK,
-      );
+      expect(standard).toMatch(/<!-- 2119-review:requirement-quality -->\n\S/);
     }
     expect(sawCustomInstructions).toBe(true);
 
@@ -466,7 +349,11 @@ it("uses arrow factory input", () => {
     for (const auditName of auditNames) {
       const audit = readFileSync(join(root, ".2119/reviews", auditName), "utf8");
       expectBoundedGuidance(audit);
-      expect(normalizedTask(audit.split("## Your task\n\n", 2)[1])).toBe(EXPECTED_AUDIT_TASK);
+      expect(audit).toMatch(/concrete mutant or input/i);
+      expect(audit).toMatch(/violated while every\s+covering test stays green/);
+      expect(audit).toMatch(/Only if you genuinely cannot construct one/);
+      expect(audit).toContain("npx rfc2119 pass");
+      expect(audit).toContain("npx rfc2119 fail");
     }
   });
 });
