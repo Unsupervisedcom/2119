@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.11--4a7441123903",
+  "requirementId": "REQ-003.1.11",
+  "hash": "4a7441123903",
+  "verdict": "fail",
+  "summary": "Test only checks that requirement-quality marker has following text; replacing the fail-on-ambiguous/untestable/mechanism guidance with unrelated text stays green.",
+  "timestamp": "2026-09-06T21:57:15.793Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.15--42c4a263febb",
+  "requirementId": "REQ-003.1.15",
+  "hash": "42c4a263febb",
+  "verdict": "fail",
+  "summary": "parameter-cases evidence checks only a marker plus nonwhitespace; reversing the guidance to require every spelling or combination would stay green",
+  "timestamp": "2026-09-06T21:57:13.818Z"
+}

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.2--7cc5745689c9",
+  "requirementId": "REQ-004.3.2",
+  "hash": "7cc5745689c9",
+  "verdict": "fail",
+  "summary": "The real init test proves one begin/end section and preserved pre-existing text, but only checks six internal topic markers followed by any non-whitespace; replacing every mandated workflow explanation with 'x' stays green, so the delivered-text contract is unverified.",
+  "timestamp": "2026-09-06T21:57:16.977Z"
+}

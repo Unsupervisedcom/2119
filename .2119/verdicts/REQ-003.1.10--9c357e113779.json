@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.10--9c357e113779",
+  "requirementId": "REQ-003.1.10",
+  "hash": "9c357e113779",
+  "verdict": "pass",
+  "summary": "tests/rigor.test.ts verifies generated review instruction files contain the violating-change guidance section without Cartesian demand",
+  "timestamp": "2026-09-06T21:57:33.967Z"
+}
