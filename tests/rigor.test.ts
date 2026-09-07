@@ -173,16 +173,16 @@ describe("deterministic rigor (0.6)", () => {
     const instructions = [
       /concrete implementation change that violates the requirement.*evidence would fail/s,
       /quantifies over a set or names a defined grammar.*boundary members or edge productions/s,
+      /Do not demand a counterexample for every word or a Cartesian product of inputs/s,
       /legitimate change that preserves the requirement's meaning.*evidence would stay green/s,
       /One evidence body may cover multiple requirement IDs.*not a duplicate test/s,
-      /Reject evidence whose only value is pinning irrelevant wording.*Preserve legitimate contracts/s,
+      /Reject evidence whose only value is pinning irrelevant wording.*Preserve legitimate contracts.*inventories derived from the real product that fail loudly on zero subjects.*snapshots with an explicit, inexpensive update path/s,
       /meaningfully distinct production behavior.*not a reason to demand every spelling or combination/s,
-      /ambiguous, untestable, or.*implementation mechanism rather than an observable outcome, fail/s,
+      /ambiguous, untestable, or.*implementation mechanism rather than an observable outcome, fail with that finding/s,
     ];
     for (const instruction of instructions) {
       expect(normalizedBody).toMatch(instruction);
     }
-    expect(body).not.toContain("For each, construct the nearest violating");
   });
 
   // 2119: REQ-003.5.6

@@ -175,9 +175,13 @@ describe("cli end-to-end", () => {
     const instructions = [
       "write or update a spec in `specs/` first",
       "observable product behavior and narrowly scoped text actually delivered",
+      "Keep test strategy, CI commands, review procedure, migration bookkeeping, and implementation notes non-normative",
       "Consolidate duplicate requirements",
       "dispatch a fresh-context reviewer to critique the draft",
+      "test annotated with a comment containing its ID",
+      "fresh-context reviewer judges each test's honesty",
       "One behavioral test may cover multiple requirement IDs",
+      "add annotations or cross-references when the evidence is already sufficient, rather than duplicating the test",
       "Reviewer diversity",
       "run `npx rfc2119 check`",
       "CI runs the same check",

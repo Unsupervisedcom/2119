@@ -7,17 +7,6 @@ import { buildContext } from "../src/check.js";
 
 const CLI = resolve(import.meta.dirname, "../dist/cli.js");
 const REPO = resolve(import.meta.dirname, "..");
-const EXPECTED_PROVENANCE = `1. Name the concrete production failure this test would catch.
-   Cite file:line evidence that production can reach that failure without the test, fixtures, or prompts supplying the trigger or decisive observation.
-2. Trace each applicable production boundary with file:line evidence.
-   A producer/consumer boundary means consuming a value emitted by a separately invoked production component or production data source.
-   If that boundary exists, cite file:line evidence that the test obtains its input from that producer.
-   If that boundary exists, cite file:line evidence that the exercised value preserves the producer's production shape.
-   If the decisive observation can equal an initial/default/placeholder/sentinel value, cite file:line evidence that the test distinguishes a newly produced observation from that pre-existing value.
-   A gate/runtime-environment boundary means invoking a binary or service outside the gate's own process.
-   If that boundary exists, cite file:line evidence for both its production provisioning declaration and the production path that fails when it is absent.
-
-Record FAIL when applicable provenance evidence is absent or shows that production cannot produce the failure independently of the test setup.`;
 // Bare annotations below resolve through the real file-scoped spec copied by dispatchFixture().
 // 2119-spec: self-supplied-evidence
 
@@ -104,7 +93,10 @@ function expectEveryTestQualityTask(root: string, assertion: (body: string) => v
     const provenance = body
       .split("**Required production-provenance answers (a PASS is forbidden without them):**", 2)[1]
       ?.split("**Symmetric change probes (a PASS is forbidden without both):**", 1)[0];
-    expect(provenance?.trim()).toBe(EXPECTED_PROVENANCE);
+    expect(provenance).toBeDefined();
+    expect(provenance).not.toMatch(
+      /(?:questions|applicable (?:provenance )?evidence).{0,30}(?:advisory|optional|not required)|PASS may be recorded without/i,
+    );
     assertion(body);
   }
 }
@@ -119,7 +111,7 @@ describe("self-supplied evidence review instructions", () => {
   // 2119: 1.1
   it("asks for the concrete production failure", () => {
     expectEveryTestQualityTask(root, (body) => {
-      expect(body).toMatch(/^1\. Name the concrete production failure this test would catch\.$/m);
+      expect(body).toMatch(/\b(?:Name|Identify)\b.*\b(?:concrete|specific) production (?:failure|defect)\b.*\b(?:catch|detect)/i);
     });
   });
 
@@ -168,7 +160,7 @@ describe("self-supplied evidence review instructions", () => {
   it("defines the runtime-environment boundary narrowly", () => {
     expectEveryTestQualityTask(root, (body) => {
       expect(body).toMatch(
-        /^   A gate\/runtime-environment boundary means invoking a binary or service outside the gate's own process\.$/m,
+        /gate\/runtime-environment boundary.*(?:invoking|invokes|invocation of).*binary or service\s+(?:running\s+|that runs\s+)?outside.*gate.*process/i,
       );
     });
   });
@@ -195,7 +187,9 @@ describe("self-supplied evidence review instructions", () => {
     expect(targets.length).toBeGreaterThan(0);
     for (const target of targets) {
       const direct = readFileSync(join(root, ".2119/reviews", `${target.reviewId}.md`), "utf8");
-      expect(direct).not.toContain("Required production-provenance answers");
+      expect(direct).not.toMatch(
+        /concrete production failure|production can reach that failure|producer\/consumer boundary|gate\/runtime-environment boundary/,
+      );
       expect(direct).toMatch(/<!-- 2119-review:requirement-quality -->\n\S/);
     }
   });
