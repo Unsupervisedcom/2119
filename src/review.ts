@@ -17,8 +17,10 @@ export const TEST_QUALITY_GUIDANCE = [
     text: `Name one concrete implementation change that violates the requirement and confirm the cited
 evidence would fail. Before selecting it, scan the requirement's conjuncts, boundaries, precedence
 rules, grammar shapes, and distinct data shapes; choose the probe most likely to expose uncovered
-behavior. Do not demand a counterexample for every word or a Cartesian product of inputs that
-exercise the same production behavior.`,
+behavior. When a requirement quantifies over a set or names a defined grammar, confirm the evidence
+exercises boundary members or edge productions, not just the easiest member. Do not demand a
+counterexample for every word or a Cartesian product of inputs that exercise the same production
+behavior.`,
   },
   {
     id: "legitimate-change",
