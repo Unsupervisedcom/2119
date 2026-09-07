@@ -162,25 +162,28 @@ describe("cli end-to-end", () => {
   });
 
   // 2119: REQ-004.3.2, REQ-004.3.5
-  it("init appends the AGENTS.md workflow section exactly once, mentioning the CI backstop", () => {
+  it("init appends the contracted AGENTS.md workflow section exactly once", () => {
     const root = mkdtempSync(join(tmpdir(), "2119-agents-"));
     writeFileSync(join(root, "AGENTS.md"), "# My project\n");
     run(root, ["init"]);
     run(root, ["init"]);
     const body = readFileSync(join(root, "AGENTS.md"), "utf8");
+    const normalizedBody = body.replace(/\s+/g, " ");
     expect(body.match(/<!-- 2119:begin -->/g)).toHaveLength(1);
     expect(body.match(/<!-- 2119:end -->/g)).toHaveLength(1);
     expect(body).toContain("# My project");
-    const topics = [
-      "planning",
-      "classification",
-      "granularity",
-      "implementation",
-      "reviewerDiversity",
-      "gate",
+    const instructions = [
+      "write or update a spec in `specs/` first",
+      "observable product behavior and narrowly scoped text actually delivered",
+      "Consolidate duplicate requirements",
+      "dispatch a fresh-context reviewer to critique the draft",
+      "One behavioral test may cover multiple requirement IDs",
+      "Reviewer diversity",
+      "run `npx rfc2119 check`",
+      "CI runs the same check",
     ];
-    for (const id of topics) {
-      expect(body.match(new RegExp(`<!-- 2119-workflow:${id} -->\\n\\S`))).toHaveLength(1);
+    for (const instruction of instructions) {
+      expect(normalizedBody).toContain(instruction);
     }
   });
 

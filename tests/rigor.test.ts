@@ -169,18 +169,20 @@ describe("deterministic rigor (0.6)", () => {
     run(root, ["review"]);
     const dir = join(root, ".2119/reviews");
     const body = readFileSync(join(dir, readdirSync(dir)[0]), "utf8");
-    const criteria = [
-      "violating-change",
-      "legitimate-change",
-      "shared-evidence",
-      "irrelevant-pins",
-      "parameter-cases",
+    const normalizedBody = body.replace(/\s+/g, " ");
+    const instructions = [
+      /concrete implementation change that violates the requirement.*evidence would fail/s,
+      /quantifies over a set or names a defined grammar.*boundary members or edge productions/s,
+      /legitimate change that preserves the requirement's meaning.*evidence would stay green/s,
+      /One evidence body may cover multiple requirement IDs.*not a duplicate test/s,
+      /Reject evidence whose only value is pinning irrelevant wording.*Preserve legitimate contracts/s,
+      /meaningfully distinct production behavior.*not a reason to demand every spelling or combination/s,
+      /ambiguous, untestable, or.*implementation mechanism rather than an observable outcome, fail/s,
     ];
-    for (const id of criteria) {
-      expect(body.match(new RegExp(`<!-- 2119-review:${id} -->\\n\\S`))).toHaveLength(1);
+    for (const instruction of instructions) {
+      expect(normalizedBody).toMatch(instruction);
     }
     expect(body).not.toContain("For each, construct the nearest violating");
-    expect(body).toMatch(/<!-- 2119-review:requirement-quality -->\n\S/);
   });
 
   // 2119: REQ-003.5.6
