@@ -95,7 +95,7 @@ function expectEveryTestQualityTask(root: string, assertion: (body: string) => v
       ?.split("**Symmetric change probes (a PASS is forbidden without both):**", 1)[0];
     expect(provenance).toBeDefined();
     expect(provenance).not.toMatch(
-      /(?:questions|applicable (?:provenance )?evidence).{0,30}(?:advisory|optional|not required)|PASS may be recorded without/i,
+      /(?:questions|applicable (?:provenance )?evidence).{0,30}(?:advisory|optional|not required)|producer (?:citations?|trace|evidence).{0,20}(?:may be omitted|optional|not required)|PASS may be recorded without/i,
     );
     assertion(body);
   }
@@ -111,7 +111,12 @@ describe("self-supplied evidence review instructions", () => {
   // 2119: 1.1
   it("asks for the concrete production failure", () => {
     expectEveryTestQualityTask(root, (body) => {
-      expect(body).toMatch(/\b(?:Name|Identify)\b.*\b(?:concrete|specific) production (?:failure|defect)\b.*\b(?:catch|detect)/i);
+      expect(body).toMatch(
+        /\b(?:Name|Identify|State)\b.*\b(?:concrete|specific|real-world) (?:production )?(?:failure|defect|malfunction)\b.*\b(?:catch|detect|expose)/i,
+      );
+      expect(body).not.toMatch(
+        /\b(?:do not|never)\s+(?:name|identify|state)\b.*\b(?:production )?(?:failure|defect|malfunction)\b/i,
+      );
     });
   });
 
@@ -136,7 +141,9 @@ describe("self-supplied evidence review instructions", () => {
   // 2119: 2.2
   it("requires applicable tests to source input from the production producer", () => {
     expectEveryTestQualityTask(root, (body) => {
-      expect(body).toContain("cite file:line evidence that the test obtains its input from that producer");
+      expect(body).toMatch(
+        /(?:cite|provide).*file:line evidence.*(?:test|covering test).*(?:obtains|sources|receives).*input.*(?:production )?producer/i,
+      );
     });
   });
 
@@ -160,7 +167,10 @@ describe("self-supplied evidence review instructions", () => {
   it("defines the runtime-environment boundary narrowly", () => {
     expectEveryTestQualityTask(root, (body) => {
       expect(body).toMatch(
-        /gate\/runtime-environment boundary.*(?:invoking|invokes|invocation of).*binary or service\s+(?:running\s+|that runs\s+)?outside.*gate.*process/i,
+        /gate\/runtime-environment boundary (?:means invoking|exists when (?:the )?gate invokes|is (?:an )?invocation of).*binary or service\s+(?:running\s+|that runs\s+)?outside.*gate.*process/i,
+      );
+      expect(body).not.toMatch(
+        /gate\/runtime-environment boundary.{0,30}(?:means|is|exists when).{0,10}not (?:invoking|an invocation)/i,
       );
     });
   });
@@ -178,6 +188,9 @@ describe("self-supplied evidence review instructions", () => {
   it("makes missing or self-supplied provenance a failing verdict", () => {
     expectEveryTestQualityTask(root, (body) => {
       expect(body).toContain("Record FAIL when applicable provenance evidence is absent or shows that production cannot produce the failure independently of the test setup.");
+      expect(body).not.toMatch(
+        /(?:do not|never)\s+record FAIL when applicable provenance evidence|record FAIL when applicable provenance evidence.{0,40}(?:prohibited|record PASS instead)/i,
+      );
     });
   });
 
@@ -188,8 +201,9 @@ describe("self-supplied evidence review instructions", () => {
     for (const target of targets) {
       const direct = readFileSync(join(root, ".2119/reviews", `${target.reviewId}.md`), "utf8");
       expect(direct).not.toMatch(
-        /concrete production failure|production can reach that failure|producer\/consumer boundary|gate\/runtime-environment boundary/,
+        /concrete production failure|production can reach that failure|Trace each applicable production boundary|producer\/consumer boundary|gate\/runtime-environment boundary/,
       );
+      expect(direct).not.toMatch(/^\d+\.\s/m);
       expect(direct).toMatch(/<!-- 2119-review:requirement-quality -->\n\S/);
     }
   });

@@ -176,13 +176,16 @@ describe("deterministic rigor (0.6)", () => {
       /Do not demand a counterexample for every word or a Cartesian product of inputs/s,
       /legitimate change that preserves the requirement's meaning.*evidence would stay green/s,
       /One evidence body may cover multiple requirement IDs.*not a duplicate test/s,
-      /Reject evidence whose only value is pinning irrelevant wording.*Preserve legitimate contracts.*inventories derived from the real product that fail loudly on zero subjects.*snapshots with an explicit, inexpensive update path/s,
+      /Reject evidence whose only value is pinning irrelevant wording, layout, digests, or implementation organization.*Preserve legitimate contracts.*inventories derived from the real product that fail loudly on zero subjects.*snapshots with an explicit, inexpensive update path/s,
       /meaningfully distinct production behavior.*not a reason to demand every spelling or combination/s,
       /ambiguous, untestable, or.*implementation mechanism rather than an observable outcome, fail with that finding/s,
     ];
     for (const instruction of instructions) {
       expect(normalizedBody).toMatch(instruction);
     }
+    expect(normalizedBody).not.toMatch(
+      /(?:do not|never|prohibit(?:ed)?).{0,30}fail|fail.{0,30}(?:prohibit(?:ed)?|pass instead)/i,
+    );
   });
 
   // 2119: REQ-003.5.6

@@ -172,6 +172,7 @@ describe("cli end-to-end", () => {
     expect(body.match(/<!-- 2119:begin -->/g)).toHaveLength(1);
     expect(body.match(/<!-- 2119:end -->/g)).toHaveLength(1);
     expect(body).toContain("# My project");
+    expect(body.indexOf("<!-- 2119:begin -->")).toBeGreaterThan(body.indexOf("# My project"));
     const instructions = [
       "write or update a spec in `specs/` first",
       "observable product behavior and narrowly scoped text actually delivered",
