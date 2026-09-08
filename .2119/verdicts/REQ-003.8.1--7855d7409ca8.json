@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.8.1--7855d7409ca8",
+  "requirementId": "REQ-003.8.1",
+  "hash": "7855d7409ca8",
+  "verdict": "pass",
+  "summary": "The 19 calibration fixtures each record a requirement, evidence, expected verdict, and reason, with known escapes, pass controls, and concrete cases for all five named review patterns.",
+  "timestamp": "2026-09-06T21:57:17.208Z"
+}

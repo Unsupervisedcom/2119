@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.1.2--c3c97de002d9",
+  "reviewId": "self-supplied-evidence.1.2--0cc78686b660",
   "requirementId": "self-supplied-evidence.1.2",
-  "hash": "c3c97de002d9",
+  "hash": "0cc78686b660",
   "verdict": "pass",
-  "summary": "Every CLI-generated test-quality packet is exact-body checked for file:line reachability independent of tests, fixtures, prompts, triggers, and decisive observations",
-  "timestamp": "2026-08-03T17:05:01.162Z"
+  "summary": "The production test-quality renderer requires file:line proof that production reaches the failure without fixtures or prompts supplying the trigger or decisive observation.",
+  "timestamp": "2026-09-08T20:18:57.123Z"
 }

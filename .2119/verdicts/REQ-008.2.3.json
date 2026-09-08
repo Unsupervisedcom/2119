@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-008.2.3--a350fc47d58b",
+  "requirementId": "REQ-008.2.3",
+  "hash": "a350fc47d58b",
+  "verdict": "pass",
+  "summary": "README and scaling guide explain block-scoped churn avoidance, configured shared-helper invalidation, and guidance-only metric observation without automatic deletion",
+  "timestamp": "2026-09-08T20:23:56.328Z"
+}

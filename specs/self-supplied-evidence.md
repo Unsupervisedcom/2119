@@ -79,39 +79,37 @@ inside the behavior under test is not enough. A runtime-environment boundary exi
 invokes a binary or service outside its own process. These definitions trigger focused provenance
 traces without making every pure unit test pay the cost.
 
-This feature's own acceptance tests invoke the built CLI's real `review --dispatch` workflow
-against this checked-in file-scoped spec and its annotated tests, then inspect instructions that
-workflow actually writes. They do not satisfy coverage by directly calling the instruction
-renderer with a hand-built requirement or by asserting against a separately copied prompt fixture.
-Thus the production parser, coverage resolver, review-target computation, and instruction writer
-supply the artifacts under assertion.
+These delivered-text obligations use direct judgment review because deterministic prose matching
+would either admit negated lookalikes or reject legitimate paraphrases. The declared evidence spans
+the production CLI path and instruction renderer; the reviewer judges the emitted contract from
+those sources instead of accepting a copied prompt fixture or a wording snapshot.
 
 ## Requirements
 
 ### 1: Independent production failure
 
-1. Each generated test-quality review instruction MUST require the reviewer to name a concrete production failure the covering test would catch.
-2. Each generated test-quality review instruction MUST require `file:line` evidence that production can reach the named failure without the test, its fixtures, or its prompts supplying the triggering input or decisive observation.
+1. Each generated test-quality review instruction MUST require the reviewer to name a concrete production failure the covering test would catch. [review: src/cli.ts, src/review.ts]
+2. Each generated test-quality review instruction MUST require `file:line` evidence that production can reach the named failure without the test, its fixtures, or its prompts supplying the triggering input or decisive observation. [review: src/cli.ts, src/review.ts]
 
 ### 2: Conditional boundary provenance
 
-1. Each generated test-quality review instruction MUST define a producer/consumer boundary as consumption of a value emitted by a separately invoked production component or production data source.
-2. Each generated test-quality review instruction MUST require the reviewer, whenever a producer/consumer boundary exists, to cite `file:line` evidence that the covering test obtains its input through that production producer.
-3. Each generated test-quality review instruction MUST require the reviewer, whenever a producer/consumer boundary exists, to cite `file:line` evidence that the input exercised by the covering test preserves the production producer's value shape.
-4. Each generated test-quality review instruction MUST require the reviewer, whenever the decisive observation can equal an initial, default, placeholder, or sentinel value, to cite `file:line` evidence that the covering test distinguishes a newly produced observation from that pre-existing value.
+1. Each generated test-quality review instruction MUST define a producer/consumer boundary as consumption of a value emitted by a separately invoked production component or production data source. [review: src/cli.ts, src/review.ts]
+2. Each generated test-quality review instruction MUST require the reviewer, whenever a producer/consumer boundary exists, to cite `file:line` evidence that the covering test obtains its input through that production producer. [review: src/cli.ts, src/review.ts]
+3. Each generated test-quality review instruction MUST require the reviewer, whenever a producer/consumer boundary exists, to cite `file:line` evidence that the input exercised by the covering test preserves the production producer's value shape. [review: src/cli.ts, src/review.ts]
+4. Each generated test-quality review instruction MUST require the reviewer, whenever the decisive observation can equal an initial, default, placeholder, or sentinel value, to cite `file:line` evidence that the covering test distinguishes a newly produced observation from that pre-existing value. [review: src/cli.ts, src/review.ts]
 
 ### 3: Declared runtime environment
 
-1. Each generated test-quality review instruction MUST define a gate/runtime-environment boundary as invocation of a binary or service outside the gate's own process.
-2. Each generated test-quality review instruction MUST require the reviewer, whenever a gate/runtime-environment boundary exists, to cite `file:line` evidence of both the dependency's production provisioning declaration and the production path that fails when the dependency is absent.
+1. Each generated test-quality review instruction MUST define a gate/runtime-environment boundary as invocation of a binary or service outside the gate's own process. [review: src/cli.ts, src/review.ts]
+2. Each generated test-quality review instruction MUST require the reviewer, whenever a gate/runtime-environment boundary exists, to cite `file:line` evidence of both the dependency's production provisioning declaration and the production path that fails when the dependency is absent. [review: src/cli.ts, src/review.ts]
 
 ### 4: Decidable verdicts
 
-1. Each generated test-quality review instruction MUST direct the reviewer to fail the judgment when any provenance evidence required by its applicable questions is absent or shows that production cannot produce the claimed failure independently of the test setup.
+1. Each generated test-quality review instruction MUST direct the reviewer to fail the judgment when any provenance evidence required by its applicable questions is absent or shows that production cannot produce the claimed failure independently of the test setup. [review: src/cli.ts, src/review.ts]
 
 ### 5: Scope
 
-1. Generated direct-judgment instructions for `[review]` requirements MUST remain exempt from the test-quality provenance questions.
+1. Generated direct-judgment instructions for `[review]` requirements MUST remain exempt from the test-quality provenance questions. [review: src/cli.ts, src/review.ts]
 
 ### 6: Lint compatibility
 
@@ -119,4 +117,4 @@ supply the artifacts under assertion.
 
 ### 7: Evidence-bounded verdict wording
 
-1. Each generated review instruction MUST direct the reviewer to keep the verdict summary's subject no broader than the cited evidence, preserving concrete member names and singular or plural scope instead of promoting member-specific evidence into a category claim.
+1. Each generated review instruction MUST direct the reviewer to keep the verdict summary's subject no broader than the cited evidence, preserving concrete member names and singular or plural scope instead of promoting member-specific evidence into a category claim. [review: src/cli.ts, src/review.ts]

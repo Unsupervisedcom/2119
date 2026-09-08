@@ -97,7 +97,9 @@ The design splits enforcement by what each layer can actually guarantee:
   requirement — and the old verdict silently stops counting; edit an
   *unrelated* test in the same file and it doesn't. `2119 pass` refuses IDs
   whose hash doesn't match current content, so verdicts can't be pre-computed
-  or replayed.
+  or replayed. Configure `shared_evidence` only for fixtures or helpers that can
+  genuinely neutralize many tests: those files deliberately invalidate every
+  dependent verdict when edited, trading broader churn for helper integrity.
 - **Verdicts are committed and schema-validated.** `.2119/verdicts/*.json`
   files carry the verdict, summary, and timestamp, so every review decision
   shows up in the PR diff for humans to audit. The gate counts a verdict only

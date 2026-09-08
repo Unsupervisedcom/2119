@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-003.6.3--4fa1d92e29a1",
+  "reviewId": "REQ-003.6.3--4d12d641b4cc",
   "requirementId": "REQ-003.6.3",
-  "hash": "4fa1d92e29a1",
+  "hash": "4d12d641b4cc",
   "verdict": "pass",
-  "summary": "Packaged CLI test rejects missing or mis-scoped audits, non-adversarial directives, stale passes, and any byte change to current, failing, orphan, or multiple verdict records",
-  "timestamp": "2026-08-03T16:15:20.573Z"
+  "summary": "The built CLI test proves --audit selects only current passing review IDs, emits counterexample-first instructions, and preserves current, failing, and orphan verdict bytes.",
+  "timestamp": "2026-09-08T20:18:56.701Z"
 }

@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.13--be56cbb59e45",
+  "requirementId": "REQ-003.1.13",
+  "hash": "be56cbb59e45",
+  "verdict": "pass",
+  "summary": "Production review packets allow shared evidence and request cross-reference rather than duplicate tests; dropping that policy fails while whitespace changes stay green.",
+  "timestamp": "2026-09-08T19:28:43.372Z"
+}

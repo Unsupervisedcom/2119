@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.2--67fbf784f393",
+  "requirementId": "REQ-004.3.2",
+  "hash": "67fbf784f393",
+  "verdict": "pass",
+  "summary": "The CLI test extracts the single marker-delimited workflow section and checks every contracted instruction inside production-generated AGENTS.md output.",
+  "timestamp": "2026-09-08T19:31:43.956Z"
+}

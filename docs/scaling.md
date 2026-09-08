@@ -90,6 +90,21 @@ shared_evidence:
 Their content then joins every test-quality hash. The cost is honest churn: editing a shared
 helper re-opens every dependent review, which is exactly what should happen.
 
+Ordinary test-quality verdicts instead hash the annotated evidence block and the file prelude.
+This keeps an edit to an unrelated neighboring annotation block from invalidating evidence it
+cannot affect. Renaming the evidence file or changing names, formatting, or setup inside the covered
+block or its prelude still invalidates the verdict. The two scopes are a deliberate tradeoff: narrow
+blocks avoid unrelated churn; explicitly configured shared evidence preserves integrity where a
+common mock or helper could neutralize many tests.
+
+## Anti-accretion rollout
+
+Treat requirement counts, execution-to-requirement ratios, matrix sizes, and verdict invalidation
+rates as review prompts or trends, never pass/fail proxies for evidence quality. Roll out
+anti-accretion through author and reviewer guidance first. The tool does not automatically delete,
+invalidate, or rewrite a repository's requirements or tests; maintainers decide what evidence is
+redundant after reviewing behavior.
+
 ## Periodic adversarial audits (cross-provider)
 
 Fresh context is not fresh framing: reviewers sharing one model family and one instruction

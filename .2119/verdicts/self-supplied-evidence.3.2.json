@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.3.2--e873b585f1a6",
+  "reviewId": "self-supplied-evidence.3.2--111d23ee4498",
   "requirementId": "self-supplied-evidence.3.2",
-  "hash": "e873b585f1a6",
+  "hash": "111d23ee4498",
   "verdict": "pass",
-  "summary": "Built CLI dispatch output is exercised; whole-task equality rejects omission of the conditional boundary, production provisioning declaration, absent-dependency failure path, or either half of both.",
-  "timestamp": "2026-08-03T17:05:06.568Z"
+  "summary": "Test-quality judgment packets conditionally require file:line evidence for both production provisioning and the production absence-failure path.",
+  "timestamp": "2026-09-08T20:18:51.902Z"
 }

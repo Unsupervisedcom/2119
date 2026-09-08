@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.11--53fcf20cd4f4",
+  "requirementId": "REQ-003.1.11",
+  "hash": "53fcf20cd4f4",
+  "verdict": "pass",
+  "summary": "Production review packets require findings for ambiguous, untestable, or mechanism-only requirements; dropping that directive fails while reflowing it stays green.",
+  "timestamp": "2026-09-08T19:28:42.978Z"
+}

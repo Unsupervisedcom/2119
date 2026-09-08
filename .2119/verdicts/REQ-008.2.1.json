@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-008.2.1--2cd0a760d9fd",
+  "reviewId": "REQ-008.2.1--19128a7cc3e9",
   "requirementId": "REQ-008.2.1",
-  "hash": "2cd0a760d9fd",
+  "hash": "19128a7cc3e9",
   "verdict": "pass",
-  "summary": "scaling.md covers all seven mandated topics with concrete recipes: pinning, separate CI gates, CODEOWNERS, independent-runner, explicit evidence globs, shared_evidence, and no-verify policy",
-  "timestamp": "2026-08-08T07:57:34.368Z"
+  "summary": "docs/scaling.md gives concrete guidance for all seven required safeguards, including separate test/check CI steps and --no-verify handling for untrusted contributions",
+  "timestamp": "2026-09-08T20:23:44.046Z"
 }

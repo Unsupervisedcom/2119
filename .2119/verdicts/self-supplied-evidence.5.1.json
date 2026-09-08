@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.5.1--c1a086a4ad44",
+  "reviewId": "self-supplied-evidence.5.1--d060740a67b8",
   "requirementId": "self-supplied-evidence.5.1",
-  "hash": "c1a086a4ad44",
+  "hash": "d060740a67b8",
   "verdict": "pass",
-  "summary": "Generated direct-judgment packets for parsed [review] targets exactly retain the direct task and omit the test-quality provenance section.",
-  "timestamp": "2026-08-03T17:05:04.793Z"
+  "summary": "The direct-judgment requirement branch omits the production-provenance questions that are emitted only by the test-quality branch.",
+  "timestamp": "2026-09-08T20:18:51.802Z"
 }

@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.2.4--9ea89fc088ad",
+  "reviewId": "self-supplied-evidence.2.4--8320faffe8dc",
   "requirementId": "self-supplied-evidence.2.4",
-  "hash": "9ea89fc088ad",
+  "hash": "8320faffe8dc",
   "verdict": "pass",
-  "summary": "Built CLI dispatch output is freshly generated and whole-task equality rejects loss of any initial/default/placeholder/sentinel case or new-versus-pre-existing distinction.",
-  "timestamp": "2026-08-03T17:05:06.404Z"
+  "summary": "Test-quality judgment packets require file:line evidence distinguishing a newly produced observation from an equal initial, default, placeholder, or sentinel value.",
+  "timestamp": "2026-09-08T20:18:51.446Z"
 }

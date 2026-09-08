@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.1.1--afb9cc135da4",
+  "reviewId": "self-supplied-evidence.1.1--e260a01b5fde",
   "requirementId": "self-supplied-evidence.1.1",
-  "hash": "afb9cc135da4",
+  "hash": "e260a01b5fde",
   "verdict": "pass",
-  "summary": "The CLI-generated packet set is exhaustively exact-body checked and rejects omission or weakening of the concrete covering-test production-failure demand",
-  "timestamp": "2026-08-03T17:05:01.031Z"
+  "summary": "The production test-quality renderer requires naming the concrete production failure the covering test would catch, and the CLI routes pending reviews through that renderer.",
+  "timestamp": "2026-09-08T20:18:56.886Z"
 }

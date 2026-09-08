@@ -46,7 +46,7 @@ plugins and are planned as thin native packages.
 ### REQ-004.3: Universal fallback layer
 
 1. `2119 init` MUST create a commented `.2119.yml` and a template spec when none exist.
-2. `2119 init` MUST append a marker-delimited workflow section to `AGENTS.md` describing spec-first planning, draft-time spec critique (dispatch a fresh reviewer to critique new requirements — outcome-stated, individually testable, one obligation each — before writing tests), test annotations, judgment reviews, reviewer-model diversity (use models from different providers routinely or as periodic `review --audit` sweeps, especially for challenging or high-consequence requirements), and the `2119 check` gate, exactly once.
+2. `2119 init` MUST append exactly once a marker-delimited workflow section to `AGENTS.md` that describes spec-first planning; distinguishes observable product behavior and narrowly scoped delivered-text contracts from non-normative verification or maintenance notes; asks authors to consolidate duplicate requirements and annotate shared behavioral evidence instead of duplicating tests; requires draft-time fresh-context spec critique; explains test annotations and judgment reviews; recommends reviewer-model diversity; and names the `2119 check` gate, with the section's key instruction-bearing phrases forming part of the delivered-text contract.
 3. `2119 init --git-hook` MUST install a git pre-commit hook that runs `2119 check`, refusing to overwrite an existing pre-commit hook it did not create.
 4. `2119 init --ci` MUST write a GitHub Actions workflow that runs `2119 check` on pull requests.
 5. The AGENTS.md section MUST state that CI runs the same check, so agents on hookless platforms know the gate cannot be skipped.

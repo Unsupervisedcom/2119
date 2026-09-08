@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.2.2--8796d4a6e793",
+  "reviewId": "self-supplied-evidence.2.2--038a254fd5af",
   "requirementId": "self-supplied-evidence.2.2",
-  "hash": "8796d4a6e793",
+  "hash": "038a254fd5af",
   "verdict": "pass",
-  "summary": "Built CLI dispatch output is read from generated files; whole-task equality rejects omission of file:line, conditional-boundary, or production-producer input provenance wording.",
-  "timestamp": "2026-08-03T17:05:06.235Z"
+  "summary": "The production test-quality renderer conditionally requires file:line proof that the covering test obtains input from the production producer.",
+  "timestamp": "2026-09-08T20:18:57.554Z"
 }

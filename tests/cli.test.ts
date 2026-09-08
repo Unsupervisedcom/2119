@@ -162,28 +162,36 @@ describe("cli end-to-end", () => {
   });
 
   // 2119: REQ-004.3.2, REQ-004.3.5
-  it("init appends the AGENTS.md workflow section exactly once, mentioning the CI backstop", () => {
+  it("init appends the contracted AGENTS.md workflow section exactly once", () => {
     const root = mkdtempSync(join(tmpdir(), "2119-agents-"));
     writeFileSync(join(root, "AGENTS.md"), "# My project\n");
     run(root, ["init"]);
     run(root, ["init"]);
     const body = readFileSync(join(root, "AGENTS.md"), "utf8");
+    const workflow = body.match(/<!-- 2119:begin -->([\s\S]*?)<!-- 2119:end -->/)?.[1];
+    expect(workflow).toBeDefined();
+    const normalizedWorkflow = workflow!.replace(/\s+/g, " ");
     expect(body.match(/<!-- 2119:begin -->/g)).toHaveLength(1);
     expect(body.match(/<!-- 2119:end -->/g)).toHaveLength(1);
     expect(body).toContain("# My project");
-    // The mandated workflow content: spec-first planning, test annotations,
-    // judgment reviews, and the check gate.
-    expect(body).toContain("write or update a spec in `specs/` first");
-    expect(body).toContain("RFC 2119 keyword");
-    const marker = ["21", "19"].join(""); // avoid a literal self-annotation
-    expect(body).toContain(`\`// ${marker}: REQ-001.2.3\``);
-    expect(body).toContain("fresh-context subagent");
-    expect(body).toMatch(/npx rfc2119 check.*must exit 0/s);
-    expect(body).toContain("CI runs the same check");
-    // 0.6 topics: draft-time spec critique + reviewer diversity (REQ-004.3.2).
-    expect(body).toContain("critique the draft\nrequirements");
-    expect(body).toContain("review --audit");
-    expect(body).toContain("different providers");
+    expect(body.indexOf("<!-- 2119:begin -->")).toBeGreaterThan(body.indexOf("# My project"));
+    const instructions = [
+      "write or update a spec in `specs/` first",
+      "observable product behavior and narrowly scoped text actually delivered",
+      "Keep test strategy, CI commands, review procedure, migration bookkeeping, and implementation notes non-normative",
+      "Consolidate duplicate requirements",
+      "dispatch a fresh-context reviewer to critique the draft",
+      "test annotated with a comment containing its ID",
+      "fresh-context reviewer judges each test's honesty",
+      "One behavioral test may cover multiple requirement IDs",
+      "add annotations or cross-references when the evidence is already sufficient, rather than duplicating the test",
+      "Reviewer diversity",
+      "run `npx rfc2119 check`",
+      "CI runs the same check",
+    ];
+    for (const instruction of instructions) {
+      expect(normalizedWorkflow).toContain(instruction);
+    }
   });
 
   // 2119: REQ-003.5.2, REQ-003.5.5

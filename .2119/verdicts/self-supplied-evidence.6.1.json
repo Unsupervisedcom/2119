@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.6.1--9eff2a724166",
+  "reviewId": "self-supplied-evidence.6.1--966521ec57f3",
   "requirementId": "self-supplied-evidence.6.1",
-  "hash": "9eff2a724166",
+  "hash": "966521ec57f3",
   "verdict": "pass",
-  "summary": "Built lint accepts isolated string/object/array/template/regexp/number/bigint/boolean/null inputs and named/static/imported/arrow factory forms without provenance violations.",
-  "timestamp": "2026-08-03T17:07:21.073Z"
+  "summary": "The real lint CLI accepts scalar, object, array, template, regexp, and primitive literals plus named, static, constructor, instance-method, imported, and arrow factory cases.",
+  "timestamp": "2026-09-08T20:18:52.020Z"
 }

@@ -163,16 +163,29 @@ describe("deterministic rigor (0.6)", () => {
     expect(r.stderr).toContain("docs/autth/**");
   });
 
-  // 2119: REQ-003.1.10, REQ-003.1.11
-  it("instruction files carry the counterexample obligation and bad-requirement clause", () => {
+  // 2119: REQ-003.1.10, REQ-003.1.11, REQ-003.1.12, REQ-003.1.13, REQ-003.1.14, REQ-003.1.15
+  it("instruction files demand discriminating evidence without rewarding duplication", () => {
     const root = fixture();
     run(root, ["review"]);
     const dir = join(root, ".2119/reviews");
     const body = readFileSync(join(dir, readdirSync(dir)[0]), "utf8");
-    expect(body).toContain("Counterexample obligation");
-    expect(body).toMatch(/nearest violating\s+input/);
-    expect(body).toContain("not a pass");
-    expect(body).toMatch(/bad\s+requirement honestly tested is still a bad requirement/);
+    const normalizedBody = body.replace(/\s+/g, " ");
+    const instructions = [
+      /concrete implementation change that violates the requirement.*evidence would fail/s,
+      /quantifies over a set or names a defined grammar.*boundary members or edge productions/s,
+      /Do not demand a counterexample for every word or a Cartesian product of inputs/s,
+      /legitimate change that preserves the requirement's meaning.*evidence would stay green/s,
+      /One evidence body may cover multiple requirement IDs.*not a duplicate test/s,
+      /Reject evidence whose only value is pinning irrelevant wording, layout, digests, or implementation organization.*Preserve legitimate contracts.*inventories derived from the real product that fail loudly on zero subjects.*snapshots with an explicit, inexpensive update path/s,
+      /meaningfully distinct production behavior.*not a reason to demand every spelling or combination/s,
+      /ambiguous, untestable, or.*implementation mechanism rather than an observable outcome, fail with that finding/s,
+    ];
+    for (const instruction of instructions) {
+      expect(normalizedBody).toMatch(instruction);
+    }
+    expect(normalizedBody).not.toMatch(
+      /(?:do not|never|prohibit(?:ed)?).{0,30}fail|fail.{0,30}(?:prohibit(?:ed)?|pass instead)/i,
+    );
   });
 
   // 2119: REQ-003.5.6
@@ -229,6 +242,7 @@ describe("deterministic rigor (0.6)", () => {
     expect(body).toContain("Adversarial Audit");
     expect(body).toMatch(/concrete mutant or input/i);
     expect(body).toMatch(/violated while every\s+covering test stays green/);
+    expect(body).toMatch(/(?:scan|inspect|enumerate).*conjunct.*boundar.*precedence.*grammar.*(?:data )?shape/is);
     // The pass-only-if-no-counterexample directive is present.
     expect(body).toMatch(/Only if you genuinely cannot construct one/);
     expect(body.split("\n").filter((line) => /\bpass(?:ed)?\b/i.test(line))).toEqual([
@@ -236,49 +250,6 @@ describe("deterministic rigor (0.6)", () => {
       "- Only if you genuinely cannot construct one after honest effort: record a PASS stating the",
       `npx rfc2119 pass ${id} --summary "audit: <strongest attempted counterexample and why it dies>"`,
     ]);
-    expect(body).toBe(
-      [
-        "# 2119 Adversarial Audit: FIX-001.1.1",
-        "",
-        "This requirement's review previously PASSED. You are the adversary: your job is to break that",
-        "verdict, not to confirm it. You did not write the code or the tests under audit.",
-        "",
-        "## Requirement",
-        "",
-        "> The widget MUST spin.",
-        "",
-        "*(FIX-001.1.1, keyword: MUST)*",
-        "",
-        "## Evidence files",
-        "",
-        "- tests/widget.test.js",
-        "",
-        "## Your task",
-        "",
-        "**Construct a concrete mutant or input under which this requirement is violated while every",
-        "covering test stays green.** Enumerate the requirement's conjuncts and boundary terms; probe the",
-        "negative space (what must be refused, not what is accepted); consider shared fixtures, preludes,",
-        "and paths the tests never touch. Reason from the requirement's text, never from the",
-        "implementation's current behavior.",
-        "",
-        "- If you find such a counterexample: record a FAIL with the mutant described concretely enough",
-        "  to reproduce.",
-        "- Only if you genuinely cannot construct one after honest effort: record a PASS stating the",
-        "  strongest candidate you tried and why it fails to survive.",
-        "",
-        "## Recording your verdict",
-        "",
-        "Keep the verdict summary's subject no broader than the cited evidence: preserve concrete member names and singular/plural scope; do not promote member-specific evidence into a category claim.",
-        "",
-        "```",
-        `npx rfc2119 pass ${id} --summary "audit: <strongest attempted counterexample and why it dies>"`,
-        `npx rfc2119 fail ${id} --summary "audit: <the counterexample, reproducibly>"`,
-        "```",
-        "",
-        "Do not edit any files; report, don't fix.",
-        "",
-      ].join("\n"),
-    );
     expect(readFileSync(verdictPath, "utf8")).toBe(verdictBefore);
     expect(readFileSync(failingVerdictPath, "utf8")).toBe(failingVerdictBefore);
     expect(readFileSync(orphanVerdictPath, "utf8")).toBe(orphanVerdict);
