@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.2.2--6e2ef622317e",
+  "reviewId": "self-supplied-evidence.2.2--038a254fd5af",
   "requirementId": "self-supplied-evidence.2.2",
-  "hash": "6e2ef622317e",
+  "hash": "038a254fd5af",
   "verdict": "pass",
-  "summary": "Complete standard-instruction equality preserves the conditional producer-input citation imperative.",
-  "timestamp": "2026-09-08T19:41:22.670Z"
+  "summary": "The production test-quality renderer conditionally requires file:line proof that the covering test obtains input from the production producer.",
+  "timestamp": "2026-09-08T20:18:57.554Z"
 }

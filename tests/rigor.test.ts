@@ -242,6 +242,7 @@ describe("deterministic rigor (0.6)", () => {
     expect(body).toContain("Adversarial Audit");
     expect(body).toMatch(/concrete mutant or input/i);
     expect(body).toMatch(/violated while every\s+covering test stays green/);
+    expect(body).toMatch(/(?:scan|inspect|enumerate).*conjunct.*boundar.*precedence.*grammar.*(?:data )?shape/is);
     // The pass-only-if-no-counterexample directive is present.
     expect(body).toMatch(/Only if you genuinely cannot construct one/);
     expect(body.split("\n").filter((line) => /\bpass(?:ed)?\b/i.test(line))).toEqual([

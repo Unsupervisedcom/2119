@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-003.2.2--62f7d584c960",
+  "reviewId": "REQ-003.2.2--8023b3f5d2ba",
   "requirementId": "REQ-003.2.2",
-  "hash": "62f7d584c960",
+  "hash": "8023b3f5d2ba",
   "verdict": "pass",
-  "summary": "pass/fail write stable plain JSON after repairing final unignore rules, and init installs the same trackable verdict path",
-  "timestamp": "2026-09-08T19:28:06.732Z"
+  "summary": "writeVerdict emits plain JSON and pass, fail, and init repair ignore rules so .2119/verdicts records remain trackable",
+  "timestamp": "2026-09-08T20:11:02.943Z"
 }

@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.1.1--fde23b71a542",
+  "reviewId": "self-supplied-evidence.1.1--e260a01b5fde",
   "requirementId": "self-supplied-evidence.1.1",
-  "hash": "fde23b71a542",
+  "hash": "e260a01b5fde",
   "verdict": "pass",
-  "summary": "Complete standard-instruction prefix and task-body equality rejects removal, qualification, or contradiction of the concrete-production-failure imperative.",
-  "timestamp": "2026-09-08T19:41:22.113Z"
+  "summary": "The production test-quality renderer requires naming the concrete production failure the covering test would catch, and the CLI routes pending reviews through that renderer.",
+  "timestamp": "2026-09-08T20:18:56.886Z"
 }

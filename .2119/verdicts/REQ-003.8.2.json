@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-003.8.2--eeeb5d82b9f7",
+  "reviewId": "REQ-003.8.2--ecd4e37e46fe",
   "requirementId": "REQ-003.8.2",
-  "hash": "eeeb5d82b9f7",
+  "hash": "ecd4e37e46fe",
   "verdict": "pass",
-  "summary": "The review template retains guidance that distinguishes all 19 calibration cases, including provenance, symmetric probes, scope, prose, inventory, and parameter shapes.",
-  "timestamp": "2026-09-08T19:28:07.284Z"
+  "summary": "the template guidance covers every corpus escape and preserves the known-good delivered-surface, derived-inventory, and distinct-shape controls",
+  "timestamp": "2026-09-08T20:11:03.868Z"
 }

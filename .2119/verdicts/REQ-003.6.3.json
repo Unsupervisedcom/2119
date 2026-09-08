@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-003.6.3--9432af8fe8cd",
+  "reviewId": "REQ-003.6.3--4d12d641b4cc",
   "requirementId": "REQ-003.6.3",
-  "hash": "9432af8fe8cd",
+  "hash": "4d12d641b4cc",
   "verdict": "pass",
-  "summary": "The CLI audits only current passing IDs, emits concrete-counterexample and pass-only-if-none guidance, and preserves pass, fail, and orphan verdict bytes.",
-  "timestamp": "2026-09-08T19:28:43.903Z"
+  "summary": "The built CLI test proves --audit selects only current passing review IDs, emits counterexample-first instructions, and preserves current, failing, and orphan verdict bytes.",
+  "timestamp": "2026-09-08T20:18:56.701Z"
 }

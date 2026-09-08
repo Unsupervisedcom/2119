@@ -244,9 +244,10 @@ ${evidenceList}
 
 **Construct a concrete mutant or input under which this requirement is violated while every
 covering test stays green.** Probe the negative space (what must be refused, not what is accepted);
-consider shared fixtures, preludes, and paths the tests never touch. Prefer a discriminating
-counterexample over exhaustive permutations of equivalent inputs. Reason from the requirement's
-text, never from the implementation's current behavior.
+consider shared fixtures, preludes, and paths the tests never touch. Before selecting a mutant,
+scan every conjunct, boundary, precedence rule, grammar shape, and distinct data shape. Prefer a
+discriminating counterexample over exhaustive permutations of equivalent inputs. Reason from the
+requirement's text, never from the implementation's current behavior.
 
 - If you find such a counterexample: record a FAIL with the mutant described concretely enough
   to reproduce.
@@ -328,6 +329,10 @@ Do not reason from the implementation's current behavior; reason from the requir
 
 Read the requirement and the evidence files and judge compliance directly. This requirement was tagged \`[review]\` because it needs judgment rather than a test.`;
 
+  const symmetricGuidance = `**Symmetric change probes (a PASS is forbidden without both):**
+
+${TEST_QUALITY_GUIDANCE.map((item) => `<!-- 2119-review:${item.id} -->\n${item.text}`).join("\n\n")}`;
+
   // Judgment-heavy [review]-tagged requirements warrant the dispatcher's own
   // (typically stronger) model; routine test-quality reviews suit the pinned
   // cheaper tier (REQ-003.5.2, REQ-003.5.3). Multiple configured models mean
@@ -366,7 +371,7 @@ ${custom.content}
 
 ## Your task
 
-${question}
+${question}${t.kind === "requirement" ? `\n\n${symmetricGuidance}` : ""}
 
 <!-- 2119-review:requirement-quality -->
 **Judge the requirement too:** ${REQUIREMENT_QUALITY_GUIDANCE}

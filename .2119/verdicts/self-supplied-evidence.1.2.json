@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.1.2--ef5edb88b7da",
+  "reviewId": "self-supplied-evidence.1.2--0cc78686b660",
   "requirementId": "self-supplied-evidence.1.2",
-  "hash": "ef5edb88b7da",
+  "hash": "0cc78686b660",
   "verdict": "pass",
-  "summary": "Complete standard-instruction equality preserves the mandatory file:line reachability trace independent of tests, fixtures, and prompts.",
-  "timestamp": "2026-09-08T19:41:22.294Z"
+  "summary": "The production test-quality renderer requires file:line proof that production reaches the failure without fixtures or prompts supplying the trigger or decisive observation.",
+  "timestamp": "2026-09-08T20:18:57.123Z"
 }
