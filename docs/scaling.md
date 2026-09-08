@@ -91,10 +91,11 @@ Their content then joins every test-quality hash. The cost is honest churn: edit
 helper re-opens every dependent review, which is exactly what should happen.
 
 Ordinary test-quality verdicts instead hash the annotated evidence block and the file prelude.
-This keeps a rename, formatting edit, or unrelated neighboring test from invalidating evidence it
-cannot affect. The two scopes are a deliberate tradeoff: narrow blocks avoid unrelated churn;
-explicitly configured shared evidence preserves integrity where a common mock or helper could
-neutralize many tests.
+This keeps an edit to an unrelated neighboring annotation block from invalidating evidence it
+cannot affect. Renaming the evidence file or changing names, formatting, or setup inside the covered
+block or its prelude still invalidates the verdict. The two scopes are a deliberate tradeoff: narrow
+blocks avoid unrelated churn; explicitly configured shared evidence preserves integrity where a
+common mock or helper could neutralize many tests.
 
 ## Anti-accretion rollout
 
