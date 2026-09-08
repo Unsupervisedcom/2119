@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.1.1--afb9cc135da4",
+  "reviewId": "self-supplied-evidence.1.1--fde23b71a542",
   "requirementId": "self-supplied-evidence.1.1",
-  "hash": "afb9cc135da4",
+  "hash": "fde23b71a542",
   "verdict": "pass",
-  "summary": "The CLI-generated packet set is exhaustively exact-body checked and rejects omission or weakening of the concrete covering-test production-failure demand",
-  "timestamp": "2026-08-03T17:05:01.031Z"
+  "summary": "Complete standard-instruction prefix and task-body equality rejects removal, qualification, or contradiction of the concrete-production-failure imperative.",
+  "timestamp": "2026-09-08T19:41:22.113Z"
 }

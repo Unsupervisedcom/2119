@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-008.1.2--5b2c0227faf3",
-  "requirementId": "REQ-008.1.2",
-  "hash": "5b2c0227faf3",
-  "verdict": "pass",
-  "summary": "README.md prominently states before adoption instructions that 2119 is not a test runner, CI replacement, or security boundary, with links to docs/design.md",
-  "timestamp": "2026-09-06T21:57:16.251Z"
-}

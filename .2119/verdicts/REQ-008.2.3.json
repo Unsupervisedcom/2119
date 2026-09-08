@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-008.2.3--e1e169e89550",
+  "requirementId": "REQ-008.2.3",
+  "hash": "e1e169e89550",
+  "verdict": "pass",
+  "summary": "README.md and docs/scaling.md explain narrow annotation hashes, deliberate shared-helper invalidation, and guidance-only non-gating anti-accretion rollout.",
+  "timestamp": "2026-09-08T19:28:01.274Z"
+}

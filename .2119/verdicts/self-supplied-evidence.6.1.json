@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.6.1--9eff2a724166",
+  "reviewId": "self-supplied-evidence.6.1--a9b6648339e5",
   "requirementId": "self-supplied-evidence.6.1",
-  "hash": "9eff2a724166",
+  "hash": "a9b6648339e5",
   "verdict": "pass",
-  "summary": "Built lint accepts isolated string/object/array/template/regexp/number/bigint/boolean/null inputs and named/static/imported/arrow factory forms without provenance violations.",
-  "timestamp": "2026-08-03T17:07:21.073Z"
+  "summary": "Built lint stays clean across materially distinct literal, function, static, constructor, imported, and arrow-factory input shapes.",
+  "timestamp": "2026-09-08T19:41:13.027Z"
 }

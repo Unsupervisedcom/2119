@@ -168,7 +168,9 @@ describe("cli end-to-end", () => {
     run(root, ["init"]);
     run(root, ["init"]);
     const body = readFileSync(join(root, "AGENTS.md"), "utf8");
-    const normalizedBody = body.replace(/\s+/g, " ");
+    const workflow = body.match(/<!-- 2119:begin -->([\s\S]*?)<!-- 2119:end -->/)?.[1];
+    expect(workflow).toBeDefined();
+    const normalizedWorkflow = workflow!.replace(/\s+/g, " ");
     expect(body.match(/<!-- 2119:begin -->/g)).toHaveLength(1);
     expect(body.match(/<!-- 2119:end -->/g)).toHaveLength(1);
     expect(body).toContain("# My project");
@@ -188,7 +190,7 @@ describe("cli end-to-end", () => {
       "CI runs the same check",
     ];
     for (const instruction of instructions) {
-      expect(normalizedBody).toContain(instruction);
+      expect(normalizedWorkflow).toContain(instruction);
     }
   });
 

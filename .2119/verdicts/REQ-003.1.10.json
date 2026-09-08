@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.10--d5d332c5e39d",
+  "requirementId": "REQ-003.1.10",
+  "hash": "d5d332c5e39d",
+  "verdict": "pass",
+  "summary": "Production review packets require a concrete violating change and detection check; removing either directive fails, while whitespace reformatting stays green.",
+  "timestamp": "2026-09-08T19:28:42.803Z"
+}

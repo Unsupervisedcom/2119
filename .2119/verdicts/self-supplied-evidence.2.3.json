@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.2.3--3b0f7cd77ddc",
+  "reviewId": "self-supplied-evidence.2.3--c661192df830",
   "requirementId": "self-supplied-evidence.2.3",
-  "hash": "3b0f7cd77ddc",
+  "hash": "c661192df830",
   "verdict": "pass",
-  "summary": "Built CLI dispatch output is read without reshaping; whole-task equality rejects omission or weakening of the conditional production-shape evidence requirement.",
-  "timestamp": "2026-08-03T17:05:06.321Z"
+  "summary": "Complete standard-instruction equality preserves the conditional production-shape citation imperative.",
+  "timestamp": "2026-09-08T19:41:22.855Z"
 }

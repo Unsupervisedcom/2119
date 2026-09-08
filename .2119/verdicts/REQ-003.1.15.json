@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.15--22863c9c36d2",
+  "requirementId": "REQ-003.1.15",
+  "hash": "22863c9c36d2",
+  "verdict": "pass",
+  "summary": "Production review packets distinguish parameter cases by production behavior rather than spelling matrices; removing that distinction fails while reformatting stays green.",
+  "timestamp": "2026-09-08T19:28:43.723Z"
+}

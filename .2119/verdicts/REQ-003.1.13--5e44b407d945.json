@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.1.13--5e44b407d945",
-  "requirementId": "REQ-003.1.13",
-  "hash": "5e44b407d945",
-  "verdict": "fail",
-  "summary": "The annotated test only checks that the shared-evidence marker is followed by non-whitespace; replacing its guidance with the opposite policy would still pass.",
-  "timestamp": "2026-09-06T21:57:19.276Z"
-}

@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.4.1--c246036538fc",
+  "reviewId": "self-supplied-evidence.4.1--860688c9ff66",
   "requirementId": "self-supplied-evidence.4.1",
-  "hash": "c246036538fc",
+  "hash": "860688c9ff66",
   "verdict": "pass",
-  "summary": "Generated test-quality packets from the spawned production CLI retain the explicit fail-on-absent-or-self-supplied-provenance direction for every parsed target.",
-  "timestamp": "2026-08-03T17:05:04.663Z"
+  "summary": "Complete standard instruction equality rejects any direction permitting PASS with absent provenance.",
+  "timestamp": "2026-09-08T19:41:12.109Z"
 }

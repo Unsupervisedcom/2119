@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.7.1--22a18023494c",
+  "reviewId": "self-supplied-evidence.7.1--4891d6c928b9",
   "requirementId": "self-supplied-evidence.7.1",
-  "hash": "22a18023494c",
+  "hash": "4891d6c928b9",
   "verdict": "pass",
-  "summary": "Every generated standard packet and every producible audit packet retains final tool-authored guidance preserving concrete member names and singular/plural scope; operator custom criteria are separately delimited before the task.",
-  "timestamp": "2026-08-03T17:05:05.044Z"
+  "summary": "Complete standard, direct, and audit prefix-plus-task contracts reject scope-broadening guidance anywhere in generated instructions.",
+  "timestamp": "2026-09-08T19:41:13.527Z"
 }

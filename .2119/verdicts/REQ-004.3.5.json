@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-004.3.5--d07f18d7637a",
+  "requirementId": "REQ-004.3.5",
+  "hash": "d07f18d7637a",
+  "verdict": "pass",
+  "summary": "The CLI test now requires the CI-runs-the-same-check statement inside the generated marker-delimited AGENTS.md workflow section.",
+  "timestamp": "2026-09-08T19:31:44.142Z"
+}

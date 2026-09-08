@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.2.2--8796d4a6e793",
+  "reviewId": "self-supplied-evidence.2.2--6e2ef622317e",
   "requirementId": "self-supplied-evidence.2.2",
-  "hash": "8796d4a6e793",
+  "hash": "6e2ef622317e",
   "verdict": "pass",
-  "summary": "Built CLI dispatch output is read from generated files; whole-task equality rejects omission of file:line, conditional-boundary, or production-producer input provenance wording.",
-  "timestamp": "2026-08-03T17:05:06.235Z"
+  "summary": "Complete standard-instruction equality preserves the conditional producer-input citation imperative.",
+  "timestamp": "2026-09-08T19:41:22.670Z"
 }

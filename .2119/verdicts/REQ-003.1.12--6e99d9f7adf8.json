@@ -1,8 +1,0 @@
-{
-  "reviewId": "REQ-003.1.12--6e99d9f7adf8",
-  "requirementId": "REQ-003.1.12",
-  "hash": "6e99d9f7adf8",
-  "verdict": "pass",
-  "summary": "tests/rigor.test.ts verifies generated review files contain legitimate-change directives",
-  "timestamp": "2026-09-06T21:57:45.084Z"
-}

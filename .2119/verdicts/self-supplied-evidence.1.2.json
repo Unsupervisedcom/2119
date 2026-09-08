@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.1.2--c3c97de002d9",
+  "reviewId": "self-supplied-evidence.1.2--ef5edb88b7da",
   "requirementId": "self-supplied-evidence.1.2",
-  "hash": "c3c97de002d9",
+  "hash": "ef5edb88b7da",
   "verdict": "pass",
-  "summary": "Every CLI-generated test-quality packet is exact-body checked for file:line reachability independent of tests, fixtures, prompts, triggers, and decisive observations",
-  "timestamp": "2026-08-03T17:05:01.162Z"
+  "summary": "Complete standard-instruction equality preserves the mandatory file:line reachability trace independent of tests, fixtures, and prompts.",
+  "timestamp": "2026-09-08T19:41:22.294Z"
 }

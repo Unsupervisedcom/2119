@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-008.1.2--4d6b2a51f53e",
+  "reviewId": "REQ-008.1.2--5b2c0227faf3",
   "requirementId": "REQ-008.1.2",
-  "hash": "4d6b2a51f53e",
+  "hash": "5b2c0227faf3",
   "verdict": "pass",
-  "summary": "README header block prominently states 2119 is not a test runner, CI replacement, or security boundary with the design.md link, before the adoption section",
-  "timestamp": "2026-08-08T09:07:04.379Z"
+  "summary": "README prominently names all three non-goals and links docs/design.md before the Use it in your repo adoption section.",
+  "timestamp": "2026-09-08T19:28:00.674Z"
 }

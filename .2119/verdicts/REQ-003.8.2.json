@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-003.8.2--6e3c630dbed4",
+  "reviewId": "REQ-003.8.2--eeeb5d82b9f7",
   "requirementId": "REQ-003.8.2",
-  "hash": "6e3c630dbed4",
+  "hash": "eeeb5d82b9f7",
   "verdict": "pass",
-  "summary": "test-quality, direct-judgment, audit, and evidence-scoping instructions still expose every expected pass/fail distinction in corpus cases 001-014",
-  "timestamp": "2026-08-03T17:05:00.892Z"
+  "summary": "The review template retains guidance that distinguishes all 19 calibration cases, including provenance, symmetric probes, scope, prose, inventory, and parameter shapes.",
+  "timestamp": "2026-09-08T19:28:07.284Z"
 }

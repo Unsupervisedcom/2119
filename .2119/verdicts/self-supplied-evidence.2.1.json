@@ -1,8 +1,8 @@
 {
-  "reviewId": "self-supplied-evidence.2.1--7fbcc5496008",
+  "reviewId": "self-supplied-evidence.2.1--8b106497a209",
   "requirementId": "self-supplied-evidence.2.1",
-  "hash": "7fbcc5496008",
+  "hash": "8b106497a209",
   "verdict": "pass",
-  "summary": "Every CLI-generated test-quality packet is exact-body checked for consumption of emitted values from separately invoked production components or data sources",
-  "timestamp": "2026-08-03T17:05:01.293Z"
+  "summary": "Complete standard-instruction equality preserves both branches of the producer/consumer boundary definition.",
+  "timestamp": "2026-09-08T19:41:22.479Z"
 }
