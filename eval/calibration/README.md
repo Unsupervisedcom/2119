@@ -22,3 +22,9 @@ for field-sourced cases, sanitized to neutral code — the pattern is the payloa
 Cases from the first field deployment (2026-07-10) and the first external audits are seeded
 below. Mode A = positive-space bias (accepting behavior tested, forbidden behavior never
 probed). Mode B = requirement states mechanism, not outcome.
+
+The 2026-10 accretion round ([2119#38](https://github.com/Unsupervisedcom/2119/issues/38)) adds
+a paired set: false-rigor escapes (prose tripwire, redundant matrix) and legitimate exceptions
+that resemble anti-patterns (derived security inventory, delivered agent instruction, distinct
+malformed shapes). The template's probes are symmetric — evidence must fail when behavior is
+removed and stay green when meaning is preserved — and cases 015–019 pin that symmetry.

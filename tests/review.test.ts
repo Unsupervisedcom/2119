@@ -185,6 +185,34 @@ describe("judgment reviews", () => {
     expect(body).toContain("Unrelated assertions");
   });
 
+  // 2119: REQ-003.1.12, REQ-003.1.13, REQ-003.1.14 — one test covers all three;
+  // the probes and the shared-evidence rules ship in the same instruction body.
+  it("directs reviewers to run both probes, permit shared evidence, and reject prose pins", () => {
+    const { root, config } = fixture();
+    const tasks = generateInstructions(config, targetsFor(root), new Map());
+    const testQuality = readFileSync(join(root, tasks[0].instructionPath), "utf8");
+    // REQ-003.1.12: legitimate-change survival probe, symmetric to the counterexample.
+    expect(testQuality).toContain("Survival probe");
+    expect(testQuality).toContain("paraphrasing it, renaming a symbol, reformatting");
+    expect(testQuality).toContain("tripwire, not behavioral evidence");
+    // REQ-003.1.13: one evidence body may cover several requirement IDs.
+    expect(testQuality).toContain("one test body may cover several requirement IDs");
+    expect(testQuality).toContain("explicit cross-reference satisfies traceability");
+    expect(testQuality).toContain("uniquely named test");
+    // REQ-003.1.14: reject prose pins (with the delivered-surface carve-out); judge
+    // large parameter sets by distinct behavior, not size.
+    expect(testQuality).toContain("pinning prose, layout, or digests the requirement does not");
+    expect(testQuality).toContain("delivered product surface");
+    expect(testQuality).toContain("fail loudly");
+    expect(testQuality).toContain("meaningfully distinct behavior they");
+    // The same symmetric probes apply to direct judgment ([review]) reviews.
+    const judgment = tasks.find((t) => t.kind === "requirement")!;
+    const judgmentBody = readFileSync(join(root, judgment.instructionPath), "utf8");
+    expect(judgmentBody).toContain("Probe the relationship symmetrically");
+    expect(judgmentBody).toContain("must stay green");
+    expect(judgmentBody).toContain("delivered product surface");
+  });
+
   // 2119: REQ-003.5.1
   it("defaults review_model to a platform-neutral phrase and honors configured values", () => {
     const { root } = fixture();

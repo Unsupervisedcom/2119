@@ -183,6 +183,10 @@ describe("cli end-to-end", () => {
     // 0.6 topics: draft-time spec critique + reviewer diversity (REQ-004.3.2).
     expect(body).toContain("critique the draft\nrequirements");
     expect(body).toContain("review --audit");
+    // Author guidance: substance taxonomy and shared-evidence annotation (REQ-004.3.2).
+    expect(body).toContain("Delivered-text contracts");
+    expect(body).toContain("Verification notes");
+    expect(body).toMatch(/several\s+requirement IDs/);
     expect(body).toContain("different providers");
   });
 

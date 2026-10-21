@@ -86,13 +86,28 @@ instead of describing product behavior. Use \`SHOULD\` for polish and edge cases
 \`[manual]\` for UI-only behaviors, and notes or acceptance-checklist bullets for
 implementation details rather than making every detail an enforced \`MUST\`.
 
-**When implementing**, every MUST/SHALL requirement needs at least one test
+**Requirement substance**: distinguish three kinds of text. Behavioral
+requirements state what the product does — the normal home for normative
+\`MUST\`s. Delivered-text contracts (agent-facing or interface text the product
+delivers) are normative through the surface that delivers them: pin the
+instruction or outcome that must survive, not a whole paragraph or heading
+order. Verification notes — test strategy, CI commands, review procedure,
+migration bookkeeping, tool versions — belong in notes or acceptance-checklist
+bullets, not enforced \`MUST\`s.
+
+**When implementing**, every MUST/SHALL requirement needs covering evidence
 annotated with a comment containing its ID, e.g. \`// 2119: REQ-001.2.3\` (the
-marker line must start with a comment leader). Write tests that would genuinely
-fail if the requirement were violated — including its negative space: what the
-requirement forbids needs a rejection test, not just what it allows. A
-fresh-context reviewer judges each test's honesty; tautological or over-mocked
-tests will be rejected.
+marker line must start with a comment leader). One test MAY carry several
+requirement IDs (\`// 2119: REQ-001.2.3, REQ-001.2.4\`): annotate existing
+evidence that already covers a requirement instead of adding a near-duplicate
+test for traceability. Write tests that would genuinely fail if the requirement
+were violated — including its negative space: what the requirement forbids needs
+a rejection test, not just what it allows — and that stay green under legitimate
+non-violating changes (paraphrase, rename, reformat, reorganization); a test
+whose only value is pinning spec wording, file layout, or digests the
+requirement does not govern is a tripwire, not evidence. A fresh-context
+reviewer judges each test's honesty; tautological or over-mocked tests will be
+rejected.
 
 **Reviewer diversity**: use reviewer models from different providers, routinely
 or as periodic \`npx rfc2119 review --audit\` sweeps — adversarial audits of

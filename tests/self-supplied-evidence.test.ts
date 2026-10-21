@@ -26,6 +26,7 @@ Read the requirement and each evidence file's tests annotated with \`2119: <REQ-
 - **Over-mocking** — mocks/stubs that bypass the very behavior the requirement constrains.
 - **Unrelated assertions** — tests that reference the requirement ID but assert something other than its criterion.
 - **Keyword theater** — string/keyword matching standing in for behavioral verification.
+- **Prose pins** — exact-equality or substring assertions against spec text, docs, comments, or digests of files the requirement does not govern.
 
 **Required production-provenance answers (a PASS is forbidden without them):**
 
@@ -38,6 +39,22 @@ When a requirement names a grammar or other defined input language, enumerate an
 productions rather than accepting coverage of only the most common form.
 Do not reason from the implementation's current behavior; reason from the requirement's text.
 A review that cannot name a rejected counterexample for a boundary term is not a pass.
+
+**Survival probe (symmetric to the counterexample):** name one legitimate change that does not
+violate this requirement — paraphrasing it, renaming a symbol, reformatting, adding a sibling
+requirement, or reorganizing files — and confirm the evidence stays green under it. A test that
+breaks only because wording or organization changed is a tripwire, not behavioral evidence:
+reject evidence whose only value is pinning prose, layout, or digests the requirement does not
+govern. Text that is itself the delivered product surface (an instruction the product delivers
+to an agent) or a derived inventory whose enumerated subjects fail loudly is behavior, not a
+prose pin.
+
+**Shared evidence:** one test body may cover several requirement IDs; do not demand a new test
+where existing evidence already rejects the relevant counterexample — an additional annotation
+or explicit cross-reference satisfies traceability. No requirement earns credit merely from a
+uniquely named test. Judge large parameter sets by the meaningfully distinct behavior they
+exercise, not by size: bulk that re-spells one branch or duplicates existing coverage verifies
+nothing, while a negative-space table over genuinely distinct malformed shapes is legitimate.
 
 **Judge the requirement too:** if the requirement itself is ambiguous, untestable, or states an
 implementation mechanism rather than an observable outcome, fail with that finding — a bad
@@ -65,6 +82,13 @@ const RECORDING_GUIDANCE = "Keep the verdict summary's subject no broader than t
 const EXPECTED_DIRECT_TASK = `**Is this requirement genuinely satisfied by the current state of the evidence files?**
 
 Read the requirement and the evidence files and judge compliance directly. This requirement was tagged \`[review]\` because it needs judgment rather than a test.
+
+Probe the relationship symmetrically: name the concrete implementation change that would violate
+this requirement and confirm the evidence would detect it, and name one legitimate non-violating
+change (paraphrase, rename, reformat, reorganization) under which the evidence must stay green.
+Evidence that pins wording, layout, or hashes the requirement does not govern — unless that text
+is itself the delivered product surface or a derived inventory whose subjects fail loudly — is
+not evidence of compliance.
 
 **Judge the requirement too:** if the requirement itself is ambiguous, untestable, or states an
 implementation mechanism rather than an observable outcome, fail with that finding — a bad
