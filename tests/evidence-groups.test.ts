@@ -314,4 +314,19 @@ describe("evidence group gate behavior", () => {
     const report = JSON.parse(result.stdout) as { violations: Array<{ rule: string; message: string }> };
     expect(report.violations.some((v) => v.rule === "REQ-013.3.1" && v.message.includes("typo"))).toBe(true);
   });
+
+  // 2119: REQ-010.2.1 (guard parity with shared_evidence)
+  it("check --changed refuses an ignored helper matched by a group's evidence globs", () => {
+    const root = greenProject();
+    git(root, "init", "-b", "main");
+    git(root, "config", "user.name", "2119 tests");
+    git(root, "config", "user.email", "tests@2119.invalid");
+    writeFileSync(join(root, ".gitignore"), "helpers/storage.ts\n");
+    git(root, "add", ".");
+    git(root, "commit", "-m", "reviewed baseline");
+    const result = run(root, ["check", "--changed", "HEAD"]);
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toContain("Cannot compare ignored requirement dependency");
+    expect(result.stderr).toContain("helpers/storage.ts");
+  });
 });

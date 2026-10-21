@@ -135,7 +135,14 @@ function assertNoIgnoredDependencies(root: string, current: CheckContext): void 
   if (ignored.size === 0) return;
 
   const selected = new Set<string>();
-  for (const globs of [current.config.specs, current.config.tests, current.config.sharedEvidence]) {
+  for (const globs of [
+    current.config.specs,
+    current.config.tests,
+    current.config.sharedEvidence,
+    // Declared group boundaries are compared across the baseline too; an
+    // ignored helper there would make the comparison read a permanent diff.
+    ...current.config.evidenceGroups.flatMap((group) => [group.tests, group.evidence]),
+  ]) {
     for (const path of matchGlobs(current.repoFiles, globs)) selected.add(path);
   }
   for (const requirement of allRequirements(current.specs)) {
