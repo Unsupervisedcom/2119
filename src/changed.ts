@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { buildContext, type CheckContext } from "./check.js";
 import { CONFIG_FILENAME } from "./config.js";
 import { evidenceBlockParts } from "./annotations.js";
+import { evidenceGroupParts } from "./review.js";
 import { matchGlobs } from "./files.js";
 import { allRequirements } from "./spec.js";
 import { fileParts, splitReviewId } from "./hash.js";
@@ -289,6 +290,10 @@ function scopeContext(
 
   const malformed = new Set(current.malformedVerdictViolations);
   const reviewViolations = current.reviewViolations.filter((v) => {
+    // Config-level violations carry no requirement ID to match against the
+    // affected set; they surface when the config itself changed. (Full
+    // `check` always reports them — including globs broken by file deletion.)
+    if (v.rule === "REQ-013.3.1") return changedPaths.has(CONFIG_FILENAME);
     if (!malformed.has(v)) return affected.has(messageRequirementId(v, currentRequirements) ?? "");
     const path = relativePath(root, v.file);
     const parsed = verdictReview(path);
@@ -335,6 +340,14 @@ function evidenceKey(ctx: CheckContext, requirementId: string): string | undefin
   const parts = evidenceBlockParts(ctx.config.root, covering, ctx.annotations, ctx.config.prefix, ctx.markerLineByFile);
   if (requirement.coverage.kind === "test") {
     parts.push(...fileParts(ctx.config.root, matchGlobs(ctx.repoFiles, ctx.config.sharedEvidence)));
+    // Same inputs as computeReviewTargets' test-quality hash (REQ-013.2.1/.2):
+    // a change scoped to one evidence group must mark exactly its dependent
+    // requirements affected here too, or check --changed diverges from check.
+    parts.push(
+      ...evidenceGroupParts(ctx.config, ctx.repoFiles, [
+        ...new Set(covering.map((a) => a.file)),
+      ].sort()),
+    );
   } else if (requirement.coverage.kind === "review") {
     const evidence = requirement.coverage.globs ? matchGlobs(ctx.repoFiles, requirement.coverage.globs) : [];
     const selected = requirement.coverage.instructions ? [requirement.coverage.instructions, ...evidence] : evidence;

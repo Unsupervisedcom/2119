@@ -36,6 +36,14 @@ const CONFIG_TEMPLATE = `# 2119 configuration — https://github.com/Unsupervise
 # shared_evidence:
 #   - "tests/helpers/**"
 #
+# Scoped helper invalidation: per-feature groups mapping covering test-file
+# globs to helper/fixture globs. Only groups a requirement's covering tests
+# belong to join its review hash; group edits invalidate their dependents:
+# evidence_groups:
+#   storage:
+#     tests: ["tests/storage/**"]
+#     evidence: ["helpers/storage.ts", "fixtures/storage/**"]
+#
 # Extra comment leaders for annotation lines, beyond the defaults
 # (//, #, *, /*, --, ;, %, <!--):
 # comment_leaders: ['"']

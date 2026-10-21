@@ -1,9 +1,9 @@
 import { mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import type { Config } from "./config.js";
+import type { Config, EvidenceGroup } from "./config.js";
 import type { CoverageResult } from "./cover.js";
 import type { Annotation, Requirement, SpecFile, Verdict, Violation } from "./model.js";
-import { computeReviewId, fileParts } from "./hash.js";
+import { computeReviewId, fileParts, type HashPart } from "./hash.js";
 import { evidenceBlockParts } from "./annotations.js";
 import { matchGlobs } from "./files.js";
 import { allRequirements } from "./spec.js";
@@ -19,6 +19,39 @@ export interface ReviewTask {
   /** Why this review exists: test-quality judgment or [review]-tag judgment. */
   kind: "test-quality" | "requirement";
   instructionPath: string;
+}
+
+/**
+ * Evidence-group parts for one requirement (REQ-013.2): the declared globs of
+ * each applicable group plus the content of every file its evidence globs
+ * match. A group applies when its `tests` globs match one of the
+ * requirement's covering test files; inapplicable groups contribute nothing
+ * (REQ-013.4.1), so editing one feature's helpers or mappings never churns
+ * another feature's review IDs. Group names are sorted at load and file
+ * parts sort by path, so the stream is deterministic (REQ-002.1).
+ */
+export function evidenceGroupParts(
+  config: Config,
+  repoFiles: string[],
+  evidenceFiles: string[],
+): HashPart[] {
+  const applicable = (group: EvidenceGroup) =>
+    matchGlobs(evidenceFiles, group.tests).length > 0;
+  return config.evidenceGroups.filter(applicable).flatMap((group) => [
+    {
+      label: `evidence-group:${group.name}#decl`,
+      // Sorted so a cosmetic glob reorder — no change in scope — does not
+      // invalidate dependent verdicts.
+      content: JSON.stringify({
+        tests: [...group.tests].sort(),
+        evidence: [...group.evidence].sort(),
+      }),
+    },
+    ...fileParts(config.root, matchGlobs(repoFiles, group.evidence)).map((part) => ({
+      ...part,
+      label: `evidence-group:${group.name}:${part.label}`,
+    })),
+  ]);
 }
 
 /**
@@ -48,9 +81,13 @@ export function computeReviewTargets(
       // shared test file don't invalidate this verdict (REQ-003.1.2/.7).
       // Configured shared fixtures/helpers join every test-quality hash, so
       // they can't be neutered without invalidating verdicts (REQ-003.1.8).
+      // Declared evidence groups scope that coupling: only groups whose tests
+      // globs match this requirement's covering files join its hash
+      // (REQ-013.2.1/.2), with the global list kept for universal helpers.
       const parts = [
         ...evidenceBlockParts(config.root, anns, annotations, config.prefix, markerLineByFile),
         ...fileParts(config.root, matchGlobs(repoFiles, config.sharedEvidence)),
+        ...evidenceGroupParts(config, repoFiles, evidence),
       ];
       out.push({
         reviewId: computeReviewId(req.id, req.text, parts),

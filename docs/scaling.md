@@ -90,6 +90,39 @@ shared_evidence:
 Their content then joins every test-quality hash. The cost is honest churn: editing a shared
 helper re-opens every dependent review, which is exactly what should happen.
 
+## `evidence_groups` for scoped helper invalidation
+
+A universal `shared_evidence` list couples every review to every shared file. Declare per-feature
+groups when most helpers serve one feature, keeping the global list for genuinely universal
+helpers:
+
+```yaml
+# .2119.yml
+shared_evidence:
+  - tests/helpers/**          # universal: joins every test-quality hash
+evidence_groups:
+  storage:
+    tests: ["tests/storage/**"]
+    evidence: ["helpers/storage.ts", "fixtures/storage/**"]
+  parser:
+    tests: ["tests/parser/**"]
+    evidence: ["helpers/parser.ts"]
+```
+
+A requirement's review hash then includes only the groups its covering tests belong to, so
+changing a storage helper re-opens storage reviews and leaves parser reviews current. The
+declared globs themselves join the hash: adding, removing, or editing a mapping invalidates the
+verdicts that depended on it, so a dependency cannot be quietly dropped under an old approval. A
+group whose `tests` or `evidence` globs match no files fails `check` loudly — a typo must not
+read as coverage. Cosmetic glob reordering does not invalidate: the declaration is canonicalized
+before hashing.
+
+The integrity caveat is the mapping's own reviewability. A group is a declared dependency
+boundary; a helper the tests really use but no group declares (and no global list covers) keeps
+old approvals alive across edits to itself. Review `evidence_groups` changes like code: the globs
+are a claim about what the evidence depends on. Groups do not attempt semantic change detection
+and never delete evidence; they only make invalidation match the declared boundary.
+
 ## Periodic adversarial audits (cross-provider)
 
 Fresh context is not fresh framing: reviewers sharing one model family and one instruction

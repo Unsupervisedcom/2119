@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { existsSync } from "node:fs";
-import { loadConfig, type Config } from "./config.js";
+import { loadConfig, CONFIG_FILENAME, type Config } from "./config.js";
 import { walk, matchGlobs } from "./files.js";
 import { parseSpec } from "./spec.js";
 import { scanAnnotations } from "./annotations.js";
@@ -120,6 +120,26 @@ export function buildContext(root: string, options: BuildOptions = {}): CheckCon
         rule: "REQ-003.1.9",
         message: `${req.id} has [review] globs matching no files (${globs.join(", ")}); fix the globs or the evidence`,
       });
+    }
+  }
+
+  // Declared evidence groups must resolve: a group whose tests or evidence
+  // globs match no repository files would silently read a typo (or a moved
+  // helper) as satisfied coverage, keeping old approvals alive across edits
+  // (REQ-013.3.1) — the config analog of REQ-003.1.9's unmatched [review] globs.
+  for (const group of config.evidenceGroups) {
+    for (const [field, globs] of [
+      ["tests", group.tests],
+      ["evidence", group.evidence],
+    ] as const) {
+      if (matchGlobs(repoFiles, globs).length === 0) {
+        reviewViolations.push({
+          file: CONFIG_FILENAME,
+          line: 1,
+          rule: "REQ-013.3.1",
+          message: `evidence group "${group.name}" has ${field} globs matching no files (${globs.join(", ")}); fix the globs or remove the group`,
+        });
+      }
     }
   }
 

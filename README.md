@@ -331,6 +331,10 @@ review_model: "opus"   # advisory, platform-specific; default recommends
                        # "a capable, cost-effective model"
 shared_evidence: []    # globs of shared fixtures/helpers hashed into every
                        # test-quality review (see docs/scaling.md)
+evidence_groups:       # optional scoped helper invalidation: per-feature
+  storage:             # groups mapping covering test-file globs to helper/
+    tests: ["tests/storage/**"]      # fixture globs hashed only into reviews
+    evidence: ["helpers/storage.ts"] # those tests cover (see docs/scaling.md)
 comment_leaders: []    # extra comment leaders for annotation lines, beyond
                        # //, #, *, /*, --, ;, %, <!--
 audit: "off"           # "always" generates adversarial audits of passing
