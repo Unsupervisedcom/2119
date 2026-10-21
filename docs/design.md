@@ -48,6 +48,37 @@ type. This is presented as a **reference architecture** — the recipe in [`scal
 describes the shape; an executable example has not shipped yet, and we say so rather than
 overclaim "supported."
 
+## Verdict invalidation is scoped, and its breadth is a tradeoff
+
+A verdict vouches for exact content — but deliberately not all content. A test-quality hash
+covers the requirement statement, the annotated evidence blocks, and files matched by
+`shared_evidence`; it excludes unrelated tests in the same file, other specs, and docs. Two
+goals must not be conflated:
+
+1. **Tests should tolerate legitimate product-preserving changes.** Paraphrasing a requirement,
+   renaming a symbol, reformatting, or reorganizing files must not invalidate evidence. The
+   reviewer template's survival probe enforces this at review time: evidence that fails only
+   because wording or organization changed is a tripwire, and the reviewer rejects it.
+2. **Review fingerprints should track everything that could neutralize the evidence.** A passing
+   suite alone does not keep an old review valid; the hash must include the requirement text and
+   any shared helper capable of neutering the tests (`shared_evidence`).
+
+Breadth is therefore a tradeoff, not a dial to maximize. Declaring every helper shared means one
+helper edit invalidates every dependent verdict — helper integrity at the cost of unrelated hash
+churn. Declaring too little means a neutering helper escapes the hash and verdicts stay green
+while the evidence dies. Declare the narrowest boundary that includes the helpers that can
+neutralize the evidence, and read a stale-verdict reduction as meaningful only alongside that
+integrity check. (Direction, not shipped: explicitly declared shared-evidence groups keep exact
+content hashes within a group and preserve universal helpers, without invalidating unrelated
+groups; no semantic-equivalence detection, no blanket safe-listing of formatting changes.)
+
+Rollout is observational, never destructive. Guidance and probe changes land first; 2119 never
+deletes or auto-invalidates a repository's tests. Worth watching as trends — never as gates,
+because a hard limit (executions per requirement, prose-test ratios) is just another number to
+optimize: verdict invalidations after changes that did not alter requirement meaning; time for
+documentation-only changes to reach green; tests added versus existing tests cross-referenced
+when specs change; requirements covered only by tests skipped in default CI.
+
 ## Specs are agent context; ritual text is banned
 
 Every line in a spec file is read by agents on every relevant task, so every line must change
