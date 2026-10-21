@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-003.1.8--80dff4a08fef",
+  "requirementId": "REQ-003.1.8",
+  "hash": "80dff4a08fef",
+  "verdict": "pass",
+  "summary": "Genuine verification: boundaries.test.ts and evidence-groups.test.ts flip both requirements' review IDs when shared_evidence content changes (real loadConfig/computeReviewTargets/walk), and the gate-level run of dist/cli.js check exits 1 naming REQ-001.1.1 and REQ-001.1.2 after the universal helper is weakened; opt-out control proves the config key gates the coupling (residual: no multi-file glob-match case in evidence)",
+  "timestamp": "2026-10-21T20:35:30.650Z"
+}

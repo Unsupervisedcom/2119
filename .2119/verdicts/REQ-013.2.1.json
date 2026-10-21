@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-013.2.1--861b0c8713da",
+  "requirementId": "REQ-013.2.1",
+  "hash": "861b0c8713da",
+  "verdict": "fail",
+  "summary": "No covering test exercises an evidence glob matching multiple files (every fixture glob matches exactly one), so a mutant hashing only the first file matched per group's evidence globs passes all 15 tests in tests/evidence-groups.test.ts — REQ-013.2.1's 'content of every repository file matched by the evidence globs' (e.g. a helpers/*.ts glob) is unverified, and dropping matches would silently preserve stale approvals.",
+  "timestamp": "2026-10-21T22:41:15.137Z"
+}

@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-003.4.2--3e386c0febf7",
+  "reviewId": "REQ-003.4.2--af48b53575b4",
   "requirementId": "REQ-003.4.2",
-  "hash": "3e386c0febf7",
+  "hash": "af48b53575b4",
   "verdict": "pass",
-  "summary": "Risks section states the self-pass residual risk plainly and names the committed-verdict, hash-invalidation, and CI re-run mitigations",
-  "timestamp": "2026-08-08T09:06:52.659Z"
+  "summary": "README Risks section plainly states nothing prevents an implementing agent from running 2119 pass on its own work and names all three mitigations: committed and auditable verdicts, hash invalidation (no stale reuse), and CI re-running the same check",
+  "timestamp": "2026-10-21T19:49:19.942Z"
 }

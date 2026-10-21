@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-013.2.2--a1519136009c",
+  "requirementId": "REQ-013.2.2",
+  "hash": "a1519136009c",
+  "verdict": "fail",
+  "summary": "REQ-013.2.2 unverified: covering tests in tests/evidence-groups.test.ts never observe the declared-globs hash part — every review-ID change they detect (evidence-scope edit, group removal, e2e removal) is confounded with matched-file-content/group-existence changes; mutation-verified: deleting the evidence-group:*#decl part from evidenceGroupParts (src/review.ts) leaves both REQ-013.2.2 covering tests green, so a declaration-only mapping edit (e.g. changing a group's tests globs or an equivalent-matching evidence glob) would not invalidate dependent verdicts",
+  "timestamp": "2026-10-21T22:52:30.446Z"
+}

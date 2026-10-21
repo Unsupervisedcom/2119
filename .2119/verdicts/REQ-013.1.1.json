@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-013.1.1--7d912618bdf4",
+  "requirementId": "REQ-013.1.1",
+  "hash": "7d912618bdf4",
+  "verdict": "pass",
+  "summary": "Covering test 'parses evidence_groups into named groups sorted by name' (tests/evidence-groups.test.ts:71-78) drives the production loadConfig (src/config.ts:62-92) over a fixture .2119.yml and asserts typed named groups (parser, storage) each mapping declared tests/evidence glob lists; scalar/non-mapping and empty-list forms are rejected (REQ-013.1.2 cases), the absent-key default [] cannot equal the asserted two-group observation, and configs lacking the key load green suite-wide (tests/cli.test.ts:60-65) plus this repo's own .2119.yml under CI check. Misdeclaration would flow into evidenceGroupParts (src/review.ts:33-56) and silently preserve approvals over weakened helpers.",
+  "timestamp": "2026-10-21T20:59:35.845Z"
+}

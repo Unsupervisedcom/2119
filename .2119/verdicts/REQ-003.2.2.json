@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-003.2.2--ba3a7f951d2b",
+  "reviewId": "REQ-003.2.2--9e0c907928e0",
   "requirementId": "REQ-003.2.2",
-  "hash": "ba3a7f951d2b",
+  "hash": "9e0c907928e0",
   "verdict": "pass",
-  "summary": "pass/fail write stable plain JSON after repairing final unignore rules, and init installs the same trackable verdict path",
-  "timestamp": "2026-08-03T17:05:00.760Z"
+  "summary": "pass/fail write plain JSON via writeVerdict to .2119/verdicts/<requirementId>.json and init installs the !.2119/verdicts gitignore section (ensureReviewStorageRules); git check-ignore shows verdict paths unignored and the cli/stable-verdict-files suites pass",
+  "timestamp": "2026-10-21T20:44:22.446Z"
 }

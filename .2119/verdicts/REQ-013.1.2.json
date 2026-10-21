@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-013.1.2--48c4d5f39f34",
+  "requirementId": "REQ-013.1.2",
+  "hash": "48c4d5f39f34",
+  "verdict": "fail",
+  "summary": "No covering test rejects the 'empty evidence' counterexample: the REQ-013.1.2 case matrix (tests/evidence-groups.test.ts:88-94) covers missing tests/evidence and empty tests only, never evidence: [] with tests present, so that conjunct of the requirement is unverified by tests; additionally the unit 'naming the group' assertion is a disjunctive /storage|evidence_groups/ regex that would pass a group-name-less error (gate-level naming is asserted only for the missing-evidence cell).",
+  "timestamp": "2026-10-21T21:39:27.215Z"
+}
