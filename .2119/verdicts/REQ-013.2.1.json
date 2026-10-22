@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-013.2.1--0d7460069fa0",
+  "reviewId": "REQ-013.2.1--2092158e2b58",
   "requirementId": "REQ-013.2.1",
-  "hash": "0d7460069fa0",
-  "verdict": "fail",
-  "summary": "Group-scoped hashing is genuinely verified for single-glob groups (content-not-labels, every file within one glob's match set, union across groups, gate-level invalidation), but every REQ-013.2.1-annotated test declares exactly one glob per side per group; a mutant that hashes content of only the first evidence glob's matches (evidence: [a, b] where a file is matched only by b) or applies a group via only the first tests glob passes all annotated tests, so the multi-glob list edge productions of the REQ-013.1.1 declared shape are unprobed — the only multi-glob list in the suite (tests/evidence-groups.test.ts:220) is the REQ-013.2.2 declaration test whose invalidation is declaration-driven, not content-driven.",
-  "timestamp": "2026-10-22T02:49:50.956Z"
+  "hash": "2092158e2b58",
+  "verdict": "pass",
+  "summary": "Verified via five source mutants: first-file-only hashing, first-glob-only hashing, first-tests-glob-only applicability, all-covering-files applicability, and content-free hashing each fail a distinct REQ-013.2.1 test (tests/evidence-groups.test.ts), and the e2e gate test shows a weakened storage.ts helper flips 'check' to exit 1 naming only REQ-001.1.1; production path check.ts:73 -> review.ts:97,33-55 -> hash.ts:31 reads real config and file content.",
+  "timestamp": "2026-10-22T04:49:27.984Z"
 }
