@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-008.2.1--2cd0a760d9fd",
+  "reviewId": "REQ-008.2.1--c29cd479f51f",
   "requirementId": "REQ-008.2.1",
-  "hash": "2cd0a760d9fd",
+  "hash": "c29cd479f51f",
   "verdict": "pass",
-  "summary": "scaling.md covers all seven mandated topics with concrete recipes: pinning, separate CI gates, CODEOWNERS, independent-runner, explicit evidence globs, shared_evidence, and no-verify policy",
-  "timestamp": "2026-08-08T07:57:34.368Z"
+  "summary": "docs/scaling.md covers all seven mandated topics: exact pinning (--save-exact, rfc2119@<pinned>), npm test and 2119 check as separate CI gate steps, CODEOWNERS for /specs/ and /.2119/verdicts/, the independent-runner recipe (bot-run review, fresh sessions, committer-identity branch protection), explicit evidence globs over bare [review] for critical requirements, shared_evidence for tests/helpers and tests/fixtures, and check --no-verify policy for untrusted contributions",
+  "timestamp": "2026-10-21T18:46:20.875Z"
 }

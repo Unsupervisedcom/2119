@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-005.2.6--cf4818fa400c",
+  "reviewId": "REQ-005.2.6--2844acfa23b8",
   "requirementId": "REQ-005.2.6",
-  "hash": "cf4818fa400c",
+  "hash": "2844acfa23b8",
   "verdict": "pass",
-  "summary": "Verify-tag docs state arbitrary-shell execution and package.json-script trust equivalence beside the [verify] semantics",
-  "timestamp": "2026-08-08T09:06:58.759Z"
+  "summary": "README's [verify] bullet in 'The spec format' states verbatim: 'Verify commands execute arbitrary shell from spec files: they carry the same trust level as package.json scripts' — both required clauses present",
+  "timestamp": "2026-10-21T20:20:04.050Z"
 }

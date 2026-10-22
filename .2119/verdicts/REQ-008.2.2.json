@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-008.2.2--aa836f47efc5",
+  "reviewId": "REQ-008.2.2--276bca206b6d",
   "requirementId": "REQ-008.2.2",
-  "hash": "aa836f47efc5",
+  "hash": "276bca206b6d",
   "verdict": "pass",
-  "summary": "README's Diversify-then-audit bullet and scaling.md's cross-provider audit section both advise periodic sweeps plus targeted audits of challenging or high-consequence requirements",
-  "timestamp": "2026-08-08T09:07:17.187Z"
+  "summary": "README 'Diversify, then audit' bullet and docs/scaling.md 'Periodic adversarial audits (cross-provider)' section both advise periodic cross-provider review --audit sweeps (README: 'Run an audit sweep periodically with a model from a different provider'; scaling guide: monthly QA cadence dispatched to a different provider) and targeted audits for particularly challenging or high-consequence requirements individually.",
+  "timestamp": "2026-10-21T19:35:05.358Z"
 }

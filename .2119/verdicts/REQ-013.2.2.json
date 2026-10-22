@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-013.2.2--e5c08361d79e",
+  "requirementId": "REQ-013.2.2",
+  "hash": "e5c08361d79e",
+  "verdict": "pass",
+  "summary": "Genuine: declaration-only edits to both tests and evidence globs invalidate (tests/evidence-groups.test.ts:255,268; mutants omitting decl/tests/evidence from the hash each fail there), removal stales the dependent verdict through the real dist/cli.js gate (:360-362), addition/reorder covered (:228,:219) with no churn to the unrelated requirement.",
+  "timestamp": "2026-10-22T05:43:49.999Z"
+}

@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-003.8.2--6e3c630dbed4",
+  "reviewId": "REQ-003.8.2--689bee9ba93e",
   "requirementId": "REQ-003.8.2",
-  "hash": "6e3c630dbed4",
+  "hash": "689bee9ba93e",
   "verdict": "pass",
-  "summary": "test-quality, direct-judgment, audit, and evidence-scoping instructions still expose every expected pass/fail distinction in corpus cases 001-014",
-  "timestamp": "2026-08-03T17:05:00.892Z"
+  "summary": "template in src/review.ts still routes all 12 expected-fail corpus cases to a catch clause (001-003,009,010 counterexample obligation, 004 grammar clause, 008-009 tautology clause, 005/011 bad-requirement clause, 006-007 audit mutant obligation, 014 scope clause) and passes both controls 012-013; load-bearing clauses pinned by tests/rigor.test.ts",
+  "timestamp": "2026-10-21T20:51:52.811Z"
 }

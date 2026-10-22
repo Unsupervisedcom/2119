@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-013.3.1--e1d7fd220856",
+  "requirementId": "REQ-013.3.1",
+  "hash": "e1d7fd220856",
+  "verdict": "pass",
+  "summary": "Verified by end-to-end tests driving the real gate (node dist/cli.js check and check --changed) on a fully green fixture project: adding declared group 'typo' with unmatched evidence glob helpers/nope/** and separately with unmatched tests glob tests/missing/** each flips check to exit 1 with stderr naming 'evidence group \"typo\"' and the literal unmatched glob (src/check.ts:130-143 pushes rule REQ-013.3.1 over both tests and evidence fields against walk(root)), and check --changed --json reports a violation with rule REQ-013.3.1 mentioning the group; both disjuncts, the group/glob naming clause, and the not-silently-green clause are each covered, with baseline check asserted status 0 before mutation",
+  "timestamp": "2026-10-21T21:46:43.015Z"
+}

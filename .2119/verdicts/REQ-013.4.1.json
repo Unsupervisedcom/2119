@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-013.4.1--d165ba857092",
+  "requirementId": "REQ-013.4.1",
+  "hash": "d165ba857092",
+  "verdict": "pass",
+  "summary": "Verified in tests/evidence-groups.test.ts: editing the inapplicable parser group's helper (helpers/parser.ts) leaves REQ-001.1.1's review ID unchanged while REQ-001.1.2's changes; gate check and check --changed report only REQ-001.1.1 stale; removing the inapplicable storage group leaves REQ-001.1.2's ID unchanged. Mutation check: dropping the applicability filter in evidenceGroupParts (src/review.ts) fails all of these tests.",
+  "timestamp": "2026-10-21T22:45:23.799Z"
+}

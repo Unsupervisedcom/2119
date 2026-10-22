@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-013.2.1--2092158e2b58",
+  "requirementId": "REQ-013.2.1",
+  "hash": "2092158e2b58",
+  "verdict": "pass",
+  "summary": "Verified via five source mutants: first-file-only hashing, first-glob-only hashing, first-tests-glob-only applicability, all-covering-files applicability, and content-free hashing each fail a distinct REQ-013.2.1 test (tests/evidence-groups.test.ts), and the e2e gate test shows a weakened storage.ts helper flips 'check' to exit 1 naming only REQ-001.1.1; production path check.ts:73 -> review.ts:97,33-55 -> hash.ts:31 reads real config and file content.",
+  "timestamp": "2026-10-22T04:49:27.984Z"
+}

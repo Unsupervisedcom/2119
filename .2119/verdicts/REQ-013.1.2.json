@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-013.1.2--1eba2d81d71a",
+  "requirementId": "REQ-013.1.2",
+  "hash": "1eba2d81d71a",
+  "verdict": "pass",
+  "summary": "Genuine behavioral verification: both REQ-013.1.2 tests (tests/evidence-groups.test.ts) fail under four source mutations — silent empty-mapping read, group name dropped from the error, empty lists accepted, missing keys silently defaulted; the unit test drives real loadConfig over an on-disk YAML file covering all four missing/empty arms and requires evidence_groups[\"storage\"] in the message; the gate test proves the identical project passes check first, then requires the built dist/cli.js subprocess to exit non-zero naming the group; a two-group probe confirms the error names the actually-rejected group.",
+  "timestamp": "2026-10-22T05:17:59.162Z"
+}

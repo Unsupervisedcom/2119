@@ -1,0 +1,8 @@
+{
+  "reviewId": "REQ-010.2.1--8995f428224f",
+  "requirementId": "REQ-010.2.1",
+  "hash": "8995f428224f",
+  "verdict": "pass",
+  "summary": "Pass: check --changed variants mark a requirement affected by each contract field alone - statement (spin->rotate), keyword (MUST->SHALL), coverage mode ([manual] dropped), verify command, [review] evidence globs, instructions path - and when added to the baseline, while identical sibling FIX-001.1.2 in the same changed spec stays unaffected; ignored group-evidence helper guard keeps glob comparison sound.",
+  "timestamp": "2026-10-21T23:26:46.896Z"
+}
