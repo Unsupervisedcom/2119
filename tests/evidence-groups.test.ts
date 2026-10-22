@@ -83,11 +83,18 @@ describe("evidence group config", () => {
       "evidence_groups:\n  storage:\n    tests: [\"tests/**\"]\n",
       "evidence_groups:\n  storage:\n    evidence: [\"helpers/**\"]\n",
       "evidence_groups:\n  storage:\n    tests: []\n    evidence: [\"helpers/**\"]\n",
+      "evidence_groups:\n  storage:\n    tests: [\"tests/**\"]\n    evidence: []\n",
       "evidence_groups:\n  storage: nope\n",
       "evidence_groups: nope\n",
     ];
     for (const config of cases) {
-      expect(() => loadConfig(baseProject(config)), config).toThrow(/storage|evidence_groups/);
+      // Every group-level cell must name the group itself, not merely the
+      // config key: a group-name-less error leaves it ambiguous which of
+      // several declared groups was rejected (REQ-013.1.2).
+      const expected = config.includes("storage:")
+        ? /evidence_groups\["storage"\]/
+        : /evidence_groups/;
+      expect(() => loadConfig(baseProject(config)), config).toThrow(expected);
     }
   });
 });
@@ -100,6 +107,38 @@ describe("evidence group hashing", () => {
     writeFileSync(join(root, "helpers/storage.ts"), "export const storageHelper = 2;\n");
     const after = reviewIds(root);
     expect(after["REQ-001.1.1"]).not.toBe(before["REQ-001.1.1"]);
+  });
+
+  // 2119: REQ-013.2.1
+  it("hashes every file an applicable group's evidence globs match, not just the first", () => {
+    // One glob matching several helpers: the requirement is about the whole
+    // match set, so weakening any matched file — including the ones a
+    // first-match-only hash would silently drop — must invalidate the
+    // dependent verdict.
+    const root = mkdtempSync(join(tmpdir(), "2119-eg-multi-"));
+    mkdirSync(join(root, "specs"), { recursive: true });
+    mkdirSync(join(root, "helpers"), { recursive: true });
+    mkdirSync(join(root, "tests/core"), { recursive: true });
+    writeFileSync(join(root, "specs/REQ-001-features.md"), SPEC);
+    writeFileSync(join(root, "helpers/alpha.ts"), "export const alpha = 1;\n");
+    writeFileSync(join(root, "helpers/beta.ts"), "export const beta = 1;\n");
+    writeFileSync(join(root, "helpers/gamma.ts"), "export const gamma = 1;\n");
+    writeFileSync(join(root, "tests/core/c.test.js"), "// 2119: REQ-001.1.1\ntest('persists', () => {})\n");
+    writeFileSync(
+      join(root, ".2119.yml"),
+      'evidence_groups:\n  core:\n    tests: ["tests/core/**"]\n    evidence: ["helpers/*.ts"]\n',
+    );
+    const anns: Annotation[] = [{ file: "tests/core/c.test.js", line: 1, ids: ["REQ-001.1.1"] }];
+    const before = reviewIds(root, anns)["REQ-001.1.1"];
+    expect(before).toBeTruthy();
+    // walk() returns paths sorted, so the matches arrive alpha, beta, gamma:
+    // beta and gamma are exactly the files a first-match-only hash drops.
+    for (const name of ["alpha.ts", "beta.ts", "gamma.ts"]) {
+      writeFileSync(join(root, "helpers", name), `export const ${name.replace(".ts", "")} = 2;\n`);
+      expect(reviewIds(root, anns)["REQ-001.1.1"], name).not.toBe(before);
+      writeFileSync(join(root, "helpers", name), `export const ${name.replace(".ts", "")} = 1;\n`);
+      expect(reviewIds(root, anns)["REQ-001.1.1"], `${name} restored`).toBe(before);
+    }
   });
 
   // 2119: REQ-013.2.1
@@ -151,6 +190,37 @@ describe("evidence group hashing", () => {
     expect(afterRemove["REQ-001.1.1"]).not.toBe(before["REQ-001.1.1"]);
     // Removing an inapplicable group leaves the unrelated requirement's hash alone.
     expect(afterRemove["REQ-001.1.2"]).toBe(before["REQ-001.1.2"]);
+  });
+
+  // 2119: REQ-013.2.2
+  it("invalidates on a declaration-only mapping edit, with no change to matched files or applicability", () => {
+    const root = baseProject();
+    const before = reviewIds(root);
+    // Evidence glob swapped for an equivalent-matching one: the matched file
+    // set and the applicability predicate are unchanged, so the only thing
+    // that moved is the declared boundary itself — and the declaration is
+    // part of the review identity (REQ-013.2.2).
+    writeFileSync(
+      join(root, ".2119.yml"),
+      CONFIG.replace(
+        '    evidence: ["helpers/storage.ts"]',
+        '    evidence: ["helpers/stor*.ts"]',
+      ) + "\n",
+    );
+    expect(reviewIds(root)["REQ-001.1.1"]).not.toBe(before["REQ-001.1.1"]);
+    // A storage-scoped declaration edit leaves the unrelated feature's hash alone.
+    expect(reviewIds(root)["REQ-001.1.2"]).toBe(before["REQ-001.1.2"]);
+    // tests-glob edit that likewise changes no applicability: a redundant
+    // extra glob over the same covering files still rewrites the declared
+    // mapping, so the dependent verdict cannot ride through it.
+    writeFileSync(
+      join(root, ".2119.yml"),
+      CONFIG.replace(
+        '    tests: ["tests/storage/**"]',
+        '    tests: ["tests/storage/**", "tests/storage/*.test.js"]',
+      ) + "\n",
+    );
+    expect(reviewIds(root)["REQ-001.1.1"]).not.toBe(before["REQ-001.1.1"]);
   });
 
   // 2119: REQ-013.4.1
@@ -269,15 +339,24 @@ describe("evidence group gate behavior", () => {
   });
 
   // 2119: REQ-013.1.2
-  it("rejects a declared group with an empty evidence list at the gate, naming the group", () => {
+  it("rejects a declared group with a missing or empty evidence list at the gate, naming the group", () => {
     const root = greenProject();
-    writeFileSync(
-      join(root, ".2119.yml"),
-      "shared_evidence:\n  - \"helpers/universal.ts\"\nevidence_groups:\n  storage:\n    tests: [\"tests/storage/**\"]\n",
-    );
-    const check = run(root, ["check"]);
-    expect(check.status).not.toBe(0);
-    expect(check.stderr).toContain("storage");
+    const brokenGroups = [
+      // Missing evidence key.
+      '  storage:\n    tests: ["tests/storage/**"]\n',
+      // Empty evidence list with tests present.
+      '  storage:\n    tests: ["tests/storage/**"]\n    evidence: []\n',
+    ];
+    for (const group of brokenGroups) {
+      writeFileSync(
+        join(root, ".2119.yml"),
+        `shared_evidence:\n  - "helpers/universal.ts"\nevidence_groups:\n${group}`,
+      );
+      const check = run(root, ["check"]);
+      expect(check.status, group).not.toBe(0);
+      // The gate error names the rejected group, not just the config key.
+      expect(check.stderr, group).toContain('evidence_groups["storage"]');
+    }
   });
 
   // 2119: REQ-013.2.1, REQ-013.4.1
