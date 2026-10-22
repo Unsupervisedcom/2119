@@ -159,6 +159,51 @@ describe("evidence group hashing", () => {
     expect(reviewIds(root, anns)["REQ-001.1.1"]).not.toBe(both["REQ-001.1.1"]);
   });
 
+  // 2119: REQ-013.2.1
+  it("hashes content matched only by a later evidence glob, not just the first glob's matches", () => {
+    // Multi-glob evidence list: bonus.ts is matched only by the second glob,
+    // so a hash restricted to the first evidence glob's matches would silently
+    // drop it — weakening bonus.ts must still invalidate the dependent
+    // verdict, and so must weakening a file matched by the first glob.
+    const root = baseProject(
+      CONFIG.replace(
+        '    evidence: ["helpers/storage.ts"]',
+        '    evidence: ["helpers/storage.ts", "helpers/extra/**"]',
+      ) + "\n",
+    );
+    mkdirSync(join(root, "helpers/extra"), { recursive: true });
+    writeFileSync(join(root, "helpers/extra/bonus.ts"), "export const bonus = 1;\n");
+    const before = reviewIds(root)["REQ-001.1.1"];
+    expect(before).toBeTruthy();
+    writeFileSync(join(root, "helpers/extra/bonus.ts"), "export const bonus = 2;\n");
+    expect(reviewIds(root)["REQ-001.1.1"], "later-glob match weakened").not.toBe(before);
+    writeFileSync(join(root, "helpers/extra/bonus.ts"), "export const bonus = 1;\n");
+    expect(reviewIds(root)["REQ-001.1.1"], "later-glob match restored").toBe(before);
+    writeFileSync(join(root, "helpers/storage.ts"), "export const storageHelper = 2;\n");
+    expect(reviewIds(root)["REQ-001.1.1"], "first-glob match weakened").not.toBe(before);
+  });
+
+  // 2119: REQ-013.2.1
+  it("applies a group via a later tests glob, so a covering file matched only there still binds the helper", () => {
+    // REQ-001.1.1's only covering test file matches the second tests glob, so
+    // a group applied via the first tests glob alone would never couple the
+    // requirement to the storage helper — weakening it must still invalidate
+    // the verdict.
+    const root = baseProject(
+      CONFIG.replace(
+        '    tests: ["tests/storage/**"]',
+        '    tests: ["tests/storage/**", "tests/edge/**"]',
+      ) + "\n",
+    );
+    mkdirSync(join(root, "tests/edge"), { recursive: true });
+    writeFileSync(join(root, "tests/edge/e.test.js"), "// 2119: REQ-001.1.1\ntest('edges', () => {})\n");
+    const anns: Annotation[] = [{ file: "tests/edge/e.test.js", line: 1, ids: ["REQ-001.1.1"] }];
+    const before = reviewIds(root, anns)["REQ-001.1.1"];
+    expect(before).toBeTruthy();
+    writeFileSync(join(root, "helpers/storage.ts"), "export const storageHelper = 2;\n");
+    expect(reviewIds(root, anns)["REQ-001.1.1"]).not.toBe(before);
+  });
+
   // 2119: REQ-013.2.2
   it("binds declared globs so editing, reordering (no scope change), or removing a mapping has the recorded effect", () => {
     const root = baseProject();

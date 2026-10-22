@@ -1,8 +1,8 @@
 {
-  "reviewId": "REQ-013.2.1--861b0c8713da",
+  "reviewId": "REQ-013.2.1--0d7460069fa0",
   "requirementId": "REQ-013.2.1",
-  "hash": "861b0c8713da",
+  "hash": "0d7460069fa0",
   "verdict": "fail",
-  "summary": "No covering test exercises an evidence glob matching multiple files (every fixture glob matches exactly one), so a mutant hashing only the first file matched per group's evidence globs passes all 15 tests in tests/evidence-groups.test.ts — REQ-013.2.1's 'content of every repository file matched by the evidence globs' (e.g. a helpers/*.ts glob) is unverified, and dropping matches would silently preserve stale approvals.",
-  "timestamp": "2026-10-21T22:41:15.137Z"
+  "summary": "Group-scoped hashing is genuinely verified for single-glob groups (content-not-labels, every file within one glob's match set, union across groups, gate-level invalidation), but every REQ-013.2.1-annotated test declares exactly one glob per side per group; a mutant that hashes content of only the first evidence glob's matches (evidence: [a, b] where a file is matched only by b) or applies a group via only the first tests glob passes all annotated tests, so the multi-glob list edge productions of the REQ-013.1.1 declared shape are unprobed — the only multi-glob list in the suite (tests/evidence-groups.test.ts:220) is the REQ-013.2.2 declaration test whose invalidation is declaration-driven, not content-driven.",
+  "timestamp": "2026-10-22T02:49:50.956Z"
 }
